@@ -16,6 +16,14 @@ pip install -r requirements.txt
 uvicorn app:app --reload --port 8000
 ```
 
+## Deploy to Vercel
+
+Import this `web3voyage` repository into Vercel. The included `vercel.json`
+configures `app.py` as a Python serverless function; no build command is
+required. Set `MINT_CONTRACT_ADDRESS` in Vercel Environment Variables (the
+public fallback address is included in `config/deployment.json`). Never commit
+`.env` or private keys.
+
 ## Routes
 
 /, /mint, /whitepaper, /store, /privacy and /health.

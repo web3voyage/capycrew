@@ -14,9 +14,8 @@ from eth_abi import decode, encode
 from eth_utils import is_address, keccak, to_checksum_address
 
 ROOT = Path(__file__).resolve().parent
-PROJECT_ROOT = ROOT.parent
 load_dotenv(ROOT / ".env")
-DEPLOYMENT_FILE = PROJECT_ROOT / "smart-contract" / "deployment" / "robinhoodTestnet.json"
+DEPLOYMENT_FILE = ROOT / "config" / "deployment.json"
 
 
 def deployed_contract_address():
@@ -35,7 +34,7 @@ templates = Jinja2Templates(directory=str(ROOT / "templates"))
 
 app.mount("/static", StaticFiles(directory=str(ROOT / "static")), name="static")
 for route, folder in (("/media/assets", "assets"), ("/media/videos", "videos"), ("/media/store", "store")):
-    path = PROJECT_ROOT / folder
+    path = ROOT / "media" / folder
     if path.exists():
         app.mount(route, StaticFiles(directory=str(path)), name=folder)
 
