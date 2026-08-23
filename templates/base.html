@@ -3,8 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="CapyCrew - a mellow onchain universe.">
+  <meta name="description" content="{{ og_description|default('CapyCrew - a mellow onchain universe.') }}">
   <meta name="theme-color" content="#101010">
+  <link rel="canonical" href="{{ canonical_url|default(request.url) }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="CAPYCREW">
+  <meta property="og:url" content="{{ canonical_url|default(request.url) }}">
+  <meta property="og:title" content="{{ og_title|default('CAPYCREW | A softer internet') }}">
+  <meta property="og:description" content="{{ og_description|default('CapyCrew - a mellow onchain universe.') }}">
+  <meta property="og:image" content="{{ og_image_url|default('/static/og-image.png') }}">
+  <meta property="og:image:secure_url" content="{{ og_image_url|default('/static/og-image.png') }}">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{ og_image_alt|default('CAPYCREW social preview') }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ og_title|default('CAPYCREW | A softer internet') }}">
+  <meta name="twitter:description" content="{{ og_description|default('CapyCrew - a mellow onchain universe.') }}">
+  <meta name="twitter:image" content="{{ og_image_url|default('/static/og-image.png') }}">
   <title>{% block title %}{{ site_name }}{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', path='site.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', path='css/capycity.css') }}?v=20260820-11">

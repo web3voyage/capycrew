@@ -26,11 +26,15 @@ class WebAppTests(unittest.TestCase):
         about = self.client.get("/about")
         self.assertIn("Digital membership", about.text)
         self.assertIn('href="/about"', about.text)
+        self.assertIn('property="og:image"', about.text)
+        self.assertIn("/static/og-image.png", about.text)
+        self.assertIn('name="twitter:card" content="summary_large_image"', about.text)
         mint = self.client.get("/mint")
         self.assertIn("mint-button", mint.text)
         self.assertIn("/static/js/mint.js", mint.text)
         self.assertEqual(self.client.get("/static/js/mint.js").status_code, 200)
         self.assertEqual(self.client.get("/static/vendor/ethers.umd.min.js").status_code, 200)
+        self.assertEqual(self.client.get("/static/og-image.png").status_code, 200)
 
     def test_mint_client_blocks_minting_on_the_wrong_network(self):
         mint_client = self.client.get("/static/js/mint.js")

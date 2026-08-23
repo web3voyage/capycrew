@@ -103,9 +103,33 @@ async def contract_read(signature: str, output_type: str, argument_types: tuple 
 
 def context(request: Request, **kwargs):
     config = mint_config()
+    page = kwargs.get("page", "home")
+    site_url = os.getenv("PUBLIC_SITE_URL", str(request.base_url).rstrip("/")).rstrip("/")
+    share_titles = {
+        "home": "CAPYCREW | A softer internet",
+        "mint": "Mint a Capy | CAPYCREW",
+        "about": "About CapyCrew | A softer internet",
+        "whitepaper": "CapyCrew Whitepaper",
+        "store": "CapyCrew Store",
+        "privacy": "CapyCrew Privacy",
+    }
+    share_descriptions = {
+        "home": "CapyCrew is a 10,000-piece collectible character project building a relaxed, creative world on the Robinhood Chain.",
+        "mint": "Claim a CapyCrew Genesis NFT on Robinhood Chain Testnet.",
+        "about": "Meet CapyCrew: a 10,000-piece collectible character project and evolving digital world.",
+        "whitepaper": "Read the CapyCrew project direction, collection details, and roadmap.",
+        "store": "Explore CapyCrew goods and future drops.",
+        "privacy": "CapyCrew privacy policy.",
+    }
     return {
         "request": request,
         "site_name": "CAPYCREW",
+        "site_url": site_url,
+        "canonical_url": site_url + request.url.path,
+        "og_title": share_titles.get(page, "CAPYCREW | A softer internet"),
+        "og_description": share_descriptions.get(page, share_descriptions["home"]),
+        "og_image_url": site_url + "/static/og-image.png",
+        "og_image_alt": "CAPYCREW NFT minting dApp on Robinhood Chain Testnet",
         "mint_contract_address": config["contract_address"],
         "mint_chain_id": str(config["chain_id"]),
         "mint_chain_name": config["chain_name"],
