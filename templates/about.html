@@ -3,7 +3,14 @@
 {% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/about.css') }}?v=20260823-1">{% endblock %}
 {% block content %}
 <div class="about-page">
-<section class="page-hero"><div class="wrap"><div class="eyebrow">CAPYCREW / THE PROJECT</div><h1>A softer<br><em>internet.</em></h1><p class="lede">A 10,000-piece collectible character project building a relaxed, creative world on the Robinhood Chain.</p></div></section>
+<section class="page-hero">
+  <section class="about-hero-video" aria-hidden="true">
+    <video class="about-hero-video__media" autoplay muted loop playsinline preload="metadata">
+      <source src="{{ url_for('videos', path='Zoom_into_futuristic_CapyCity_202608191211.mp4') }}" type="video/mp4">
+    </video>
+  </section>
+  <div class="wrap"><div class="eyebrow">CAPYCREW / THE PROJECT</div><h1>A softer<br><em>internet.</em></h1><p class="lede">A 10,000-piece collectible character project building a relaxed, creative world on the Robinhood Chain.</p></div>
+</section>
 <main class="section"><div class="wrap paper">
 <section class="paper-section"><div class="paper-kicker">01 / What is CapyCrew?</div><h2>Characters with somewhere to go.</h2><p>CapyCrew is a 10,000-piece collectible character project built on the Robinhood Chain. Each Capy is a digital identity and membership pass into CapyCity, an evolving universe shaped by character art, fashion, animation, and community culture.</p><p>The project is designed around long-term participation rather than short-term speculation. CapyCrew gives people a shared world to explore, contribute to, and make their own.</p></section>
 <section class="paper-section"><div class="paper-kicker">02 / Utility</div><h2>Useful reasons to stay curious.</h2><ul><li><strong>Digital membership:</strong> access to CapyCrew community channels, announcements, and holder activities.</li><li><strong>Digital identity:</strong> a unique character, style, and role within the CapyCity universe.</li><li><strong>Community experiences:</strong> creative challenges, collaborations, events, and community-led experiments.</li><li><strong>Holder rewards:</strong> future digital collectibles, airdrops, merchandise, and partner benefits as project milestones are reached.</li><li><strong>Interactive expansion:</strong> a foundation for stories, city districts, games, and other digital experiences.</li><li><strong>Community influence:</strong> opportunities to help shape future themes, collaborations, features, and creative direction.</li></ul></section>
