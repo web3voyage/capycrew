@@ -129,6 +129,10 @@ async def mint(request: Request):
 async def whitepaper(request: Request):
     return templates.TemplateResponse(request=request, name="whitepaper.html", context=context(request, page="whitepaper"))
 
+@app.get("/about", response_class=HTMLResponse)
+async def about(request: Request):
+    return templates.TemplateResponse(request=request, name="about.html", context=context(request, page="about"))
+
 @app.get("/privacy", response_class=HTMLResponse)
 async def privacy(request: Request):
     return templates.TemplateResponse(request=request, name="privacy.html", context=context(request, page="privacy"))

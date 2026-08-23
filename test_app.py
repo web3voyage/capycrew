@@ -20,9 +20,12 @@ class WebAppTests(unittest.TestCase):
         self.client = TestClient(webapp.app)
 
     def test_pages_and_static_mint_client_load(self):
-        for path in ("/", "/mint", "/whitepaper", "/store", "/privacy"):
+        for path in ("/", "/mint", "/about", "/whitepaper", "/store", "/privacy"):
             response = self.client.get(path)
             self.assertEqual(response.status_code, 200, path)
+        about = self.client.get("/about")
+        self.assertIn("Digital membership", about.text)
+        self.assertIn('href="/about"', about.text)
         mint = self.client.get("/mint")
         self.assertIn("mint-button", mint.text)
         self.assertIn("/static/js/mint.js", mint.text)
