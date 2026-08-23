@@ -32,6 +32,12 @@ class WebAppTests(unittest.TestCase):
         self.assertEqual(self.client.get("/static/js/mint.js").status_code, 200)
         self.assertEqual(self.client.get("/static/vendor/ethers.umd.min.js").status_code, 200)
 
+    def test_mint_client_blocks_minting_on_the_wrong_network(self):
+        mint_client = self.client.get("/static/js/mint.js")
+        self.assertIn("let networkReady = false", mint_client.text)
+        self.assertIn("Boolean(account) && !networkReady", mint_client.text)
+        self.assertIn('setNetwork("Switch to " + chainName', mint_client.text)
+
     def test_config_endpoint_exposes_public_chain_configuration_only(self):
         response = self.client.get("/api/mint/config")
         self.assertEqual(response.status_code, 200)

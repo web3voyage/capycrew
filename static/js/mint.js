@@ -54,6 +54,7 @@
   let busy = false;
   let collection = null;
   let walletState = null;
+  let networkReady = false;
 
   const shorten = (value) => value ? value.slice(0, 6) + "..." + value.slice(-4) : "";
   const networkHex = () => "0x" + chainId.toString(16);
@@ -81,6 +82,7 @@
     if (code === 4001 || code === "ACTION_REJECTED" || raw.includes("user rejected")) return "Transaction rejected in your wallet. You can safely try again.";
     if (code === 4100 || raw.includes("unauthorized") || raw.includes("request rejected")) return "Wallet permission was not granted. Approve this site in your wallet, then try again.";
     if (raw.includes("already processing") || raw.includes("-32002")) return "Your wallet already has a pending request. Complete it there, then try again.";
+    if (code === 4902 || raw.includes("unrecognized chain") || raw.includes("unknown chain")) return "Robinhood Chain Testnet is not configured in your wallet. Approve adding it, then try again.";
     if (code === "INSUFFICIENT_FUNDS" || raw.includes("insufficient funds")) return "Insufficient testnet funds for the mint and gas.";
     if (raw.includes("publicmintdisabled")) return "Public minting is not active yet.";
     if (raw.includes("mintingclosed")) return "Minting is closed for this collection.";
@@ -88,7 +90,7 @@
     if (raw.includes("exceedsmaxsupply")) return "The collection is sold out.";
     if (raw.includes("incorrectpayment")) return "The mint price changed. Refresh the collection state and try again.";
     if (raw.includes("paused") || raw.includes("enforcedpause")) return "Minting is temporarily paused.";
-    if (raw.includes("network") || raw.includes("rpc") || raw.includes("fetch")) return "The network could not be reached. Check your connection and try again.";
+    if (raw.includes("chain") || raw.includes("wrong network") || raw.includes("network") || raw.includes("rpc") || raw.includes("fetch")) return "Switch your wallet to Robinhood Chain Testnet, then try again.";
     return "The action could not be completed. Check your wallet and try again.";
   }
 
@@ -103,13 +105,14 @@
     elements.disconnect.disabled = busy;
     elements.switchNetwork.disabled = busy;
     elements.quantity.disabled = busy;
-    elements.mint.disabled = busy || !contractAddress || (!account && !canConnect) ||
+    elements.mint.disabled = busy || !contractAddress || (!account && !canConnect) || (Boolean(account) && !networkReady) ||
       (Boolean(account) && (!available || remaining === 0));
     elements.mint.setAttribute("aria-busy", busy ? "true" : "false");
     elements.disconnect.setAttribute("aria-busy", busy ? "true" : "false");
 
     if (!busy) {
       if (!account) elements.mint.textContent = ethereum ? "Connect wallet" : "Wallet unavailable";
+      else if (!networkReady) elements.mint.textContent = "Switch network";
       else if (!available) elements.mint.textContent = soldOut ? "Sold out" : "Mint closed";
       else if (remaining === 0) elements.mint.textContent = "Wallet limit reached";
       else elements.mint.textContent = "Mint now";
@@ -208,12 +211,15 @@
     if (!ethereum) return false;
     const current = BigInt(await ethereum.request({ method: "eth_chainId" }));
     if (current === chainId) {
+      networkReady = true;
       setNetwork(chainName, "success");
       elements.switchNetwork.hidden = true;
       return true;
     }
-    setNetwork("Wrong network", "error");
+    networkReady = false;
+    setNetwork("Switch to " + chainName, "error");
     elements.switchNetwork.hidden = false;
+    updateControls();
     return false;
   }
 
@@ -269,7 +275,10 @@
         return false;
       }
 
-      await ensureNetwork();
+      if (!(await ensureNetwork())) {
+        setStatus("Switch to " + chainName + " before verifying this wallet.", "error");
+        return false;
+      }
       setStatus("Please sign the message in your wallet to verify ownership...");
       const message = "Sign to verify you own this wallet.\n\nSite: CapyCrew\nAddress: " + account;
       await ethereum.request({ method: "personal_sign", params: [message, account] });
@@ -392,17 +401,34 @@
       const previous = account;
       account = accounts && accounts[0] ? ethers.getAddress(accounts[0]) : "";
       walletVerified = account && account === previous ? walletVerified : false;
+      networkReady = false;
       elements.wallet.textContent = account ? shorten(account) : "No wallet connected";
       if (!account) {
         walletState = null;
         resetTransactionState();
       }
-      await refreshState({ quiet: true });
-    });
-    ethereum.on && ethereum.on("chainChanged", async () => {
       await ensureNetwork().catch(() => false);
       await refreshState({ quiet: true });
     });
+    ethereum.on && ethereum.on("chainChanged", async () => {
+      networkReady = false;
+      await ensureNetwork().catch(() => false);
+      await refreshState({ quiet: true });
+    });
+
+    (async () => {
+      try {
+        const accounts = await ethereum.request({ method: "eth_accounts" });
+        if (accounts && accounts[0]) {
+          account = ethers.getAddress(accounts[0]);
+          elements.wallet.textContent = shorten(account);
+          await ensureNetwork();
+        }
+      } catch (_) {
+        networkReady = false;
+      }
+      await refreshState({ quiet: true });
+    })();
   }
 
   resetTransactionState();
