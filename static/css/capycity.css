@@ -1,0 +1,179 @@
+/* Persistent Three.js viewport. It is visual only; all UI remains in the DOM. */
+body {
+  min-height: 100vh;
+}
+
+#scene-stage {
+  position: fixed;
+  top: 13vh;
+  right: max(20px, calc((100vw - 1280px) / 2));
+  width: min(46vw, 740px);
+  height: 74vh;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 1;
+  border: 2px solid #101010;
+  box-shadow: 9px 9px 0 #ff4b3e, 0 28px 70px rgba(7,17,14,.28);
+  background:
+    radial-gradient(circle at 68% 24%, rgba(214, 255, 63, 0.22), transparent 18%),
+    linear-gradient(150deg, transparent 0 44%, rgba(96, 212, 173, 0.2) 44.4% 45%, transparent 45.4%),
+    #07110e;
+  isolation: isolate;
+}
+
+#scene-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border: 1px solid rgba(214, 255, 63, 0.26);
+  box-shadow: inset 0 0 70px rgba(0, 0, 0, 0.36);
+}
+
+#scene-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(180deg, rgba(7, 17, 14, 0.05), transparent 56%, rgba(7, 17, 14, 0.48)),
+    repeating-linear-gradient(180deg, transparent 0 3px, rgba(214, 255, 63, 0.035) 4px);
+}
+
+/* Always-visible architectural horizon sits behind the transparent WebGL canvas. */
+#scene-stage .scene-horizon {
+  position: absolute;
+  z-index: 0;
+  inset: auto 5% 6% 5%;
+  height: 54%;
+  opacity: 0.58;
+  background:
+    linear-gradient(90deg,
+      #163d31 0 8%, transparent 8% 10%,
+      #245d49 10% 18%, transparent 18% 21%,
+      #1d4d3d 21% 34%, transparent 34% 37%,
+      #2b7258 37% 47%, transparent 47% 50%,
+      #173f33 50% 64%, transparent 64% 67%,
+      #286950 67% 78%, transparent 78% 81%,
+      #1c4a3b 81% 91%, transparent 91% 94%,
+      #2d755a 94% 100%);
+  clip-path: polygon(0 100%,0 47%,8% 47%,8% 24%,18% 24%,18% 62%,30% 62%,30% 13%,43% 13%,43% 56%,55% 56%,55% 30%,68% 30%,68% 4%,79% 4%,79% 51%,90% 51%,90% 19%,100% 19%,100% 100%);
+}
+
+#scene-stage canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: saturate(1.02) contrast(1.02);
+}
+
+#scene-stage .world-video {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.92) contrast(1.04);
+}
+
+#scene-stage .world-video[hidden] { display: none; }
+
+#scene-stage.scene-fallback {
+  background:
+    linear-gradient(118deg, transparent 0 56%, rgba(214, 255, 63, 0.16) 56.2% 56.8%, transparent 57%),
+    linear-gradient(62deg, transparent 0 62%, rgba(108, 211, 178, 0.14) 62.2% 62.7%, transparent 63%),
+    repeating-linear-gradient(90deg, rgba(24, 64, 51, 0.55) 0 2px, transparent 2px 42px),
+    #07110e;
+}
+
+.scene-fallback-copy {
+  position: absolute;
+  z-index: 4;
+  left: 22px;
+  right: 22px;
+  bottom: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: #d6ff3f;
+  font: 10px "DM Mono", monospace;
+  letter-spacing: 0.14em;
+}
+
+.scene-fallback-copy span { color: #fff; }
+
+.site-content {
+  position: relative;
+}
+
+/* Copy stays on an opaque reading lane; the right side reveals the 3D viewport. */
+.site-content [data-scene] {
+  position: relative;
+  background: transparent;
+}
+
+.site-content [data-scene] > .wrap,
+.site-content .ticker,
+.site-content .footer {
+  position: relative;
+  z-index: 3;
+}
+
+#scene-stage[data-renderer="webgl"] .scene-horizon {
+  display: none;
+}
+
+body:not([data-page="home"]) #scene-stage {
+  display: none;
+}
+
+body:not([data-page="home"]) .site-content > :not(.footer) {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 900px) {
+  #scene-stage {
+    top: 92px;
+    right: 18px;
+    width: 44vw;
+    height: 48vh;
+  }
+}
+
+@media (max-width: 760px) {
+  #scene-stage,
+  body:not([data-page="home"]) #scene-stage {
+    position: absolute;
+    top: 82px;
+    right: 14px;
+    left: 14px;
+    width: auto;
+    height: min(43vh, 390px);
+    opacity: 1;
+    box-shadow: 6px 6px 0 #ff4b3e;
+  }
+
+  .site-content [data-scene] { background: transparent; }
+
+  body[data-page="home"] .hero {
+    padding-top: calc(min(43vh, 390px) + 142px);
+  }
+
+  body:not([data-page="home"]) #scene-stage {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #scene-stage canvas {
+    display: none;
+  }
+}

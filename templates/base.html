@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="CapyCrew - a mellow onchain universe.">
+  <meta name="theme-color" content="#101010">
+  <title>{% block title %}{{ site_name }}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='site.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/capycity.css') }}?v=20260820-11">
+  {% block styles %}{% endblock %}
+</head>
+<body data-page="{{ page|default('home') }}">
+  <nav class="site-nav">
+    <a class="brand" href="/">CAPYCREW</a>
+    <div class="nav-links">
+      <a class="{{ 'active' if page=='mint' else '' }}" href="/mint">Mint</a>
+      <a class="{{ 'active' if page=='whitepaper' else '' }}" href="/whitepaper">Whitepaper</a>
+      <a class="{{ 'active' if page=='store' else '' }}" href="/store">Store</a>
+    </div>
+  </nav>
+  <div id="scene-stage" aria-hidden="true"><div class="scene-horizon"></div>{% if page == 'home' %}<video class="world-video" autoplay muted loop playsinline preload="auto" src="/media/videos/Capy_%23042_rises_with_NFT_202608191210.mp4"></video>{% endif %}</div>
+  <div class="site-content">
+    {% block content %}{% endblock %}
+    <footer class="footer">
+      <div class="wrap footer-grid">
+        <div>
+          <div class="brand">CAPYCREW</div>
+          <p>Stay mellow. Build onchain.<br><small>Copyright 2026 CapyCrew. All rights reserved.</small></p>
+        </div>
+        <div>
+          <div class="eyebrow" style="color:var(--acid)">Explore</div>
+          <p><a href="/mint">Mint the crew</a><br><a href="/whitepaper">Read the whitepaper</a><br><a href="/store">Store / coming soon</a><br><a href="/privacy">Privacy policy</a></p>
+        </div>
+        <div>
+          <div class="eyebrow" style="color:var(--acid)">Community</div>
+          <div class="socials">
+            <a class="social-icon" href="https://x.com/capycrew" target="_blank" rel="noreferrer" aria-label="CapyCrew on X" title="X">X</a>
+            <a class="social-icon" href="https://t.me/capycrew" target="_blank" rel="noreferrer" aria-label="CapyCrew on Telegram" title="Telegram">TG</a>
+            <a class="social-icon" href="https://discord.gg/capycrew" target="_blank" rel="noreferrer" aria-label="CapyCrew on Discord" title="Discord">DC</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <script src="{{ url_for('static', path='three.min.js') }}?v=20260820-11"></script>
+  <script src="{{ url_for('static', path='js/capycity.js') }}?v=20260820-11" defer></script>
+</body>
+</html>

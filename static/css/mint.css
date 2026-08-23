@@ -1,0 +1,6 @@
+.mint-wallet-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px}.mint-wallet-row .mint-wallet{min-width:0;overflow-wrap:anywhere}.mint-wallet-row .network-switch{flex:0 0 auto;min-height:44px}
+.mint-stats{grid-template-columns:repeat(4,1fr)}
+.mint-actions,.mint-links{display:flex;gap:12px;flex-wrap:wrap}.mint-actions .btn{flex:1 1 190px}
+.mint-disclosure{padding-top:14px;border-top:1px solid var(--line);font-size:13px!important}.mint-links{align-items:center}
+@media(max-width:900px){.mint-stats{grid-template-columns:repeat(2,1fr)}.mint-stats>div:nth-child(2){border-right:0}.mint-stats>div:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+@media(max-width:760px){.mint-stats{grid-template-columns:1fr}.mint-stats>div,.mint-stats>div+div{border-right:0}}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}CAPYCREW - Stay mellow{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/home.css') }}">{% endblock %}
+{% block content %}
+<main class="home-flow">
+  <section class="hero" data-scene="world">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">01 / The world - CAPYCITY</div>
+        <h1>STAY <em>MELLOW.</em><br>GO ONCHAIN.</h1>
+        <p class="lede">CapyCrew is an animation-first character universe, a shared city, and a community that makes room for better internet rituals.</p>
+        <div class="cta-row"><a class="btn primary" href="/mint">Enter the mint</a><a class="btn" href="/whitepaper">Read the plan</a></div>
+      </div>
+      <div class="hero-note"><span class="eyebrow">CapyCity / 2026</span><strong>Soft power<br>for the timeline.</strong><span>Genesis 042<br>10,000 animated characters</span></div>
+    </div>
+  </section>
+
+  <div class="ticker" aria-label="CapyCrew updates"><span>CAPYCITY IS CALLING - 1,000,000,000 $MELLOW - CAPYCREW FOREVER - </span><span>CAPYCITY IS CALLING - 1,000,000,000 $MELLOW - CAPYCREW FOREVER - </span></div>
+
+  <section class="section signal-section" data-scene="signal">
+    <div class="wrap">
+      <div class="section-head"><span class="kicker">02 / The signal</span><h2>Broadcasts<br>from the district.</h2></div>
+      <p class="lede">Animated clips, city transmissions, and collectible moments move through CapyCity all day.</p>
+      <div class="signal-rail" tabindex="0" aria-label="Scrollable CapyCity video transmissions">
+        <article class="signal-card"><video autoplay muted loop playsinline preload="metadata" src="/media/videos/Capybara_counting_project_perks_202608191148.mp4"></video><span>Perks / 001</span></article>
+        <article class="signal-card"><video autoplay muted loop playsinline preload="metadata" src="/media/videos/Capybara_giving_thumbs_up_202608191148.mp4"></video><span>Signal / 002</span></article>
+        <article class="signal-card"><video autoplay muted loop playsinline preload="metadata" src="/media/videos/Capybara_wearing_streetwear_202608191149.mp4"></video><span>Street / 003</span></article>
+        <article class="signal-card"><video autoplay muted loop playsinline preload="metadata" src="/media/videos/CapyCrew_logo_forms_on_screen_202608191209.mp4"></video><span>Logo / 004</span></article>
+        <article class="signal-card"><video autoplay muted loop playsinline preload="metadata" src="/media/videos/Capy_%23042_rises_with_NFT_202608191210.mp4"></video><span>Rise / 005</span></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section crew-section" data-scene="crew">
+    <div class="wrap">
+      <div class="section-head"><span class="kicker">03 / Meet the crew</span><h2>Different fits.<br>Same frequency.</h2></div>
+      <div class="crew-window" aria-label="CapyCrew character gallery">
+        <div class="crew-track">
+          {% for image, label in [
+            ('Capybara_dressed_as_skater_202608190231.jpeg','Skater / 014'),
+            ('Capybara_wearing_captain_hat_202608191119.jpeg','Captain / 027'),
+            ('Capybara_wearing_gorpcore_fashion_202608190231.jpeg','Gorpcore / 031'),
+            ('Capybara_wearing_maritime_uniform_202608190423.jpeg','Maritime / 042'),
+            ('Capybara_wearing_puffer_jacket_202608190230.jpeg','Puffer / 056'),
+            ('Capybara_wearing_techwear_attire_202608190230.jpeg','Techwear / 073'),
+            ('Capybara_wearing_varsity_jacket_202608190232.jpeg','Varsity / 088')
+          ] %}
+          <figure class="crew-card"><img src="/media/assets/{{ image }}" alt="CapyCrew {{ label }}" loading="lazy"><figcaption>{{ label }}</figcaption></figure>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section roadmap-section" data-scene="roadmap">
+    <div class="wrap roadmap-layout">
+      <div><div class="section-head"><span class="kicker">04 / Roadmap</span><h2>Keep moving<br>with intention.</h2></div><p class="lede">The route is lit by deliverables, not hype. Each checkpoint unlocks a more useful, more playful layer of CapyCity.</p></div>
+      <ol class="roadmap-list"><li><b>01</b><span><strong>Signal</strong> Genesis animation, community channels, and verified contract documentation.</span></li><li><b>02</b><span><strong>District</strong> CapyCity scenes, holder tools, and community-led drops.</span></li><li><b>03</b><span><strong>Utility</strong> $MELLOW distribution, liquidity, and transparent reporting.</span></li><li><b>04</b><span><strong>Expansion</strong> Physical goods, collaborations, and interactive world modules.</span></li></ol>
+    </div>
+  </section>
+</main>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Mint - CAPYCREW{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/mint.css') }}?v=20260822-3">{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="wrap"><div class="eyebrow">CapyCrew / Genesis mint</div><h1>CLAIM YOUR<br>CAPY.</h1></div></section>
+<main class="section"><div class="wrap mint-layout">
+  <section class="card mint-panel" aria-labelledby="mint-title">
+    <div class="eyebrow">{{ mint_chain_name }}</div>
+    <h2 id="mint-title">Mint portal</h2>
+    <p class="mint-intro">Connect your wallet, choose up to two Genesis NFTs, then confirm one mint transaction. Metadata is pre-shuffled before upload and revealed after minting closes.</p>
+
+    <div class="mint-stats" aria-label="Live collection details">
+      <div><span>Live price / NFT</span><strong id="mint-price">Loading...</strong></div>
+      <div><span>Minted</span><strong id="minted-supply">Loading...</strong></div>
+      <div><span>Your public mints</span><strong id="wallet-minted">-- / 2</strong></div>
+      <div><span>Metadata</span><strong id="metadata-status">HIDDEN</strong></div>
+    </div>
+
+    <div class="mint-network-row">
+      <span class="eyebrow">Network</span>
+      <div class="mint-network-actions">
+        <span id="network-status" class="status-pill" data-tone="neutral">Checking...</span>
+        <button class="network-switch" id="switch-network" type="button" hidden>Switch network</button>
+        <button class="network-switch" id="refresh-mint" type="button">Refresh</button>
+      </div>
+    </div>
+
+
+    <form class="form mint-form" id="mint-form">
+      <label for="mint-quantity">Quantity</label>
+      <select id="mint-quantity" aria-describedby="quantity-help">
+        <option value="1">1 NFT</option>
+        <option value="2">2 NFTs</option>
+      </select>
+      <small id="quantity-help">Maximum 2 public mints per wallet.</small>
+      <div class="mint-actions">
+        <button class="btn primary" id="mint-button" type="submit" disabled>Connect wallet</button>
+      </div>
+      <div class="mint-wallet-row"><div class="mint-wallet" id="wallet-address">No wallet connected</div><button class="network-switch" id="disconnect-wallet" type="button" hidden>Disconnect</button></div>
+      <div class="status" id="wallet-status" role="status" aria-live="polite">Loading collection state...</div>
+      <div class="mint-links">
+        <a class="mint-explorer-link" id="contract-link" target="_blank" rel="noreferrer" hidden>View verified contract</a>
+        <a class="mint-explorer-link" id="explorer-link" target="_blank" rel="noreferrer" hidden>View transaction</a>
+      </div>
+    </form>
+  </section>
+
+  <aside class="card mint-details">
+    <div class="eyebrow">Drop details</div>
+    <h3>Genesis collection</h3>
+    <div class="collection-preview-hero" style="margin:1rem 0;text-align:center">
+      <img id="nft-preview" src="/static/hidden-nft.webp" alt="Unrevealed CapyCrew Genesis NFT" width="400" height="400" loading="eager" decoding="async" style="width:min(320px,80%);aspect-ratio:1;object-fit:contain;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03)">
+      <p class="mint-preview-caption" id="mint-preview-label" style="font-size:12px;opacity:.6;margin-top:6px">Hidden metadata — revealed after minting closes</p>
+    </div>
+    <p>Fixed supply: 10,000<br>Public limit: 2 per wallet<br>Network: {{ mint_chain_name }}</p>
+    <p class="mint-disclosure">Metadata is pre-shuffled off-chain before minting and committed in the published shuffle manifest. Token IDs mint sequentially, then the collection reveal switches to the fixed IPFS sequence.</p>
+    <div class="badge">Testnet mint</div>
+  </aside>
+</div></main>
+<script id="mint-config" type="application/json">{{ {
+  "contractAddress": mint_contract_address,
+  "chainId": mint_chain_id,
+  "chainName": mint_chain_name,
+  "currencyName": mint_currency_name,
+  "currencySymbol": mint_currency_symbol,
+  "rpcUrl": mint_rpc_url,
+  "explorerUrl": mint_explorer_url
+}|tojson }}</script>
+<script src="{{ url_for('static', path='vendor/ethers.umd.min.js') }}"></script>
+<script src="{{ url_for('static', path='js/mint.js') }}?v=20260822-3" defer></script>
+{% endblock %}

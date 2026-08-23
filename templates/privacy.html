@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy — CAPYCREW{% endblock %}
+{% block content %}
+<section class="page-hero paper-hero">
+  <div class="wrap paper-hero-grid">
+    <div>
+      <div class="eyebrow">CAPYCREW / LEGAL</div>
+      <h1>PRIVACY,<br><em>PLAINLY.</em></h1>
+      <p class="lede">This policy explains what CapyCrew collects, why, how long it is kept, and the choices available to you.</p>
+    </div>
+    <div class="paper-meta" aria-label="Policy metadata">
+      <span>Effective date</span><strong>22 August 2026</strong>
+      <span>Applies to</span><strong>capycrew.com</strong>
+      <span>Contact</span><strong>privacy@capycrew.com</strong>
+    </div>
+  </div>
+</section>
+
+<main class="section paper-shell">
+  <div class="wrap paper-layout">
+    <aside class="paper-rail" aria-label="Policy sections">
+      <div class="paper-rail-label">On this page</div>
+      <a href="#summary">Summary</a>
+      <a href="#scope">01 / Scope</a>
+      <a href="#information">02 / Information collected</a>
+      <a href="#use">03 / How information is used</a>
+      <a href="#legal-bases">04 / Legal bases</a>
+      <a href="#wallets">05 / Wallet data &amp; signatures</a>
+      <a href="#cookies">06 / Cookies &amp; local storage</a>
+      <a href="#sharing">07 / Sharing</a>
+      <a href="#retention">08 / Retention</a>
+      <a href="#security">09 / Security</a>
+      <a href="#rights">10 / Your rights</a>
+      <a href="#children">11 / Children</a>
+      <a href="#transfers">12 / International transfers</a>
+      <a href="#changes">13 / Changes</a>
+      <a href="#contact">14 / Contact</a>
+    </aside>
+
+    <article class="paper">
+      <section id="summary" class="paper-section paper-intro">
+        <p class="eyebrow">Quick summary</p>
+        <p class="paper-lead">We do not require an account, we do not ask for your seed phrase or private key, and we do not sell personal information.</p>
+        <p>The public site can be browsed without connecting a wallet. If you connect a wallet, your public wallet address and related onchain eligibility information may be processed to show mint status. Your browser may temporarily store a verification marker so interface state works across page views.</p>
+        <div class="paper-callout"><span class="callout-mark">!</span><div><strong>Important</strong><p>Blockchain transactions and wallet addresses are generally public and cannot be erased from an immutable chain. Privacy rights over onchain records are limited by that technical reality.</p></div></div>
+      </section>
+
+      <section id="scope" class="paper-section">
+        <div class="paper-kicker">01 / Scope</div>
+        <h2>Who this policy covers.</h2>
+        <p>This policy applies to the CapyCrew website and related web interfaces controlled by CapyCrew. It does not apply to third-party wallets, block explorers, marketplaces, social networks, hosting providers, analytics services operated by others, or independent websites reached through links.</p>
+        <p>If you interact with those services, their own privacy policies control their processing. Always review them before connecting a wallet or sharing information.</p>
+      </section>
+
+      <section id="information" class="paper-section">
+        <div class="paper-kicker">02 / Information collected</div>
+        <h2>Data we may process.</h2>
+        <div class="allocation-table-wrap"><table class="allocation-table"><caption class="sr-only">Categories of information collected</caption><thead><tr><th scope="col">Category</th><th scope="col">Examples</th><th scope="col">Purpose</th></tr></thead><tbody>
+          <tr><th scope="row">Wallet data</th><td>Public address, connected network, token balance or mint count returned by RPC reads.</td><td>Show eligibility, supply status, and transaction context.</td></tr>
+          <tr><th scope="row">Transaction data</th><td>Public transaction hashes, contract interactions, gas and status details.</td><td>Display receipts and explorer links after you initiate activity.</td></tr>
+          <tr><th scope="row">Technical data</th><td>IP address, user agent, device type, referring page, timestamps, and basic request logs processed by hosting/security infrastructure.</td><td>Operate, secure, diagnose, and prevent abuse of the site.</td></tr>
+          <tr><th scope="row">Communications</th><td>Name or alias, email address, and message contents if you contact us voluntarily.</td><td>Respond to support, privacy, security, or business requests.</td></tr>
+          <tr><th scope="row">Local interface state</th><td>A temporary wallet-verification marker stored in your browser session storage.</td><td>Maintain interface state during your browsing session.</td></tr>
+        </tbody></table></div>
+        <p>We do not knowingly collect government identification numbers, payment card numbers through this website, biometric identifiers, precise geolocation, or sensitive categories of personal data. We do not collect private keys or seed phrases.</p>
+      </section>
+
+      <section id="use" class="paper-section">
+        <div class="paper-kicker">03 / How information is used</div>
+        <h2>Limited, service-focused purposes.</h2>
+        <p>We use information to provide the website and mint interface; verify that you control a connected wallet when signature verification is requested; read public contract state; display transaction links; secure and debug systems; comply with law; and respond to you. We do not use personal information for automated decisions with legal or similarly significant effects.</p>
+        <p>We do not sell personal information as that term is commonly understood, and we do not share it for cross-context behavioral advertising.</p>
+      </section>
+
+      <section id="legal-bases" class="paper-section">
+        <div class="paper-kicker">04 / Legal bases</div>
+        <h2>Why processing is permitted.</h2>
+        <p>Where the GDPR applies, processing may rely on: <strong>performance of a service</strong> you request; <strong>legitimate interests</strong> in operating and securing our site, balanced against your rights; <strong>consent</strong>, where required for optional cookies or communications; and <strong>legal obligation</strong>, where retention or disclosure is mandatory.</p>
+        <p>You may withdraw consent where consent is the basis, but withdrawal does not affect prior lawful processing.</p>
+      </section>
+
+      <section id="wallets" class="paper-section">
+        <div class="paper-kicker">05 / Wallet data &amp; signatures</div>
+        <h2>Proof is not permission.</h2>
+        <p>Connecting a wallet makes its public address available to the site. Where signature verification is used, we request a human-readable <code>personal_sign</code> message identifying CapyCrew and the purpose. Signing proves control of the wallet at that moment; it does not authorize a transfer or grant access to your funds.</p>
+        <p>Never approve a message or transaction you do not understand. A seed phrase should never be entered into the CapyCrew website. If you believe you interacted with a spoofed domain, disconnect immediately and seek support through official channels.</p>
+        <p>You can disconnect through your wallet, clear site data, close your browser tab, or use a fresh wallet address for future sessions.</p>
+      </section>
+
+      <section id="cookies" class="paper-section">
+        <div class="paper-kicker">06 / Cookies &amp; local storage</div>
+        <h2>Minimal browser storage.</h2>
+        <p>The current website does not use advertising cookies. It uses browser session storage for a short-lived interface marker and may use strictly necessary storage or cookies for security, load balancing, and basic functionality. Hosting providers may set technical cookies necessary to deliver the service.</p>
+        <p>Your browser allows you to block, delete, or clear site data. Doing so may reset preferences or require reconnecting a wallet. We will provide notice and obtain any consent required before adding non-essential tracking technologies.</p>
+      </section>
+
+      <section id="sharing" class="paper-section">
+        <div class="paper-kicker">07 / Sharing</div>
+        <h2>Only what operations require.</h2>
+        <p>We may share limited information with service providers that host the site, transmit RPC requests, provide analytics, email, security, audit, or professional services under contractual confidentiality and purpose limitations. Public blockchain data is inherently visible to anyone. We may also disclose information to respond to legal process, protect rights and safety, investigate fraud or abuse, or complete a corporate transaction, subject to applicable law.</p>
+      </section>
+
+      <section id="retention" class="paper-section">
+        <div class="paper-kicker">08 / Data retention</div>
+        <h2>Kept only as long as needed.</h2>
+        <p>Session-storage markers normally disappear when your browser session ends. Technical logs are retained only for a reasonable operational and security period, typically no longer than 12 months unless required longer. Support communications are retained while handling your matter and then according to legal, accounting, and limitation requirements. Onchain records cannot be deleted because they exist on public networks outside our control.</p>
+      </section>
+
+      <section id="security" class="paper-section">
+        <div class="paper-kicker">09 / Security</div>
+        <h2>Safeguards and limits.</h2>
+        <p>We use administrative and technical measures appropriate to risk, including transport encryption, least privilege, dependency maintenance, monitoring, and incident response practices. No online service is perfectly secure. Do not send private keys, seed phrases, or unnecessary personal information to us.</p>
+      </section>
+
+      <section id="rights" class="paper-section">
+        <div class="paper-kicker">10 / Your rights</div>
+        <h2>Choices and controls.</h2>
+        <p>Depending on your jurisdiction, you may have rights to access, correct, delete, restrict or object to processing, port data, withdraw consent, opt out of targeted advertising or sale/sharing, and lodge a complaint with a supervisory authority. California residents may additionally request disclosure about collection and may not be discriminated against for exercising rights.</p>
+        <p>To make a request, contact <a href="mailto:privacy@capycrew.com">privacy@capycrew.com</a>. We verify requests before responding and may permit an authorized agent only with proof of authorization. We aim to respond within the time required by applicable law. Because we generally do not maintain a persistent account profile tied to identity, our ability to locate data may be limited.</p>
+      </section>
+
+      <section id="children" class="paper-section">
+        <div class="paper-kicker">11 / Children</div>
+        <h2>Not directed to minors.</h2>
+        <p>CapyCrew is not directed to children under 16, and digital-asset features are not intended for users below the legal age in their jurisdiction. If you believe a child provided personal information, contact us and we will delete it where technically possible.</p>
+      </section>
+
+      <section id="transfers" class="paper-section">
+        <div class="paper-kicker">12 / International transfers</div>
+        <h2>Global infrastructure.</h2>
+        <p>Information may be processed in countries other than yours, including the United States. Where required, we rely on appropriate safeguards such as adequacy findings, standard contractual clauses, or other lawful transfer mechanisms, together with additional technical controls where needed.</p>
+      </section>
+
+      <section id="changes" class="paper-section">
+        <div class="paper-kicker">13 / Changes</div>
+        <h2>Dated updates.</h2>
+        <p>We may update this policy to reflect product, legal, or operational changes. The effective date above identifies the current version. For material changes, we will provide reasonable notice through the website or another appropriate channel.</p>
+      </section>
+
+      <section id="contact" class="paper-section">
+        <div class="paper-kicker">14 / Contact</div>
+        <h2>Reach the privacy team.</h2>
+        <p>Email <a href="mailto:privacy@capycrew.com">privacy@capycrew.com</a> for questions, complaints, or privacy requests. If a concern is unresolved where required, EU/UK residents may contact their competent data protection authority.</p>
+        <p class="paper-updated">This policy is provided as project documentation and does not constitute legal advice.</p><a class="btn dark" href="/mint">Return to mint portal</a></section>
+    </article>
+  </div>
+</main>
+{% endblock %}
