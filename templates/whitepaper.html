@@ -77,13 +77,46 @@
         <div class="section-title-row"><h2>$MELLOW supply</h2><span class="status-pill">PLANNED MODEL</span></div>
         <p><strong>$MELLOW</strong> is planned as a community coordination asset with a fixed genesis supply of <strong>1,000,000,000 tokens</strong>. No inflation, mint function, team top-up, or hidden reserve is contemplated in this model. Any later supply change would require a separate public proposal and implementation.</p>
         <div class="allocation-chart" aria-label="$MELLOW allocation chart">
-          <div class="allocation-pie-stage">
-            <div class="allocation-pie" role="img" aria-label="Token allocation: NFT holders 20 percent, community treasury 20 percent, liquidity 40 percent, growth and development 10 percent, team and advisors 10 percent"></div>
-            <div class="allocation-pie-label label-nft"><strong>20%</strong><span>NFT holders</span></div>
-            <div class="allocation-pie-label label-treasury"><strong>20%</strong><span>Treasury</span></div>
-            <div class="allocation-pie-label label-liquidity"><strong>40%</strong><span>Liquidity</span></div>
-            <div class="allocation-pie-label label-growth"><strong>10%</strong><span>Growth</span></div>
-            <div class="allocation-pie-label label-team"><strong>10%</strong><span>Team</span></div>
+          <div class="allocation-visual">
+            <div class="allocation-visual-head"><span>GENESIS SUPPLY</span><strong>1B <em>$MELLOW</em></strong></div>
+            <svg class="allocation-ring" viewBox="0 0 620 460" role="img" aria-labelledby="allocation-ring-title allocation-ring-desc">
+              <title id="allocation-ring-title">$MELLOW token allocation</title>
+              <desc id="allocation-ring-desc">NFT holders 20 percent, community treasury 20 percent, liquidity 40 percent, growth and development 10 percent, and team and advisors 10 percent.</desc>
+              <defs>
+                <filter id="allocation-shadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="14" stdDeviation="10" flood-color="#101010" flood-opacity=".24"/></filter>
+                <radialGradient id="allocation-core" cx="35%" cy="28%"><stop offset="0" stop-color="#fff"/><stop offset=".65" stop-color="#f4f0e8"/><stop offset="1" stop-color="#d9d0c2"/></radialGradient>
+                <linearGradient id="allocation-nft" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#efff8a"/><stop offset="1" stop-color="#a8dd15"/></linearGradient>
+                <linearGradient id="allocation-treasury" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e9ffff"/><stop offset="1" stop-color="#80d6de"/></linearGradient>
+                <linearGradient id="allocation-liquidity" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff756b"/><stop offset="1" stop-color="#d9362f"/></linearGradient>
+                <linearGradient id="allocation-growth" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f1e8da"/><stop offset="1" stop-color="#bcae9d"/></linearGradient>
+                <linearGradient id="allocation-team" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4d4d4d"/><stop offset="1" stop-color="#101010"/></linearGradient>
+              </defs>
+              <g class="allocation-ring-grid" aria-hidden="true"><circle cx="250" cy="225" r="152"/><circle cx="250" cy="225" r="112"/></g>
+              <g class="allocation-segment allocation-segment-nft" tabindex="0" aria-label="NFT holders, 20 percent">
+                <circle cx="250" cy="225" r="132" pathLength="100" stroke="url(#allocation-nft)" stroke-dasharray="18.5 81.5" stroke-dashoffset="0"/>
+              </g>
+              <g class="allocation-segment allocation-segment-treasury" tabindex="0" aria-label="Community treasury, 20 percent">
+                <circle cx="250" cy="225" r="132" pathLength="100" stroke="url(#allocation-treasury)" stroke-dasharray="18.5 81.5" stroke-dashoffset="-20"/>
+              </g>
+              <g class="allocation-segment allocation-segment-liquidity" tabindex="0" aria-label="Liquidity, 40 percent">
+                <circle cx="250" cy="225" r="132" pathLength="100" stroke="url(#allocation-liquidity)" stroke-dasharray="38.5 61.5" stroke-dashoffset="-40"/>
+              </g>
+              <g class="allocation-segment allocation-segment-growth" tabindex="0" aria-label="Growth and development, 10 percent">
+                <circle cx="250" cy="225" r="132" pathLength="100" stroke="url(#allocation-growth)" stroke-dasharray="8.5 91.5" stroke-dashoffset="-80"/>
+              </g>
+              <g class="allocation-segment allocation-segment-team" tabindex="0" aria-label="Team and advisors, 10 percent">
+                <circle cx="250" cy="225" r="132" pathLength="100" stroke="url(#allocation-team)" stroke-dasharray="8.5 91.5" stroke-dashoffset="-90"/>
+              </g>
+              <circle class="allocation-core-shadow" cx="250" cy="225" r="83"/>
+              <circle class="allocation-core" cx="250" cy="225" r="80"/>
+              <text class="allocation-core-label" x="250" y="218" text-anchor="middle">$MELLOW</text>
+              <text class="allocation-core-value" x="250" y="246" text-anchor="middle">1B SUPPLY</text>
+              <g class="allocation-callout allocation-callout-nft"><path d="M142 129 72 77H14"/><rect x="14" y="34" width="144" height="43"/><text x="27" y="53">NFT HOLDERS</text><text x="27" y="69" class="allocation-callout-value">20% / 200M</text></g>
+              <g class="allocation-callout allocation-callout-treasury"><path d="M332 132 405 78h55"/><rect x="405" y="34" width="170" height="43"/><text x="418" y="53">COMMUNITY TREASURY</text><text x="418" y="69" class="allocation-callout-value">20% / 200M</text></g>
+              <g class="allocation-callout allocation-callout-liquidity"><path d="M360 270 431 311h42"/><rect x="431" y="289" width="144" height="43"/><text x="444" y="308">LIQUIDITY</text><text x="444" y="324" class="allocation-callout-value">40% / 400M</text></g>
+              <g class="allocation-callout allocation-callout-growth"><path d="M164 325 107 377H42"/><rect x="42" y="377" width="154" height="43"/><text x="55" y="396">GROWTH + DEV</text><text x="55" y="412" class="allocation-callout-value">10% / 100M</text></g>
+              <g class="allocation-callout allocation-callout-team"><path d="M279 348 292 390h38"/><rect x="330" y="377" width="158" height="43"/><text x="343" y="396">TEAM + ADVISORS</text><text x="343" y="412" class="allocation-callout-value">10% / 100M</text></g>
+            </svg>
           </div>
           <div class="allocation-legend" aria-label="Token allocation legend">
             <div><i class="allocation-swatch swatch-nft"></i><span>NFT holders</span><strong>20%</strong><small>200,000,000</small></div>
