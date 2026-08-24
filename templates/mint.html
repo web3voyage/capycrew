@@ -7,7 +7,7 @@
   <section class="card mint-panel" aria-labelledby="mint-title">
     <div class="eyebrow">{{ mint_chain_name }}</div>
     <h2 id="mint-title">Mint portal</h2>
-    <p class="mint-intro">Connect your wallet, choose up to five Genesis NFTs, then confirm one mint transaction. Metadata is pre-shuffled before upload and revealed after minting closes.</p>
+    <p class="mint-intro">Connect and verify your wallet, choose up to five Genesis NFTs, then click Mint now and confirm one transaction. Metadata is pre-shuffled before upload and revealed after minting closes.</p>
 
     <div class="mint-stats" aria-label="Live collection details">
       <div><span>Live price / NFT</span><strong id="mint-price">Loading...</strong></div>
@@ -40,7 +40,7 @@
         <button class="btn primary" id="mint-button" type="submit" disabled>Connect wallet</button>
       </div>
       <div class="mint-wallet-row"><div class="mint-wallet" id="wallet-address">No wallet connected</div><button class="network-switch" id="disconnect-wallet" type="button" hidden>Disconnect</button></div>
-      <div class="status" id="wallet-status" role="status" aria-live="polite">Loading collection state...</div>
+      <div class="status" id="wallet-status" role="status" aria-live="polite" aria-atomic="true">Loading collection state...</div>
       <div class="mint-links">
         <a class="mint-explorer-link" id="contract-link" target="_blank" rel="noreferrer" hidden>View verified contract</a>
         <a class="mint-explorer-link" id="explorer-link" target="_blank" rel="noreferrer" hidden>View transaction</a>
@@ -70,5 +70,5 @@
   "explorerUrl": mint_explorer_url
 }|tojson }}</script>
 <script src="{{ url_for('static', path='vendor/ethers.umd.min.js') }}"></script>
-<script src="{{ url_for('static', path='js/mint.js') }}?v=20260822-3" defer></script>
+<script src="{{ url_for('static', path='js/mint.js') }}?v=20260824-1" defer></script>
 {% endblock %}

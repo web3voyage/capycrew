@@ -42,6 +42,14 @@ class WebAppTests(unittest.TestCase):
         self.assertIn("Boolean(account) && !networkReady", mint_client.text)
         self.assertIn('setNetwork("Switch to " + chainName', mint_client.text)
 
+    def test_mint_client_keeps_connect_verify_and_mint_as_separate_actions(self):
+        mint_client = self.client.get("/static/js/mint.js")
+        self.assertIn('elements.mint.textContent = "Verify wallet"', mint_client.text)
+        self.assertIn("await connectWallet(true);\n      return;", mint_client.text)
+        self.assertIn("await verifyWallet();\n      return;", mint_client.text)
+        self.assertIn('setStatus("Wallet verified. Click Mint now to continue."', mint_client.text)
+        self.assertIn("refreshState({ quiet: true, preserveStatus: true })", mint_client.text)
+
     def test_config_endpoint_exposes_public_chain_configuration_only(self):
         response = self.client.get("/api/mint/config")
         self.assertEqual(response.status_code, 200)

@@ -113,6 +113,7 @@
     if (!busy) {
       if (!account) elements.mint.textContent = ethereum ? "Connect wallet" : "Wallet unavailable";
       else if (!networkReady) elements.mint.textContent = "Switch network";
+      else if (!walletVerified) elements.mint.textContent = "Verify wallet";
       else if (!available) elements.mint.textContent = soldOut ? "Sold out" : "Mint closed";
       else if (remaining === 0) elements.mint.textContent = "Wallet limit reached";
       else elements.mint.textContent = "Mint now";
@@ -185,6 +186,7 @@
 
   async function refreshState(options = {}) {
     const quiet = Boolean(options.quiet);
+    const preserveStatus = Boolean(options.preserveStatus);
     if (!quiet) setStatus("Refreshing collection state...");
     try {
       collection = await loadCollectionState();
@@ -192,11 +194,15 @@
       walletState = await loadWalletState();
       renderWallet();
 
-      if (!collection.publicMintEnabled) setStatus(collection.mintingClosed ? "Minting is closed. Metadata can now be revealed." : "Public minting is not active yet.");
-      else if (collection.totalSupply >= collection.maxSupply) setStatus("The collection is sold out.");
-      else if (!account) setStatus("Connect a wallet to begin.");
-      else if (walletState && walletState.remaining > 0) setStatus("Ready to mint. Confirm one transaction in your wallet.", "success");
-      else setStatus("This wallet has reached its public mint limit.", "error");
+      if (!preserveStatus) {
+        if (!collection.publicMintEnabled) setStatus(collection.mintingClosed ? "Minting is closed. Metadata can now be revealed." : "Public minting is not active yet.");
+        else if (collection.totalSupply >= collection.maxSupply) setStatus("The collection is sold out.");
+        else if (!account) setStatus("Connect a wallet to begin.");
+        else if (!networkReady) setStatus("Switch to " + chainName + " before continuing.", "error");
+        else if (!walletVerified) setStatus("Wallet connected. Verify ownership to continue.");
+        else if (walletState && walletState.remaining > 0) setStatus("Wallet verified. Click Mint now to continue.", "success");
+        else setStatus("This wallet has reached its public mint limit.", "error");
+      }
     } catch (error) {
       collection = null;
       walletState = null;
@@ -247,6 +253,7 @@
     account = "";
     walletState = null;
     walletVerified = false;
+    try { sessionStorage.removeItem(SESSION_KEY); } catch (_) {}
     resetTransactionState();
     elements.wallet.textContent = "No wallet connected";
     if (ethereum) {
@@ -279,12 +286,9 @@
         setStatus("Switch to " + chainName + " before verifying this wallet.", "error");
         return false;
       }
-      setStatus("Please sign the message in your wallet to verify ownership...");
-      const message = "Sign to verify you own this wallet.\n\nSite: CapyCrew\nAddress: " + account;
-      await ethereum.request({ method: "personal_sign", params: [message, account] });
-      walletVerified = true;
-      try { sessionStorage.setItem(SESSION_KEY, account); } catch (_) {}
-      await refreshState({ quiet: true });
+      walletVerified = false;
+      setStatus("Wallet connected. Click Verify wallet to sign the ownership message.");
+      await refreshState({ quiet: true, preserveStatus: true });
       return true;
     } catch (error) {
       account = "";
@@ -294,7 +298,25 @@
       resetTransactionState();
       setContractVisibility();
       await refreshState({ quiet: true });
-      setStatus(error && error.code === 4001 ? "Signature or connection rejected. Wallet is not verified." : explainError(error), "error");
+      setStatus(error && error.code === 4001 ? "Wallet connection was rejected. Try again when you are ready." : explainError(error), "error");
+      return false;
+    }
+  }
+
+  async function verifyWallet() {
+    if (!ethereum || !account) return false;
+    try {
+      setStatus("Please sign the message in your wallet to verify ownership...");
+      const message = "Sign to verify you own this wallet.\n\nSite: CapyCrew\nAddress: " + account;
+      await ethereum.request({ method: "personal_sign", params: [message, account] });
+      walletVerified = true;
+      try { sessionStorage.setItem(SESSION_KEY, account); } catch (_) {}
+      await refreshState({ quiet: true, preserveStatus: true });
+      setStatus("Wallet verified. Click Mint now to continue.", "success");
+      return true;
+    } catch (error) {
+      walletVerified = false;
+      setStatus(error && error.code === 4001 ? "Signature rejected. Click Verify wallet to try again." : explainError(error), "error");
       return false;
     }
   }
@@ -307,9 +329,26 @@
   }
 
   async function submitMint() {
-    if (!walletVerified && !(await connectWallet(true))) return;
-    if (!(await ensureNetwork()) && !(await switchNetwork())) return;
-    await refreshState({ quiet: true });
+    if (!account) {
+      setBusy(true, "Connecting...");
+      await connectWallet(true);
+      return;
+    }
+    if (!(await ensureNetwork())) {
+      setBusy(true, "Switch network...");
+      setStatus("Approve the network switch in your wallet.");
+      await switchNetwork();
+      await refreshState({ quiet: true, preserveStatus: true });
+      setStatus(walletVerified ? "Network ready. Click Mint now to continue." : "Network ready. Click Verify wallet to continue.", "success");
+      return;
+    }
+    if (!walletVerified) {
+      setBusy(true, "Verify in wallet...");
+      await verifyWallet();
+      return;
+    }
+    setBusy(true, "Preparing mint...");
+    await refreshState({ quiet: true, preserveStatus: true });
     if (!collection || !walletState) throw new Error("Mint state is unavailable.");
     if (!collection.publicMintEnabled || collection.mintingClosed) throw new Error("MintingClosed");
     if (walletState.remaining === 0) throw new Error("ExceedsWalletLimit");
@@ -326,8 +365,8 @@
     elements.explorer.hidden = false;
     setStatus("Mint submitted. Waiting for confirmation...");
     await tx.wait();
+    await refreshState({ quiet: true, preserveStatus: true });
     setStatus("Mint confirmed. Your Capy is onchain.", "success");
-    await refreshState({ quiet: true });
   }
 
   elements.disconnect.addEventListener("click", async () => {
@@ -360,13 +399,7 @@
       await submitMint();
     } catch (error) {
       setStatus(explainError(error), "error");
-      if (account && !walletVerified) {
-        account = "";
-        walletState = null;
-        elements.wallet.textContent = "No wallet connected";
-        resetTransactionState();
-        setContractVisibility();
-      }
+      if (account && !walletVerified) updateControls();
     } finally {
       setBusy(false);
     }
@@ -395,12 +428,17 @@
 
   if (!ethereum) {
     setNetwork("Wallet unavailable", "error");
-    setStatus("Install MetaMask or open this page in a wallet-enabled browser. Live collection data remains visible.", "error");
+    refreshState({ quiet: true }).finally(() => {
+      setStatus("Install MetaMask or open this page in a wallet-enabled browser. Live collection data remains visible.", "error");
+    });
   } else {
     ethereum.on && ethereum.on("accountsChanged", async (accounts) => {
       const previous = account;
       account = accounts && accounts[0] ? ethers.getAddress(accounts[0]) : "";
-      walletVerified = account && account === previous ? walletVerified : false;
+      if (!account) walletVerified = false;
+      else if (account !== previous) {
+        try { walletVerified = sessionStorage.getItem(SESSION_KEY) === account; } catch (_) { walletVerified = false; }
+      }
       networkReady = false;
       elements.wallet.textContent = account ? shorten(account) : "No wallet connected";
       if (!account) {
@@ -422,6 +460,7 @@
         if (accounts && accounts[0]) {
           account = ethers.getAddress(accounts[0]);
           elements.wallet.textContent = shorten(account);
+          try { walletVerified = sessionStorage.getItem(SESSION_KEY) === account; } catch (_) { walletVerified = false; }
           await ensureNetwork();
         }
       } catch (_) {
@@ -433,5 +472,4 @@
 
   resetTransactionState();
   setContractVisibility();
-  refreshState();
 })();
