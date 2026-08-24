@@ -78,6 +78,14 @@
         <p><strong>$MELLOW</strong> is planned as a community coordination asset with a fixed genesis supply of <strong>1,000,000,000 tokens</strong>. No inflation, mint function, team top-up, or hidden reserve is contemplated in this model. Any later supply change would require a separate public proposal and implementation.</p>
         <div class="allocation-chart" aria-label="$MELLOW allocation chart">
           <div class="allocation-visual">
+            <div class="allocation-3d-scene" tabindex="0" role="img" aria-label="Interactive 3D $MELLOW allocation model. Drag with a mouse or finger, or use the arrow keys, to rotate it.">
+              <div class="allocation-3d-hud"><span>INTERACTIVE MODEL</span><strong>DRAG TO ROTATE</strong></div>
+              <div class="allocation-3d-label label-3d-nft" data-segment="0"><span>NFT HOLDERS</span><strong>20%</strong><small>200M</small></div>
+              <div class="allocation-3d-label label-3d-treasury" data-segment="1"><span>TREASURY</span><strong>20%</strong><small>200M</small></div>
+              <div class="allocation-3d-label label-3d-liquidity" data-segment="2"><span>LIQUIDITY</span><strong>40%</strong><small>400M</small></div>
+              <div class="allocation-3d-label label-3d-growth" data-segment="3"><span>GROWTH + DEV</span><strong>10%</strong><small>100M</small></div>
+              <div class="allocation-3d-label label-3d-team" data-segment="4"><span>TEAM + ADVISORS</span><strong>10%</strong><small>100M</small></div>
+            </div>
             <svg class="allocation-ring" viewBox="0 0 620 460" role="img" aria-labelledby="allocation-ring-title allocation-ring-desc">
               <title id="allocation-ring-title">$MELLOW token allocation</title>
               <desc id="allocation-ring-desc">NFT holders 20 percent, community treasury 20 percent, liquidity 40 percent, growth and development 10 percent, and team and advisors 10 percent.</desc>
@@ -256,3 +264,4 @@
   </div>
 </main>
 {% endblock %}
+{% block scripts %}<script src="{{ url_for('static', path='js/tokenomics3d.js') }}?v=20260824-1" defer></script>{% endblock %}
