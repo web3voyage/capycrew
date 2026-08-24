@@ -7,12 +7,12 @@
   <section class="card mint-panel" aria-labelledby="mint-title">
     <div class="eyebrow">{{ mint_chain_name }}</div>
     <h2 id="mint-title">Mint portal</h2>
-    <p class="mint-intro">Connect your wallet, choose up to two Genesis NFTs, then confirm one mint transaction. Metadata is pre-shuffled before upload and revealed after minting closes.</p>
+    <p class="mint-intro">Connect your wallet, choose up to five Genesis NFTs, then confirm one mint transaction. Metadata is pre-shuffled before upload and revealed after minting closes.</p>
 
     <div class="mint-stats" aria-label="Live collection details">
       <div><span>Live price / NFT</span><strong id="mint-price">Loading...</strong></div>
       <div><span>Minted</span><strong id="minted-supply">Loading...</strong></div>
-      <div><span>Your public mints</span><strong id="wallet-minted">-- / 2</strong></div>
+      <div><span>Your public mints</span><strong id="wallet-minted">-- / 5</strong></div>
       <div><span>Metadata</span><strong id="metadata-status">HIDDEN</strong></div>
     </div>
 
@@ -31,8 +31,11 @@
       <select id="mint-quantity" aria-describedby="quantity-help">
         <option value="1">1 NFT</option>
         <option value="2">2 NFTs</option>
+        <option value="3">3 NFTs</option>
+        <option value="4">4 NFTs</option>
+        <option value="5">5 NFTs</option>
       </select>
-      <small id="quantity-help">Maximum 2 public mints per wallet.</small>
+      <small id="quantity-help">Maximum 5 public mints per wallet.</small>
       <div class="mint-actions">
         <button class="btn primary" id="mint-button" type="submit" disabled>Connect wallet</button>
       </div>
@@ -52,7 +55,7 @@
       <img id="nft-preview" src="/static/hidden-nft.webp" alt="Unrevealed CapyCrew Genesis NFT" width="400" height="400" loading="eager" decoding="async" style="width:min(320px,80%);aspect-ratio:1;object-fit:contain;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03)">
       <p class="mint-preview-caption" id="mint-preview-label" style="font-size:12px;opacity:.6;margin-top:6px">Hidden metadata — revealed after minting closes</p>
     </div>
-    <p>Fixed supply: 10,000<br>Public limit: 2 per wallet<br>Network: {{ mint_chain_name }}</p>
+    <p>Fixed supply: 10,000<br>Public limit: 5 per wallet<br>Network: {{ mint_chain_name }}</p>
     <p class="mint-disclosure">Metadata is pre-shuffled off-chain before minting and committed in the published shuffle manifest. Token IDs mint sequentially, then the collection reveal switches to the fixed IPFS sequence.</p>
     <div class="badge">Testnet mint</div>
   </aside>

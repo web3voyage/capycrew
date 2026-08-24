@@ -86,7 +86,7 @@
     if (code === "INSUFFICIENT_FUNDS" || raw.includes("insufficient funds")) return "Insufficient testnet funds for the mint and gas.";
     if (raw.includes("publicmintdisabled")) return "Public minting is not active yet.";
     if (raw.includes("mintingclosed")) return "Minting is closed for this collection.";
-    if (raw.includes("exceedswalletlimit")) return "This wallet has reached its 2-NFT public limit.";
+    if (raw.includes("exceedswalletlimit")) return "This wallet has reached its 5-NFT public limit.";
     if (raw.includes("exceedsmaxsupply")) return "The collection is sold out.";
     if (raw.includes("incorrectpayment")) return "The mint price changed. Refresh the collection state and try again.";
     if (raw.includes("paused") || raw.includes("enforcedpause")) return "Minting is temporarily paused.";
@@ -177,7 +177,7 @@
 
   function renderWallet() {
     if (!account || !walletState) {
-      elements.walletMinted.textContent = "-- / 2";
+      elements.walletMinted.textContent = "-- / 5";
       return;
     }
     elements.walletMinted.textContent = walletState.minted + " / " + walletState.limit;
