@@ -12,26 +12,30 @@
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
   const model = new THREE.Group();
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2(2, 2);
   const meshes = [];
   const labels = [...sceneHost.querySelectorAll('[data-segment]')];
+  const lines = [...sceneHost.querySelectorAll('[data-line]')];
+  const anchors = [];
+  const labelOffsets = [[-142, -25], [36, -25], [48, 15], [-150, 26], [40, 48]];
   const palette = [0xd6ff3f, 0x9aecde, 0xff4b3e, 0xd9d0c2, 0x252a31];
   const shares = [0.2, 0.2, 0.4, 0.1, 0.1];
   const innerRadius = 1.36;
   const outerRadius = 2.75;
   const depth = 0.5;
   const gap = 0.035;
+  const projected = new THREE.Vector3();
   let startAngle = Math.PI * 0.5;
   let activeSegment = -1;
   let dragging = false;
   let previousX = 0;
   let previousY = 0;
   let targetX = -0.78;
-  let targetZ = -0.18;
-  let velocityZ = 0;
+  let targetY = 0.16;
+  let velocityY = 0;
   let visible = true;
   let lastTime = performance.now();
 
@@ -41,7 +45,8 @@
   renderer.domElement.setAttribute('aria-hidden', 'true');
   sceneHost.prepend(renderer.domElement);
 
-  camera.position.set(0, 0.15, 9.4);
+  camera.position.set(0, 0.15, 9.5);
+  camera.lookAt(0, 0, 0);
   scene.add(new THREE.HemisphereLight(0xe8fff9, 0x06101e, 2.2));
   const keyLight = new THREE.DirectionalLight(0xffffff, 4.4);
   keyLight.position.set(-3.8, 4.8, 7);
@@ -67,6 +72,7 @@
 
   shares.forEach((share, index) => {
     const span = share * Math.PI * 2;
+    const middle = startAngle + span / 2;
     const geometry = new THREE.ExtrudeGeometry(makeSegmentShape(startAngle + gap, startAngle + span - gap), {
       depth,
       bevelEnabled: true,
@@ -75,7 +81,7 @@
       bevelThickness: 0.07,
       curveSegments: 36,
     });
-    geometry.center();
+    geometry.translate(0, 0, -depth / 2);
     const material = new THREE.MeshStandardMaterial({
       color: palette[index],
       roughness: 0.38,
@@ -88,6 +94,7 @@
     mesh.userData.index = index;
     model.add(mesh);
     meshes.push(mesh);
+    anchors.push(new THREE.Vector3(Math.cos(middle) * (outerRadius + 0.08), Math.sin(middle) * (outerRadius + 0.08), depth * 0.58));
     startAngle += span;
   });
 
@@ -121,7 +128,7 @@
   cap.position.z = 0.42;
   model.add(cap);
 
-  model.rotation.set(targetX, 0, targetZ);
+  model.rotation.set(targetX, targetY, 0);
 
   const setActive = (index) => {
     if (activeSegment === index) return;
@@ -143,7 +150,7 @@
     dragging = true;
     previousX = event.clientX;
     previousY = event.clientY;
-    velocityZ = 0;
+    velocityY = 0;
     sceneHost.classList.add('is-dragging');
     sceneHost.setPointerCapture(event.pointerId);
   };
@@ -155,9 +162,9 @@
     }
     const deltaX = event.clientX - previousX;
     const deltaY = event.clientY - previousY;
-    targetZ += deltaX * 0.009;
-    targetX = THREE.MathUtils.clamp(targetX + deltaY * 0.006, -1.25, -0.2);
-    velocityZ = deltaX * 0.0007;
+    targetY += deltaX * 0.009;
+    targetX = THREE.MathUtils.clamp(targetX + deltaY * 0.006, -1.2, -0.16);
+    velocityY = deltaX * 0.0007;
     previousX = event.clientX;
     previousY = event.clientY;
   };
@@ -177,6 +184,34 @@
     camera.updateProjectionMatrix();
   };
 
+  const layoutLabels = () => {
+    const width = sceneHost.clientWidth;
+    const height = sceneHost.clientHeight;
+    if (!width || !height) return;
+    anchors.forEach((anchor, index) => {
+      projected.copy(anchor);
+      model.localToWorld(projected);
+      projected.project(camera);
+      const anchorX = (projected.x * 0.5 + 0.5) * width;
+      const anchorY = (-projected.y * 0.5 + 0.5) * height;
+      const label = labels[index];
+      const [offsetX, offsetY] = labelOffsets[index];
+      const labelWidth = label.offsetWidth || 120;
+      const labelHeight = label.offsetHeight || 48;
+      const left = THREE.MathUtils.clamp(anchorX + offsetX, 8, width - labelWidth - 8);
+      const top = THREE.MathUtils.clamp(anchorY + offsetY, 62, height - labelHeight - 8);
+      label.style.left = `${left}px`;
+      label.style.top = `${top}px`;
+      label.style.right = 'auto';
+      label.style.bottom = 'auto';
+      const labelIsRight = left > anchorX;
+      const edgeX = labelIsRight ? left : left + labelWidth;
+      const edgeY = top + labelHeight / 2;
+      const elbowX = anchorX + (edgeX - anchorX) * 0.52;
+      lines[index].setAttribute('d', `M ${anchorX.toFixed(1)} ${anchorY.toFixed(1)} L ${elbowX.toFixed(1)} ${anchorY.toFixed(1)} L ${edgeX.toFixed(1)} ${edgeY.toFixed(1)}`);
+    });
+  };
+
   sceneHost.addEventListener('pointerdown', pointerDown);
   sceneHost.addEventListener('pointermove', pointerMove);
   sceneHost.addEventListener('pointerup', pointerUp);
@@ -184,10 +219,10 @@
   sceneHost.addEventListener('pointerleave', () => { if (!dragging) setActive(-1); });
   sceneHost.addEventListener('keydown', (event) => {
     const amount = event.shiftKey ? 0.25 : 0.1;
-    if (event.key === 'ArrowLeft') targetZ -= amount;
-    else if (event.key === 'ArrowRight') targetZ += amount;
-    else if (event.key === 'ArrowUp') targetX = THREE.MathUtils.clamp(targetX - amount, -1.25, -0.2);
-    else if (event.key === 'ArrowDown') targetX = THREE.MathUtils.clamp(targetX + amount, -1.25, -0.2);
+    if (event.key === 'ArrowLeft') targetY -= amount;
+    else if (event.key === 'ArrowRight') targetY += amount;
+    else if (event.key === 'ArrowUp') targetX = THREE.MathUtils.clamp(targetX - amount, -1.2, -0.16);
+    else if (event.key === 'ArrowDown') targetX = THREE.MathUtils.clamp(targetX + amount, -1.2, -0.16);
     else return;
     event.preventDefault();
   });
@@ -208,18 +243,19 @@
     const delta = Math.min((time - lastTime) / 16.67, 2);
     lastTime = time;
     if (!dragging && !reducedMotion) {
-      targetZ += 0.00035 * delta;
-      targetZ += velocityZ * delta;
-      velocityZ *= 0.94;
+      targetY += 0.00035 * delta;
+      targetY += velocityY * delta;
+      velocityY *= 0.94;
     }
     model.rotation.x += (targetX - model.rotation.x) * 0.09;
-    model.rotation.z += (targetZ - model.rotation.z) * 0.09;
+    model.rotation.y += (targetY - model.rotation.y) * 0.09;
     meshes.forEach((mesh, index) => {
       const targetScale = activeSegment === index ? 1.055 : 1;
       const nextScale = THREE.MathUtils.lerp(mesh.scale.x, targetScale, 0.12);
       mesh.scale.setScalar(nextScale);
       mesh.material.emissiveIntensity = THREE.MathUtils.lerp(mesh.material.emissiveIntensity, activeSegment === index ? 0.12 : 0.02, 0.12);
     });
+    layoutLabels();
     renderer.render(scene, camera);
   };
   requestAnimationFrame(animate);
