@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0c221c">
+  <meta name="description" content="CapyCrew is a 10,000-piece collectible character project for the Robinhood chain.">
+  <title>CapyCrew / Stay Mellow</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+    :root { --ink:#0c221c; --ink-2:#123c30; --mint:#8de3b4; --acid:#dbf26a; --cream:#f4f1de; --coral:#ff7654; --blue:#7bd6e4; --line:rgba(244,241,222,.2); }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--ink); color:var(--cream); font-family:'Space Grotesk',Arial,sans-serif; overflow-x:hidden; }
+    a { color:inherit; text-decoration:none; }
+    button { font:inherit; }
+    .progress { position:fixed; inset:0 0 auto; z-index:20; height:3px; background:var(--acid); transform:scaleX(0); transform-origin:left; }
+    .shell { width:min(1280px,calc(100% - 56px)); margin:0 auto; }
+    .site-nav { position:absolute; z-index:10; top:0; left:0; right:0; padding:22px 0; }
+    .nav-inner { display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    .wordmark { font-weight:700; letter-spacing:-.08em; font-size:clamp(23px,3vw,38px); }
+    .wordmark b { color:var(--acid); font-weight:700; }
+    .nav-links { display:flex; align-items:center; gap:25px; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+    .nav-links a { opacity:.75; transition:opacity .2s ease,color .2s ease; }
+    .nav-links a:hover,.nav-links a:focus-visible { opacity:1; color:var(--acid); }
+    .nav-cta { min-height:44px; padding:0 16px; border:1px solid var(--acid); color:var(--ink); background:var(--acid); font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; }
+    .nav-cta:hover,.nav-cta:focus-visible { background:var(--cream); border-color:var(--cream); outline:none; }
+    .hero { position:relative; min-height:100svh; display:grid; align-items:end; overflow:hidden; isolation:isolate; }
+    .ticker, footer { position:relative; z-index:2; }
+    .hero-video { position:absolute; z-index:0; inset:0; width:100%; height:100%; object-fit:cover; object-position:center; filter:saturate(.95) contrast(1.04); opacity:.09; }
+    .hero-scene { position:fixed; z-index:0; inset:0; overflow:hidden; background:radial-gradient(circle at 50% 36%,#184a3b 0%,#0c221c 56%,#06100d 100%); transition:opacity .45s ease; pointer-events:none; }
+    .hero-scene canvas { display:block; width:100%; height:100%; }
+    .scene-loading { position:absolute; left:24px; top:108px; z-index:2; color:var(--acid); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; transition:opacity .35s ease; }
+    .scene-loading.is-ready { opacity:0; pointer-events:none; }
+    .scene-caption { position:absolute; right:24px; top:108px; z-index:2; color:rgba(244,241,222,.72); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.14em; text-align:right; text-transform:uppercase; pointer-events:none; }
+    .scene-fallback { display:none; }
+    .hero-scene.is-fallback { display:none; }
+    .hero-shade { position:absolute; z-index:2; inset:0; background:linear-gradient(180deg,rgba(12,34,28,.18) 0%,rgba(12,34,28,.02) 43%,rgba(12,34,28,.76) 100%); pointer-events:none; }
+    .hero-copy { position:relative; z-index:3; padding:150px 0 52px; max-width:870px; }
+    .kicker { display:flex; align-items:center; gap:10px; color:var(--acid); font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; }
+    .kicker::before { content:""; display:block; width:34px; height:1px; background:currentColor; }
+    h1 { display:inline-block; position:relative; isolation:isolate; margin:18px 0 22px; max-width:830px; padding:10px 18px 16px 10px; color:var(--cream); font-size:clamp(64px,12vw,166px); line-height:.79; letter-spacing:-.1em; text-transform:uppercase; text-shadow:0 3px 0 rgba(12,34,28,.38),0 16px 34px rgba(12,34,28,.42); }
+    h1::before { content:""; position:absolute; z-index:-1; inset:8px 0 8px -10px; background:rgba(12,34,28,.62); border-left:5px solid var(--acid); transform:skewX(-4deg); }
+    .hero-deck { max-width:520px; margin:0; color:rgba(244,241,222,.8); font-size:clamp(16px,2vw,21px); line-height:1.45; }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:30px; }
+    .button { display:inline-flex; align-items:center; justify-content:center; min-height:50px; padding:0 18px; border:1px solid var(--cream); color:var(--ink); background:var(--cream); font-size:11px; font-weight:700; letter-spacing:.11em; text-transform:uppercase; transition:transform .2s ease,background .2s ease; }
+    .button:hover,.button:focus-visible { transform:translateY(-3px); background:var(--acid); outline:none; }
+    .button.alt { color:var(--cream); background:transparent; }
+    .button.alt:hover,.button.alt:focus-visible { color:var(--ink); }
+    .hero-foot { display:flex; align-items:center; justify-content:space-between; gap:18px; padding-top:30px; border-top:1px solid rgba(244,241,222,.3); font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+    .scroll-note { display:flex; align-items:center; gap:10px; }
+    .scroll-note span { display:block; width:26px; height:40px; border:1px solid var(--cream); position:relative; }
+    .scroll-note span::after { content:""; position:absolute; top:8px; left:50%; width:3px; height:9px; background:var(--acid); transform:translateX(-50%); animation:drop 1.8s infinite; }
+    @keyframes drop { 0%,100%{transform:translate(-50%,0);opacity:.4} 50%{transform:translate(-50%,11px);opacity:1} }
+    .ticker { overflow:hidden; border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--acid); color:var(--ink); }
+    .ticker-track { display:flex; width:max-content; padding:13px 0; animation:marquee 26s linear infinite; }
+    .ticker-item { display:flex; align-items:center; gap:25px; padding-right:25px; font-size:13px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; }
+    .ticker-item i { display:block; width:9px; height:9px; border-radius:50%; background:var(--coral); }
+    @keyframes marquee { to{transform:translateX(-50%)} }
+    .band { position:relative; z-index:2; min-height:100svh; display:flex; align-items:center; padding:110px 0; overflow:hidden; }
+    .band > .shell { position:relative; z-index:2; }
+    .blueprint-band { background:linear-gradient(120deg,#f4f1de 0%,#dce6cf 48%,#a9d6bc 100%); color:var(--ink); }
+    .blueprint-layout { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr); gap:34px; align-items:stretch; }
+    .blueprint-stage { position:relative; min-height:560px; overflow:hidden; border:1px solid rgba(12,34,28,.28); background:linear-gradient(145deg,#dce6cf,#b9d7c2); }
+    .blueprint-stage::before { content:""; position:absolute; inset:0; background:linear-gradient(rgba(12,34,28,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(12,34,28,.08) 1px,transparent 1px); background-size:32px 32px; opacity:.72; }
+    .blueprint-stage::after { content:"KENT·042 / ORTHOGRAPHIC BUILD"; position:absolute; left:18px; bottom:16px; font:10px 'DM Mono',monospace; letter-spacing:.15em; color:rgba(12,34,28,.64); }
+    .blueprint-canvas { position:absolute; inset:20px; z-index:1; }
+    .blueprint-canvas canvas { display:block; width:100%; height:100%; }
+    .blueprint-copy { display:flex; flex-direction:column; justify-content:space-between; padding:28px; border:1px solid rgba(12,34,28,.26); background:rgba(244,241,222,.68); }
+    .blueprint-copy h3 { margin:14px 0 10px; font-size:clamp(28px,4vw,50px); line-height:.92; letter-spacing:-.07em; text-transform:uppercase; }
+    .blueprint-copy p { margin:0; max-width:390px; font-size:16px; line-height:1.5; opacity:.74; }
+    .blueprint-meta { display:grid; grid-template-columns:repeat(2,1fr); gap:0; margin-top:28px; border-top:1px solid rgba(12,34,28,.35); }
+    .blueprint-meta div { padding:14px 12px 14px 0; border-bottom:1px solid rgba(12,34,28,.25); }
+    .blueprint-meta div:nth-child(even) { padding-left:12px; border-left:1px solid rgba(12,34,28,.25); }
+    .blueprint-meta strong { display:block; font-size:20px; letter-spacing:-.05em; }
+    .blueprint-meta span { display:block; margin-top:4px; font:10px 'DM Mono',monospace; letter-spacing:.1em; text-transform:uppercase; opacity:.6; }
+    .callouts { display:grid; gap:10px; margin-top:26px; }
+    .callout { display:grid; grid-template-columns:34px 1fr; gap:10px; align-items:start; padding-top:10px; border-top:1px solid rgba(12,34,28,.23); }
+    .callout b { display:grid; place-items:center; width:28px; height:28px; border:1px solid var(--coral); color:var(--coral); font:11px 'DM Mono',monospace; }
+    .callout strong { display:block; font-size:13px; text-transform:uppercase; letter-spacing:.04em; }
+    .callout span { display:block; margin-top:3px; font-size:13px; opacity:.65; }
+    .mockup-band { background:#121417; color:var(--cream); }
+    .mockup-layout { display:grid; grid-template-columns:minmax(0,1.05fr) minmax(280px,.95fr); gap:42px; align-items:center; }
+    .mockup-card { position:relative; min-height:520px; overflow:hidden; padding:28px; background:#e9e4da; color:#121417; border:1px solid rgba(244,241,222,.35); }
+    .mockup-card::before { content:"CAPYCREW / FIELD MOCKUP"; position:absolute; top:20px; left:22px; font:10px 'DM Mono',monospace; letter-spacing:.15em; }
+    .mockup-art { display:block; width:min(72%,390px); margin:44px auto 18px; filter:drop-shadow(0 18px 22px rgba(12,34,28,.25)); }
+    .mockup-footer { display:flex; justify-content:space-between; gap:12px; padding-top:15px; border-top:1px solid rgba(12,34,28,.3); font:10px 'DM Mono',monospace; letter-spacing:.11em; text-transform:uppercase; }
+    .mockup-copy h3 { margin:14px 0 16px; font-size:clamp(40px,6vw,82px); line-height:.84; letter-spacing:-.09em; text-transform:uppercase; }
+    .mockup-copy p { max-width:400px; margin:0; font-size:17px; line-height:1.5; color:rgba(244,241,222,.72); }
+    .swatches { display:flex; gap:9px; margin-top:28px; }
+    .swatches i { display:block; width:34px; height:34px; border:1px solid rgba(244,241,222,.45); }
+    .swatches i:nth-child(1){background:#ff7654}.swatches i:nth-child(2){background:#7bd6e4}.swatches i:nth-child(3){background:#dbf26a}.swatches i:nth-child(4){background:#98745b}.swatches i:nth-child(5){background:#121417}
+    .band.mint { background:linear-gradient(90deg,rgba(141,227,180,.94) 0%,rgba(141,227,180,.78) 43%,rgba(141,227,180,.08) 75%,transparent 100%); color:var(--ink); }
+    .band.cream { background:linear-gradient(90deg,rgba(244,241,222,.96) 0%,rgba(244,241,222,.78) 48%,rgba(244,241,222,.08) 78%,transparent 100%); color:var(--ink); }
+    #signal { background:linear-gradient(270deg,rgba(12,34,28,.94) 0%,rgba(12,34,28,.74) 48%,rgba(12,34,28,.06) 78%,transparent 100%); }
+    #roadmap { background:linear-gradient(90deg,rgba(12,34,28,.94) 0%,rgba(12,34,28,.72) 48%,rgba(12,34,28,.06) 80%,transparent 100%); }
+    .scene-chip { display:inline-flex; margin-bottom:18px; padding:8px 10px; border:1px solid currentColor; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; backdrop-filter:blur(10px); }
+    .section-head { display:grid; grid-template-columns:1.2fr .8fr; gap:40px; align-items:end; margin-bottom:52px; }
+    .section-label { color:var(--coral); font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; }
+    h2 { margin:12px 0 0; font-size:clamp(42px,7vw,96px); line-height:.86; letter-spacing:-.09em; text-transform:uppercase; }
+    .section-intro { max-width:380px; margin:0; font-size:17px; line-height:1.5; opacity:.72; }
+    .stats { display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid currentColor; border-bottom:1px solid currentColor; }
+    .stat { padding:25px 20px 25px 0; border-right:1px solid currentColor; }
+    .stat + .stat { padding-left:20px; }
+    .stat:last-child { border:0; }
+    .stat strong { display:block; font-size:clamp(38px,6vw,75px); letter-spacing:-.08em; line-height:1; }
+    .stat span { display:block; margin-top:10px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; opacity:.68; }
+    .signal-reel { display:flex; gap:14px; overflow-x:auto; overscroll-behavior-inline:contain; scroll-snap-type:x proximity; padding:0 0 14px; scrollbar-color:var(--acid) rgba(12,34,28,.25); scrollbar-width:thin; }
+    .signal-reel::-webkit-scrollbar { height:8px; }
+    .signal-reel::-webkit-scrollbar-track { background:rgba(12,34,28,.25); }
+    .signal-reel::-webkit-scrollbar-thumb { background:var(--acid); }
+    .video-card { position:relative; flex:0 0 clamp(280px,42vw,560px); min-height:420px; overflow:hidden; scroll-snap-align:start; background:var(--ink-2); }
+    .video-card.small { min-height:420px; }
+    .video-card video { width:100%; height:100%; object-fit:cover; display:block; transition:transform .7s cubic-bezier(.2,.75,.25,1); }
+    .video-card:hover video { transform:scale(1.045); }
+    .video-card::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,transparent 45%,rgba(12,34,28,.8)); pointer-events:none; }
+    .video-card figcaption { position:absolute; z-index:1; left:20px; right:20px; bottom:18px; display:flex; justify-content:space-between; align-items:end; gap:12px; font-size:18px; font-weight:600; }
+    .video-card figcaption small { color:var(--acid); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; }
+    .crew-reel { overflow:hidden; padding-bottom:14px; }
+    .crew-track { display:flex; width:max-content; gap:10px; animation:crew-drift 34s linear infinite; }
+    .crew-reel:hover .crew-track { animation-play-state:paused; }
+    .crew-grid { display:flex; gap:10px; }
+    .crew-tile { position:relative; flex:0 0 clamp(190px,19vw,248px); overflow:hidden; aspect-ratio:1 / 1.2; background:var(--ink); }
+    .crew-tile img { width:100%; height:100%; object-fit:cover; display:block; filter:saturate(.88); transition:transform .45s ease,filter .45s ease; }
+    .crew-tile:hover img { transform:scale(1.06); filter:saturate(1.15); }
+    .crew-tile span { position:absolute; left:10px; bottom:10px; color:var(--acid); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.08em; text-transform:uppercase; }
+    @keyframes crew-drift { from{transform:translateX(0)} to{transform:translateX(calc(-50% - 5px))} }
+    .roadmap { display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid currentColor; }
+    .phase { padding:26px 22px 30px 0; border-right:1px solid currentColor; }
+    .phase + .phase { padding-left:22px; }
+    .phase:last-child { border:0; }
+    .phase-no { color:var(--coral); font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.13em; }
+    .phase h3 { margin:34px 0 12px; font-size:27px; letter-spacing:-.06em; text-transform:uppercase; }
+    .phase p { margin:0; max-width:260px; font-size:15px; line-height:1.5; opacity:.7; }
+    .endcap { position:relative; min-height:75svh; display:grid; place-items:center; overflow:hidden; text-align:center; background:var(--coral); color:var(--ink); }
+    .endcap::before { content:""; position:absolute; inset:0; background:url('assets/CapyCrew_042_cutout.png') 50% 35% / min(520px,65vw) auto no-repeat; opacity:.18; mix-blend-mode:multiply; }
+    .endcap-inner { position:relative; z-index:1; max-width:760px; padding:90px 0; }
+    .endcap h2 { font-size:clamp(58px,11vw,150px); }
+    .endcap p { max-width:480px; margin:23px auto 0; font-size:18px; line-height:1.5; }
+    .endcap .button { margin-top:30px; border-color:var(--ink); background:var(--ink); color:var(--cream); }
+    footer { padding:28px 0; background:var(--ink); color:rgba(244,241,222,.6); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.08em; text-transform:uppercase; }
+    .footer-inner { display:flex; justify-content:space-between; gap:20px; }
+    .mute { position:fixed; z-index:12; right:24px; bottom:24px; min-width:48px; min-height:48px; border:1px solid var(--cream); color:var(--cream); background:rgba(12,34,28,.65); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.08em; cursor:pointer; }
+    .mute:hover,.mute:focus-visible { color:var(--ink); background:var(--acid); outline:none; }
+    @media (max-width:800px) { .shell{width:calc(100% - 32px)} .nav-links a:not(:last-child){display:none} .hero-copy{padding-top:130px} .hero-foot{align-items:flex-start; flex-direction:column} .section-head{display:block} .section-intro{margin-top:22px} .band{min-height:115svh; align-items:flex-end; padding-bottom:80px} .band.mint,.band.cream,#signal,#roadmap{background:linear-gradient(180deg,transparent 0%,rgba(12,34,28,.18) 24%,rgba(12,34,28,.92) 58%,rgba(12,34,28,.98) 100%); color:var(--cream)} .stats{grid-template-columns:1fr} .stat,.stat+.stat{padding:20px 0;border-right:0;border-bottom:1px solid currentColor} .stat:last-child{border-bottom:0} .video-card,.video-card.small{min-height:290px; flex-basis:82vw} .crew-tile{flex-basis:58vw} .roadmap{grid-template-columns:1fr} .phase,.phase+.phase{padding:24px 0;border-right:0;border-bottom:1px solid currentColor} .phase:last-child{border-bottom:0} .footer-inner{flex-direction:column} .blueprint-layout,.mockup-layout{grid-template-columns:1fr} .blueprint-stage{min-height:430px} .mockup-card{min-height:470px} .mockup-art{width:min(78%,330px)} }
+    @media (prefers-reduced-motion:reduce) { html{scroll-behavior:auto} *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important} }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <header class="site-nav"><div class="shell nav-inner"><a href="#top" class="wordmark" aria-label="CapyCrew home">CAPY<b>CREW</b></a><nav class="nav-links" aria-label="Primary navigation"><a href="#world">Blueprint</a><a href="#mockup">Mockup</a><a href="#crew">Crew</a><a href="#roadmap">Roadmap</a><a href="#mint">Mint</a><button class="nav-cta" type="button" data-scroll="#mint">Enter the crew</button></nav></div></header>
+  <div class="hero-scene" id="capyScene" aria-hidden="true"><div class="scene-loading" id="sceneLoading">loading capycity / 042</div><div class="scene-caption" id="sceneCaption">00 / CAPYCITY<br>THE MELLOW DISTRICT</div></div>
+  <main id="top">
+    <section class="hero" data-scene="0"><video class="hero-video" id="heroVideo" autoplay muted loop playsinline poster="assets/Capybara_wearing_trendy_streetwear_2K_202608191116.jpeg"><source src="videos/Capy_%23042_rises_with_NFT_202608191210.mp4" type="video/mp4"></video><div class="hero-shade"></div><div class="shell hero-copy"><div class="kicker">a collectible character project / 042</div><h1>Stay<br>mellow.</h1><p class="hero-deck">CapyCrew is a 10,000-piece world of relaxed characters, loud fits, and useful mischief on the Robinhood chain.</p><div class="hero-actions"><a class="button" href="#world">Explore the world</a><a class="button alt" href="#mint">Read the mint plan</a></div><div class="hero-foot"><span>CapyCrew / NFT project / est. 2026</span><span class="scroll-note"><span aria-hidden="true"></span> keep scrolling</span></div></div></section>
+    <div class="ticker" aria-label="CapyCrew highlights"><div class="ticker-track"><div class="ticker-item">10,000 collectibles <i></i> Robinhood chain <i></i> #042 street edition <i></i> community first <i></i></div><div class="ticker-item" aria-hidden="true">10,000 collectibles <i></i> Robinhood chain <i></i> #042 street edition <i></i> community first <i></i></div></div></div>
+    <section class="band blueprint-band" id="world" data-scene="0"><div class="shell"><div class="scene-chip">Kentsugi / character asset blueprint</div><div class="section-head"><div><div class="section-label">01 / Character blueprint</div><h2>Built in parts.<br>Styled as one.</h2></div><p class="section-intro">This is the construction layer: a bounded, reusable capy asset mapped from body volumes to wardrobe anchors before any final illustration or mockup is applied.</p></div><div class="blueprint-layout"><div class="blueprint-stage"><div class="blueprint-canvas" id="blueprintCanvas" aria-label="Interactive wireframe preview of the CapyCrew 042 character blueprint"></div></div><div class="blueprint-copy"><div><div class="section-label">asset / capycrew_042_character</div><h3>Orthographic<br>character map</h3><p>One source of truth for proportion, pose, and trait attachment points. The final artwork stays expressive; this layer keeps every edition structurally consistent.</p><div class="blueprint-meta"><div><strong>2.95m</strong><span>height envelope</span></div><div><strong>14</strong><span>primitive parts</span></div><div><strong>3/4</strong><span>canonical stance</span></div><div><strong>0.1.0</strong><span>blueprint schema</span></div></div><div class="callouts"><div class="callout"><b>01</b><div><strong>Identity lock</strong><span>muzzle, ears, glasses, raised card hand</span></div></div><div class="callout"><b>02</b><div><strong>Trait rails</strong><span>hat, outerwear, bottoms, footwear, hardware</span></div></div><div class="callout"><b>03</b><div><strong>Render handoff</strong><span>validated JSON → Blender / GLB-ready asset</span></div></div></div></div><a class="button" href="assets/capycrew_042_character.json" download>Download blueprint JSON</a></div></div></div></section>
+    <section class="band mockup-band" id="mockup"><div class="shell"><div class="mockup-layout"><figure class="mockup-card"><img class="mockup-art" src="assets/CapyCrew_042_cutout.png" alt="CapyCrew 042 finished character mockup"><figcaption class="mockup-footer"><span>CAPYCREW / 042</span><span>street edition / final art</span></figcaption></figure><div class="mockup-copy"><div class="section-label">02 / Separate presentation</div><h3>The mockup<br>is the moment.</h3><p>This is the finished-facing design: a clean field card for showing the character, palette, and serial identity after the construction pass is approved.</p><div class="swatches" aria-label="CapyCrew palette"><i></i><i></i><i></i><i></i><i></i></div></div></div></div></section>
+    <section class="band" id="signal" data-scene="1"><div class="shell"><div class="scene-chip">3D scene / holographic signal deck</div><div class="section-head"><div><div class="section-label">03 / The signal</div><h2>See you<br>in CapyCity.</h2></div><p class="section-intro">The project grows in chapters: characters, city blocks, airdrops, and community experiments that reward staying curious.</p></div><div class="signal-reel" aria-label="CapyCrew signal videos"><figure class="video-card"><video autoplay muted loop playsinline poster="assets/Capybara_wearing_trendy_streetwear_202608191116.jpeg"><source src="videos/Zoom_into_futuristic_CapyCity_202608191211.mp4" type="video/mp4"></video><figcaption>Enter CapyCity <small>01 / 04</small></figcaption></figure><figure class="video-card small"><video autoplay muted loop playsinline><source src="videos/Capybara_wearing_streetwear_202608191149.mp4" type="video/mp4"></video><figcaption>Wear your mood <small>02 / 04</small></figcaption></figure><figure class="video-card small"><video autoplay muted loop playsinline><source src="videos/Capybara_counting_project_perks_202608191148.mp4" type="video/mp4"></video><figcaption>Count the perks <small>03 / 04</small></figcaption></figure><figure class="video-card small"><video autoplay muted loop playsinline><source src="videos/Capybara_giving_thumbs_up_202608191148.mp4" type="video/mp4"></video><figcaption>Good energy only <small>04 / 04</small></figcaption></figure></div></div></section>
+    <section class="band cream" id="crew" data-scene="2"><div class="shell"><div class="scene-chip">3D scene / rotating crew archive</div><div class="section-head"><div><div class="section-label">04 / Meet the crew</div><h2>Different fits.<br>Same energy.</h2></div><p class="section-intro">Every Capy is a role in the city. Pick your signal, find your people, and leave the door open for the unexpected.</p></div><div class="crew-reel" aria-label="Meet the CapyCrew"><div class="crew-track"><div class="crew-grid"><figure class="crew-tile"><img src="assets/Capybara_wearing_trendy_streetwear_202608191116.jpeg" alt="Streetwear Capy character"><span>01 / streetwear</span></figure><figure class="crew-tile"><img src="assets/Capybara_dressed_as_skater_202608190231.jpeg" alt="Skater Capy character"><span>02 / skater</span></figure><figure class="crew-tile"><img src="assets/Capybara_wearing_puffer_jacket_202608190230.jpeg" alt="Puffer jacket Capy character"><span>03 / puffer</span></figure><figure class="crew-tile"><img src="assets/Capybara_wearing_techwear_attire_202608190230.jpeg" alt="Techwear Capy character"><span>04 / techwear</span></figure><figure class="crew-tile"><img src="assets/Capybara_wearing_varsity_jacket_202608190232.jpeg" alt="Varsity Capy character"><span>05 / varsity</span></figure></div><div class="crew-grid" aria-hidden="true"><figure class="crew-tile"><img src="assets/Capybara_wearing_trendy_streetwear_202608191116.jpeg" alt=""><span>01 / streetwear</span></figure><figure class="crew-tile"><img src="assets/Capybara_dressed_as_skater_202608190231.jpeg" alt=""><span>02 / skater</span></figure><figure class="crew-tile"><img src="assets/Capybara_wearing_puffer_jacket_202608190230.jpeg" alt=""><span>03 / puffer</span></figure><figure class="crew-tile"><img src="assets/Capybara_wearing_techwear_attire_202608190230.jpeg" alt=""><span>04 / techwear</span></figure><figure class="crew-tile"><img src="assets/Capybara_wearing_varsity_jacket_202608190232.jpeg" alt=""><span>05 / varsity</span></figure></div></div></div></div></section>
+    <section class="band" id="roadmap" data-scene="3"><div class="shell"><div class="scene-chip">3D scene / illuminated route checkpoints</div><div class="section-head"><div><div class="section-label">04 / The roadmap</div><h2>No rush.<br>Big plans.</h2></div><p class="section-intro">A public direction, not a promise machine. We ship the next useful thing, then listen to the people who showed up.</p></div><div class="roadmap"><article class="phase"><div class="phase-no">PHASE 01 / NOW</div><h3>Find the signal</h3><p>Launch the collection, build the home base, and gather the first 10,000 curious capys.</p></article><article class="phase"><div class="phase-no">PHASE 02 / NEXT</div><h3>Open the city</h3><p>Holder airdrops, new character drops, and the first CapyCity experiences for the crew.</p></article><article class="phase"><div class="phase-no">PHASE 03 / LATER</div><h3>Make it useful</h3><p>Community-led perks, collaborations, and a roadmap that gets better with every new voice.</p></article></div></div></section>
+    <section class="endcap" id="mint"><div class="endcap-inner"><div class="section-label">05 / Your invitation</div><h2>Come as<br>you are.</h2><p>Minting opens soon. Join the signal now and be first in line when CapyCrew goes live.</p><a class="button" href="mailto:hello@capycrew.xyz?subject=Join%20the%20CapyCrew">Join the list</a></div></section>
+  </main>
+  <footer><div class="shell footer-inner"><span>CAPYCREW / A GOOD DAY IS A STRATEGY</span><span>© 2026 CapyCrew. Built for the mellow.</span></div></footer>
+  <button class="mute" id="mute" type="button" aria-label="Unmute hero video">Sound off</button>
+  <script>
+    const progress=document.getElementById('progress'); const video=document.getElementById('heroVideo'); const mute=document.getElementById('mute');
+    const updateProgress=()=>{const max=document.documentElement.scrollHeight-innerHeight; progress.style.transform=`scaleX(${max>0?scrollY/max:0})`}; addEventListener('scroll',updateProgress,{passive:true}); updateProgress();
+    mute.addEventListener('click',()=>{video.muted=!video.muted; mute.textContent=video.muted?'Sound off':'Sound on'; mute.setAttribute('aria-label',video.muted?'Unmute hero video':'Mute hero video')});
+    document.querySelectorAll('[data-scroll]').forEach(button=>button.addEventListener('click',()=>document.querySelector(button.dataset.scroll)?.scrollIntoView({behavior:'smooth'})));
+  </script>
+  <script src="./vendor/three.min.js"></script>
+  <script>
+
+    const host = document.getElementById('capyScene');
+    const heroVideo = document.getElementById('heroVideo');
+    const loading = document.getElementById('sceneLoading');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = matchMedia('(max-width: 800px)').matches;
+
+    // The blueprint viewer is intentionally separate from the hero scene: it visualizes
+    // the validated Kentsugi primitive build, while the mockup section shows final art.
+    const blueprintHost = document.getElementById('blueprintCanvas');
+    if (blueprintHost && window.THREE) {
+      const blueprintRenderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+      blueprintRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+      blueprintRenderer.setClearColor(0x000000, 0);
+      blueprintHost.appendChild(blueprintRenderer.domElement);
+      const blueprintScene = new THREE.Scene();
+      const blueprintCamera = new THREE.PerspectiveCamera(28, 1, .1, 20);
+      blueprintCamera.position.set(3.8, 2.9, 6.4);
+      blueprintCamera.lookAt(0, 1.55, 0);
+      blueprintScene.add(new THREE.HemisphereLight(0xf4f1de, 0x173a2e, 2));
+      const blueprintRoot = new THREE.Group();
+      blueprintRoot.rotation.y = -.22;
+      blueprintScene.add(blueprintRoot);
+      const wire = (geometry, position, scale, color = 0x123c30) => {
+        const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color, wireframe:true, transparent:true, opacity:.86}));
+        mesh.position.set(...position); mesh.scale.set(...scale); blueprintRoot.add(mesh); return mesh;
+      };
+      wire(new THREE.SphereGeometry(.5, 18, 12), [0,1.7,0], [1.25,.86,1.2]);
+      wire(new THREE.SphereGeometry(.5, 18, 12), [.1,2.45,-.02], [.92,.82,.9], 0xff7654);
+      wire(new THREE.SphereGeometry(.5, 18, 12), [.19,2.32,-.34], [.52,.42,.36], 0x123c30);
+      wire(new THREE.SphereGeometry(.5, 14, 10), [-.3,2.73,-.06], [.22,.16,.28]);
+      wire(new THREE.SphereGeometry(.5, 14, 10), [.48,2.73,-.06], [.22,.16,.28]);
+      wire(new THREE.CylinderGeometry(.5,.5,1,18), [-.43,1.02,0], [.32,.32,.9], 0xff7654);
+      wire(new THREE.CylinderGeometry(.5,.5,1,18), [.43,1.02,0], [.32,.32,.9], 0xff7654);
+      wire(new THREE.SphereGeometry(.5, 14, 10), [-.77,1.68,0], [.4,.38,.64]);
+      wire(new THREE.SphereGeometry(.5, 14, 10), [.77,1.68,0], [.4,.38,.64]);
+      wire(new THREE.BoxGeometry(1,1,1), [-.43,.42,0], [.58,.75,.28], 0x123c30);
+      wire(new THREE.BoxGeometry(1,1,1), [.43,.42,0], [.58,.75,.28], 0x123c30);
+      wire(new THREE.CylinderGeometry(.5,.5,1,20), [0,2.92,0], [1.02,1.02,.22], 0xff7654);
+      wire(new THREE.CylinderGeometry(.5,.5,1,20), [0,3.12,0], [.74,.74,.34], 0xff7654);
+      const blueprintResize = () => { const w=blueprintHost.clientWidth||520, h=blueprintHost.clientHeight||520; blueprintRenderer.setSize(w,h,false); blueprintCamera.aspect=w/h; blueprintCamera.updateProjectionMatrix(); };
+      new ResizeObserver(blueprintResize).observe(blueprintHost); blueprintResize();
+      let blueprintT = 0;
+      const blueprintTick = () => { blueprintT += .01; if (!reduceMotion) blueprintRoot.rotation.y = -.22 + Math.sin(blueprintT) * .22; blueprintRenderer.render(blueprintScene, blueprintCamera); requestAnimationFrame(blueprintTick); };
+      blueprintTick();
+    }
+
+    const fallback = () => {
+      host?.classList.add('is-fallback');
+      if (heroVideo) heroVideo.style.opacity = '1';
+      if (loading) loading.textContent = 'static mode / capycity';
+    };
+
+    if (!host || !window.WebGLRenderingContext) {
+      fallback();
+    } else {
+      try {
+        const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true, powerPreference: 'high-performance' });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 1.6));
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        renderer.domElement.setAttribute('aria-hidden', 'true');
+        host.appendChild(renderer.domElement);
+
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x0c221c, 0.022);
+        const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 180);
+        camera.position.set(0, 5.5, 18);
+        const city = new THREE.Group();
+        scene.add(city);
+
+        scene.add(new THREE.HemisphereLight(0xf4f1de, 0x0c221c, 1.8));
+        const key = new THREE.DirectionalLight(0xdbf26a, 2.2);
+        key.position.set(-8, 15, 8);
+        scene.add(key);
+        const redLight = new THREE.PointLight(0xff7654, 18, 34, 2);
+        redLight.position.set(5, 4, 4);
+        scene.add(redLight);
+
+        const ground = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshStandardMaterial({ color:0x0a1713, roughness:.92, metalness:.08 }));
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.y = -0.08;
+        city.add(ground);
+        const grid = new THREE.GridHelper(100, 50, 0x1b6048, 0x123b30);
+        grid.position.y = 0.01;
+        city.add(grid);
+
+        const roadMaterial = new THREE.MeshStandardMaterial({ color:0x142c25, roughness:.8, metalness:.15 });
+        for (let i = -2; i <= 2; i += 1) {
+          const road = new THREE.Mesh(new THREE.BoxGeometry(2.2, .08, 80), roadMaterial);
+          road.position.set(i * 8, .02, -18);
+          city.add(road);
+        }
+
+        const buildingPalette = [0x153c31, 0x1b4f3e, 0x203f3b, 0x274d42, 0x102b25];
+        for (let i = 0; i < 34; i += 1) {
+          const side = i % 2 === 0 ? -1 : 1;
+          const lane = Math.floor(i / 2) % 5;
+          const z = 10 - Math.floor(i / 10) * 9 - (i % 3) * 3;
+          const height = 2.4 + ((i * 17) % 7) * .52;
+          const width = 2.2 + ((i * 11) % 4) * .45;
+          const building = new THREE.Mesh(new THREE.BoxGeometry(width, height, 2.8), new THREE.MeshStandardMaterial({ color:buildingPalette[i % buildingPalette.length], roughness:.76, metalness:.18 }));
+          building.position.set(side * (13 + lane * 3.5), height / 2, z);
+          city.add(building);
+          if (i % 3 === 0) {
+            const window = new THREE.Mesh(new THREE.PlaneGeometry(width * .52, .28), new THREE.MeshBasicMaterial({ color:i % 2 ? 0xdbf26a : 0x7bd6e4 }));
+            window.position.set(building.position.x - side * width * .51, height * .66, z + 1.42);
+            window.rotation.y = side < 0 ? -Math.PI / 2 : Math.PI / 2;
+            city.add(window);
+          }
+        }
+
+        const labelTexture = (text, color) => {
+          const canvas = document.createElement('canvas');
+          canvas.width = 1024; canvas.height = 180;
+          const ctx = canvas.getContext('2d');
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.font = '700 86px Arial';
+          ctx.letterSpacing = '8px';
+          ctx.fillStyle = color;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+          const texture = new THREE.CanvasTexture(canvas);
+          texture.colorSpace = THREE.SRGBColorSpace;
+          return texture;
+        };
+        const addSign = (text, color, position, scale, target = city) => {
+          const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map:labelTexture(text, color), transparent:true, depthWrite:false }));
+          sprite.position.set(...position);
+          sprite.scale.set(scale, scale * .18, 1);
+          target.add(sprite);
+          return sprite;
+        };
+        addSign('CAPYCITY', '#dbf26a', [-4, 7.8, -8], 8);
+        addSign('MELLOW DISTRICT', '#ff7654', [6.8, 5.4, -1], 4.2);
+
+        const textureLoader = new THREE.TextureLoader();
+        const capyTexture = textureLoader.load('assets/CapyCrew_042_cutout.png');
+        capyTexture.colorSpace = THREE.SRGBColorSpace;
+        const capy = new THREE.Mesh(new THREE.PlaneGeometry(4.8, 6.8), new THREE.MeshBasicMaterial({ map:capyTexture, transparent:true, side:THREE.DoubleSide, depthWrite:false }));
+        capy.position.set(-3.8, 4.3, -3.4);
+        capy.rotation.y = .12;
+        city.add(capy);
+
+        const billboard = new THREE.Mesh(new THREE.PlaneGeometry(7.5, 4.2), new THREE.MeshBasicMaterial({ color:0x101a16, side:THREE.DoubleSide }));
+        billboard.position.set(5.8, 5, -7.5);
+        billboard.rotation.y = -.17;
+        city.add(billboard);
+        const video = document.createElement('video');
+        video.src = 'videos/Capy_%23042_rises_with_NFT_202608191210.mp4';
+        video.muted = true; video.loop = true; video.playsInline = true; video.autoplay = true;
+        video.setAttribute('aria-hidden', 'true');
+        video.play().catch(() => {});
+        const videoTexture = new THREE.VideoTexture(video);
+        videoTexture.colorSpace = THREE.SRGBColorSpace;
+        const videoPanel = new THREE.Mesh(new THREE.PlaneGeometry(6.9, 3.6), new THREE.MeshBasicMaterial({ map:videoTexture, side:THREE.DoubleSide }));
+        videoPanel.position.set(5.8, 5, -7.35);
+        videoPanel.rotation.y = -.17;
+        city.add(videoPanel);
+
+        const halo = new THREE.Mesh(new THREE.TorusGeometry(3.1, .045, 12, 96), new THREE.MeshBasicMaterial({ color:0xdbf26a, transparent:true, opacity:.78 }));
+        halo.position.set(0, 4.2, -10);
+        halo.rotation.x = .25;
+        city.add(halo);
+        const portal = new THREE.Mesh(new THREE.TorusGeometry(2.2, .16, 16, 96), new THREE.MeshBasicMaterial({ color:0x7bd6e4, transparent:true, opacity:.9 }));
+        portal.position.set(0, .24, 3.5);
+        portal.rotation.x = Math.PI / 2;
+        city.add(portal);
+        const portalCore = new THREE.Mesh(new THREE.CircleGeometry(2.05, 64), new THREE.MeshBasicMaterial({ color:0x7bd6e4, transparent:true, opacity:.18, side:THREE.DoubleSide }));
+        portalCore.position.set(0, .19, 3.5);
+        portalCore.rotation.x = -Math.PI / 2;
+        city.add(portalCore);
+
+        const signalGroup = new THREE.Group();
+        const crewGroup = new THREE.Group();
+        const roadmapGroup = new THREE.Group();
+        scene.add(signalGroup, crewGroup, roadmapGroup);
+
+        const panelVideos = [
+          'videos/Zoom_into_futuristic_CapyCity_202608191211.mp4',
+          'videos/Capybara_wearing_streetwear_202608191149.mp4',
+          'videos/Capybara_counting_project_perks_202608191148.mp4',
+          'videos/Capybara_giving_thumbs_up_202608191148.mp4'
+        ];
+        panelVideos.forEach((src, index) => {
+          const panelVideo = document.createElement('video');
+          panelVideo.src = src;
+          panelVideo.muted = true; panelVideo.loop = true; panelVideo.playsInline = true; panelVideo.autoplay = true;
+          panelVideo.play().catch(() => {});
+          const panelTexture = new THREE.VideoTexture(panelVideo);
+          panelTexture.colorSpace = THREE.SRGBColorSpace;
+          const panel = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 2.5), new THREE.MeshBasicMaterial({ map:panelTexture, side:THREE.DoubleSide }));
+          const angle = (index - 1.5) * .42;
+          panel.position.set((index - 1.5) * 4.15, 3.8 + Math.abs(index - 1.5) * .55, -4.2 - Math.abs(index - 1.5) * .5);
+          panel.rotation.y = angle;
+          signalGroup.add(panel);
+          const frame = new THREE.Mesh(new THREE.BoxGeometry(4.5, 2.8, .12), new THREE.MeshBasicMaterial({ color:0xdbf26a, wireframe:true, transparent:true, opacity:.6 }));
+          frame.position.copy(panel.position); frame.rotation.copy(panel.rotation); frame.position.z -= .08;
+          signalGroup.add(frame);
+        });
+        addSign('THE SIGNAL', '#dbf26a', [0, 7.8, -6], 7.2, signalGroup);
+
+        const crewImages = [
+          'assets/Capybara_wearing_trendy_streetwear_202608191116.jpeg',
+          'assets/Capybara_dressed_as_skater_202608190231.jpeg',
+          'assets/Capybara_wearing_puffer_jacket_202608190230.jpeg',
+          'assets/Capybara_wearing_techwear_attire_202608190230.jpeg',
+          'assets/Capybara_wearing_varsity_jacket_202608190232.jpeg'
+        ];
+        crewImages.forEach((src, index) => {
+          const texture = textureLoader.load(src);
+          texture.colorSpace = THREE.SRGBColorSpace;
+          const card = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 4.25), new THREE.MeshBasicMaterial({ map:texture, side:THREE.DoubleSide }));
+          const angle = (index - 2) * .34;
+          card.position.set((index - 2) * 3.1, 3.6 + Math.abs(index - 2) * .22, -4.5 + Math.abs(index - 2) * .28);
+          card.rotation.y = angle;
+          crewGroup.add(card);
+          const edge = new THREE.Mesh(new THREE.BoxGeometry(3.35, 4.4, .09), new THREE.MeshBasicMaterial({ color:0xff7654, wireframe:true, transparent:true, opacity:.72 }));
+          edge.position.copy(card.position); edge.rotation.copy(card.rotation); edge.position.z -= .06;
+          crewGroup.add(edge);
+        });
+        addSign('MEET THE CREW', '#ff7654', [0, 7.8, -6], 7.2, crewGroup);
+
+        const routePoints = [new THREE.Vector3(-8, .3, 4), new THREE.Vector3(-4, .8, -1), new THREE.Vector3(0, .35, 2), new THREE.Vector3(4, 1.1, -3), new THREE.Vector3(8, .45, -7)];
+        const route = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(routePoints), 64, .1, 8, false), new THREE.MeshBasicMaterial({ color:0xdbf26a }));
+        roadmapGroup.add(route);
+        routePoints.forEach((point, index) => {
+          const checkpoint = new THREE.Mesh(new THREE.TorusGeometry(.58, .1, 10, 32), new THREE.MeshBasicMaterial({ color:index === 0 ? 0xff7654 : 0x7bd6e4 }));
+          checkpoint.position.copy(point); checkpoint.rotation.x = Math.PI / 2;
+          roadmapGroup.add(checkpoint);
+          const pillar = new THREE.Mesh(new THREE.BoxGeometry(.12, 2.1, .12), new THREE.MeshBasicMaterial({ color:0xdbf26a }));
+          pillar.position.set(point.x, point.y + 1, point.z);
+          roadmapGroup.add(pillar);
+        });
+        addSign('THE ROADMAP', '#dbf26a', [0, 7.8, -6], 7.2, roadmapGroup);
+        const sceneGroups = [city, signalGroup, crewGroup, roadmapGroup];
+        sceneGroups.forEach((group, index) => { if (index > 0) group.position.z = -26; });
+        const sceneCaption = document.getElementById('sceneCaption');
+        const sceneSections = [...document.querySelectorAll('[data-scene]')];
+        let activeScene = 0;
+
+        const pointer = new THREE.Vector2();
+        const onPointerMove = event => {
+          const rect = renderer.domElement.getBoundingClientRect();
+          pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+          pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        };
+        const onTouchMove = event => {
+          const touch = event.touches[0];
+          if (touch) onPointerMove(touch);
+        };
+        renderer.domElement.addEventListener('pointermove', onPointerMove);
+        renderer.domElement.addEventListener('touchmove', onTouchMove, { passive:true });
+
+        const resize = () => {
+          const width = host.clientWidth || window.innerWidth;
+          const height = host.clientHeight || window.innerHeight;
+          renderer.setSize(width, height, false);
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+        };
+        const resizeObserver = 'ResizeObserver' in window ? new ResizeObserver(resize) : null;
+        resizeObserver?.observe(host);
+        resize();
+
+        const clock = new THREE.Clock();
+        const tick = () => {
+          const time = clock.getElapsedTime();
+          const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+          const scroll = Math.min(window.scrollY / maxScroll, 1);
+          const viewportLine = window.scrollY + window.innerHeight * .46;
+          let nextScene = 0;
+          sceneSections.forEach(section => { if (viewportLine >= section.offsetTop - 80) nextScene = Number(section.dataset.scene || 0); });
+          activeScene = nextScene;
+          const sceneNames = ['00 / CAPYCITY\nTHE MELLOW DISTRICT', '02 / THE SIGNAL\nHOLOGRAPHIC DECK', '03 / MEET THE CREW\nARCHIVE ROTATION', '04 / THE ROADMAP\nCHECKPOINT ROUTE'];
+          if (sceneCaption) sceneCaption.innerHTML = sceneNames[activeScene].replace('\n', '<br>');
+          sceneGroups.forEach((group, index) => {
+            const targetZ = index === activeScene ? 0 : -26;
+            group.position.z += (targetZ - group.position.z) * .055;
+            const targetScale = index === activeScene ? 1 : .72;
+            group.scale.x += (targetScale - group.scale.x) * .055;
+            group.scale.y += (targetScale - group.scale.y) * .055;
+            group.scale.z += (targetScale - group.scale.z) * .055;
+          });
+          if (!reduceMotion) {
+            sceneGroups.forEach((group, index) => {
+              const focus = index === activeScene ? 1 : .35;
+              group.rotation.y += (pointer.x * .045 * focus - group.rotation.y) * .035;
+              group.rotation.x += (-pointer.y * .02 * focus - group.rotation.x) * .035;
+            });
+            camera.position.x += (pointer.x * 1.1 - camera.position.x * .04) * .025;
+            camera.position.y += (5.5 + activeScene * .7 + Math.sin(time * .3) * .15 - camera.position.y) * .018;
+            camera.position.z += (18 - activeScene * 1.4 + pointer.y * .7 - camera.position.z) * .018;
+            halo.rotation.z = time * .12;
+            portal.rotation.z = -time * .35;
+            portal.scale.setScalar(1 + Math.sin(time * 1.8) * .045);
+            portalCore.material.opacity = .12 + Math.sin(time * 1.8) * .045;
+            capy.position.y = 4.3 + Math.sin(time * .8) * .12;
+            videoPanel.position.y = 5 + Math.sin(time * .5) * .08;
+            signalGroup.children.forEach((object, index) => { if (object.isMesh && index % 2 === 0) object.position.y += Math.sin(time * .7 + index) * .0015; });
+            crewGroup.rotation.y += (Math.sin(time * .22) * .18 - crewGroup.rotation.y) * .02;
+            roadmapGroup.children.forEach((object, index) => { if (object.isMesh && object.geometry.type === 'TorusGeometry') object.rotation.z = time * .8 + index; });
+          } else {
+            camera.position.set(0, 5.5 + activeScene * .7, 18 - activeScene * 1.4);
+          }
+          camera.lookAt(0, 3.5, -6);
+          renderer.render(scene, camera);
+          requestAnimationFrame(tick);
+        };
+        tick();
+        loading?.classList.add('is-ready');
+      } catch (error) {
+        console.warn('CapyCity WebGL fallback:', error);
+        fallback();
+      }
+    }
+  </script>
+</body>
+</html>
