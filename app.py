@@ -107,6 +107,7 @@ def context(request: Request, **kwargs):
     site_url = os.getenv("PUBLIC_SITE_URL", str(request.base_url).rstrip("/")).rstrip("/")
     share_titles = {
         "home": "CAPYCREW | A softer internet",
+        "hub": "Crew Hub | CAPYCREW",
         "mint": "Mint a Capy | CAPYCREW",
         "about": "About CapyCrew | A softer internet",
         "whitepaper": "CapyCrew Whitepaper",
@@ -115,6 +116,7 @@ def context(request: Request, **kwargs):
     }
     share_descriptions = {
         "home": "CapyCrew is a 10,000-piece collectible character project building a relaxed, creative world on the Robinhood Chain.",
+        "hub": "Your CapyCrew membership home: missions, rewards, and the next CapyCity signal.",
         "mint": "Claim a CapyCrew Genesis NFT on Robinhood Chain Testnet.",
         "about": "Meet CapyCrew: a 10,000-piece collectible character project and evolving digital world.",
         "whitepaper": "Read the CapyCrew project direction, collection details, and roadmap.",
@@ -144,6 +146,10 @@ def context(request: Request, **kwargs):
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse(request=request, name="home.html", context=context(request, page="home"))
+
+@app.get("/hub", response_class=HTMLResponse)
+async def hub(request: Request):
+    return templates.TemplateResponse(request=request, name="hub.html", context=context(request, page="hub"))
 
 @app.get("/mint", response_class=HTMLResponse)
 async def mint(request: Request):

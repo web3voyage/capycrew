@@ -30,13 +30,14 @@
   <nav class="site-nav">
     <a class="brand" href="/">CAPYCREW</a>
     <div class="nav-links">
+      <a class="{{ 'active' if page=='hub' else '' }}" href="/hub">Crew Hub</a>
       <a class="{{ 'active' if page=='mint' else '' }}" href="/mint">Mint</a>
       <a class="{{ 'active' if page=='about' else '' }}" href="/about">About</a>
       <a class="{{ 'active' if page=='whitepaper' else '' }}" href="/whitepaper">Whitepaper</a>
       <a class="{{ 'active' if page=='store' else '' }}" href="/store">Store</a>
     </div>
   </nav>
-  <div id="scene-stage" aria-hidden="true"><div class="scene-horizon"></div>{% if page == 'home' %}<video class="world-video" autoplay muted loop playsinline preload="auto" src="/media/videos/Capy_%23042_rises_with_NFT_202608191210.mp4"></video>{% endif %}</div>
+  {% if page != 'hub' %}<div id="scene-stage" aria-hidden="true"><div class="scene-horizon"></div>{% if page == 'home' %}<video class="world-video" autoplay muted loop playsinline preload="auto" src="/media/videos/Capy_%23042_rises_with_NFT_202608191210.mp4"></video>{% endif %}</div>{% endif %}
   <div class="site-content">
     {% block content %}{% endblock %}
     <footer class="footer">
@@ -61,7 +62,7 @@
     </footer>
   </div>
   <script src="{{ url_for('static', path='three.min.js') }}?v=20260820-11"></script>
-  <script src="{{ url_for('static', path='js/capycity.js') }}?v=20260820-11" defer></script>
+  {% if page != 'hub' %}<script src="{{ url_for('static', path='js/capycity.js') }}?v=20260820-11" defer></script>{% endif %}
   {% block scripts %}{% endblock %}
 </body>
 </html>

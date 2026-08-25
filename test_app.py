@@ -20,7 +20,7 @@ class WebAppTests(unittest.TestCase):
         self.client = TestClient(webapp.app)
 
     def test_pages_and_static_mint_client_load(self):
-        for path in ("/", "/mint", "/about", "/whitepaper", "/store", "/privacy"):
+        for path in ("/", "/hub", "/mint", "/about", "/whitepaper", "/store", "/privacy"):
             response = self.client.get(path)
             self.assertEqual(response.status_code, 200, path)
         about = self.client.get("/about")
@@ -35,6 +35,10 @@ class WebAppTests(unittest.TestCase):
         self.assertEqual(self.client.get("/static/js/mint.js").status_code, 200)
         self.assertEqual(self.client.get("/static/vendor/ethers.umd.min.js").status_code, 200)
         self.assertEqual(self.client.get("/static/og-image.png").status_code, 200)
+        hub = self.client.get("/hub")
+        self.assertIn("YOUR CAPY", hub.text)
+        self.assertIn("Useful things", hub.text)
+        self.assertIn("/static/js/hub.js", hub.text)
 
     def test_mint_client_blocks_minting_on_the_wrong_network(self):
         mint_client = self.client.get("/static/js/mint.js")

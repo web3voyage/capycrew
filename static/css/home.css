@@ -65,6 +65,13 @@
 @keyframes crew-drift { to { transform: translateX(calc(-50% - 9px)); } }
 
 .roadmap-layout { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(420px, 1fr); gap: 80px; align-items: start; }
+.hub-preview-section { background: #101010; color: #fff; }
+.hub-preview-section .lede { color: #b8b4bd; margin: -18px 0 34px; }
+.hub-preview-grid { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 18px; align-items: start; }
+.hub-preview-grid figure { margin: 0; }
+.hub-preview-grid img { display: block; width: 100%; height: auto; border: 1px solid #514c55; background: #17151c; }
+.hub-preview-grid figcaption { padding-top: 10px; color: #aaa3af; font: 10px "DM Mono", monospace; text-transform: uppercase; }
+.hub-preview-mobile { justify-self: end; }
 .roadmap-layout .section-head { display: block; }
 .roadmap-layout .kicker { display: block; margin-bottom: 16px; }
 .home-flow .roadmap-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); }
@@ -79,6 +86,8 @@
   .signal-rail { grid-auto-columns: 86vw; margin-right: -14px; }
   .crew-window { margin-inline: -14px; }
   .home-flow .roadmap-list li { grid-template-columns: 42px 1fr; }
+  .hub-preview-grid { grid-template-columns: 1fr; }
+  .hub-preview-mobile { width: min(70vw, 280px); justify-self: center; }
 }
 
 @media (prefers-reduced-motion: reduce) {
