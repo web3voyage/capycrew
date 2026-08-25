@@ -41,7 +41,8 @@
     document.querySelectorAll('.future-card').forEach((card) => card.classList.toggle('is-hidden', value !== 'all' && card.dataset.stage !== value));
   }));
 
-  const stage = document.querySelector('[data-character-stage]');
+  const stage = document.querySelector('.character-stage');
+  const showcase = stage?.closest('.kentsugi-showcase');
   const canvas = document.querySelector('#character-canvas');
   const loading = document.querySelector('#character-loading');
   const angleLabel = document.querySelector('#character-angle');
@@ -49,6 +50,7 @@
   const fallback = () => { stage?.classList.add('is-fallback'); loading?.classList.add('is-ready'); };
 
   function startCharacterScene() {
+    return;
     if (!stage || !canvas || !window.THREE) return fallback();
     let renderer;
     try { renderer = new THREE.WebGLRenderer({ canvas, antialias: !/Mobi/i.test(navigator.userAgent), alpha: true }); } catch { return fallback(); }
