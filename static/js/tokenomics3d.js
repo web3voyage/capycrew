@@ -20,9 +20,10 @@
   const labels = [...sceneHost.querySelectorAll('[data-segment]')];
   const lines = [...sceneHost.querySelectorAll('[data-line]')];
   const anchors = [];
-  const labelOffsets = [[-142, -25], [36, -25], [48, 15], [-150, 26], [40, 48]];
   const palette = [0xd6ff3f, 0x9aecde, 0xff4b3e, 0xd9d0c2, 0x252a31];
-  const shares = [0.2, 0.2, 0.4, 0.1, 0.1];
+  // Ecosystem & missions, treasury & grants, liquidity, contributors, reserve.
+  // Must stay in step with the allocation table in templates/whitepaper.html.
+  const shares = [0.4, 0.25, 0.15, 0.1, 0.1];
   const innerRadius = 1.36;
   const outerRadius = 2.75;
   const depth = 0.5;
@@ -184,22 +185,39 @@
     camera.updateProjectionMatrix();
   };
 
+  // The model keeps rotating, so each label is placed from its projected anchor
+  // every frame rather than from a fixed per-segment offset table.
+  const placements = labels.map((label, index) => ({ index, label }));
+
   const layoutLabels = () => {
     const width = sceneHost.clientWidth;
     const height = sceneHost.clientHeight;
     if (!width || !height) return;
-    anchors.forEach((anchor, index) => {
-      projected.copy(anchor);
+    placements.forEach((placement) => {
+      projected.copy(anchors[placement.index]);
       model.localToWorld(projected);
       projected.project(camera);
-      const anchorX = (projected.x * 0.5 + 0.5) * width;
-      const anchorY = (-projected.y * 0.5 + 0.5) * height;
-      const label = labels[index];
-      const [offsetX, offsetY] = labelOffsets[index];
-      const labelWidth = label.offsetWidth || 120;
-      const labelHeight = label.offsetHeight || 48;
-      const left = THREE.MathUtils.clamp(anchorX + offsetX, 8, width - labelWidth - 8);
-      const top = THREE.MathUtils.clamp(anchorY + offsetY, 62, height - labelHeight - 8);
+      const label = placement.label;
+      placement.anchorX = (projected.x * 0.5 + 0.5) * width;
+      placement.anchorY = (-projected.y * 0.5 + 0.5) * height;
+      placement.labelWidth = label.offsetWidth || 120;
+      placement.labelHeight = label.offsetHeight || 48;
+      placement.side = placement.anchorX >= width / 2 ? 1 : -1;
+      const nudge = placement.anchorY >= height / 2 ? placement.labelHeight * 0.35 : placement.labelHeight * -0.35;
+      const rawLeft = placement.side === 1 ? placement.anchorX + 30 : placement.anchorX - placement.labelWidth - 30;
+      placement.left = THREE.MathUtils.clamp(rawLeft, 8, Math.max(8, width - placement.labelWidth - 8));
+      placement.top = THREE.MathUtils.clamp(placement.anchorY - placement.labelHeight / 2 + nudge, 62, Math.max(62, height - placement.labelHeight - 8));
+    });
+    [-1, 1].forEach((side) => {
+      const column = placements.filter((placement) => placement.side === side).sort((a, b) => a.top - b.top);
+      column.forEach((placement, position) => {
+        if (!position) return;
+        const previous = column[position - 1];
+        const minimum = previous.top + previous.labelHeight + 6;
+        if (placement.top < minimum) placement.top = Math.min(minimum, Math.max(62, height - placement.labelHeight - 8));
+      });
+    });
+    placements.forEach(({ index, label, anchorX, anchorY, labelWidth, labelHeight, left, top }) => {
       label.style.left = `${left}px`;
       label.style.top = `${top}px`;
       label.style.right = 'auto';

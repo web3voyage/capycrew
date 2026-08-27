@@ -1,16 +1,18 @@
 {% extends "base.html" %}
 {% block title %}Whitepaper — CAPYCREW{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/whitepaper.css') }}?v=20260827-1">{% endblock %}
 {% block content %}
+<div class="paper-progress" aria-hidden="true"><span></span></div>
 <section class="page-hero paper-hero">
   <div class="wrap paper-hero-grid">
     <div>
-      <div class="eyebrow">CAPYCREW / WHITEPAPER V1.1 · AUGUST 2026</div>
-      <h1>THE MELLOW<br><em>PROTOCOL.</em></h1>
-      <p class="lede">A character universe, media layer, and community coordination system built in public.</p>
+      <div class="eyebrow">CAPYCREW / WHITEPAPER V2.0 · AUGUST 2026</div>
+      <h1>THE CAPY<br><em>EXPERIENCE.</em></h1>
+      <p class="lede">A creative internet club where a collectible character becomes your identity, your membership pass, and your way to help shape CapyCity.</p>
     </div>
     <div class="paper-meta" aria-label="Whitepaper metadata">
       <span>Document status</span><strong>Living draft</strong>
-      <span>Last reviewed</span><strong>22 Aug 2026</strong>
+      <span>Last reviewed</span><strong>27 Aug 2026</strong>
       <span>Network</span><strong>To be announced</strong>
     </div>
   </div>
@@ -24,22 +26,25 @@
       <a href="#world">01 / The world</a>
       <a href="#collection">02 / Collection</a>
       <a href="#loop">03 / Signal loop</a>
-      <a href="#tokenomics">04 / Tokenomics</a>
+      <a href="#mvp">04 / MVP product</a>
+      <a href="#tokenomics">05 / Tokenomics</a>
       <a href="#nft-tier-distribution">NFT tier airdrop</a>
-      <a href="#distribution">05 / Distribution</a>
-      <a href="#utility">06 / Utility</a>
-      <a href="#governance">07 / Governance</a>
-      <a href="#roadmap">08 / Roadmap</a>
-      <a href="#architecture">09 / Architecture</a>
-      <a href="#security">10 / Security</a>
-      <a href="#risks">11 / Risks</a>
+      <a href="#distribution">06 / Distribution</a>
+      <a href="#utility">07 / Utility</a>
+      <a href="#governance">08 / Governance</a>
+      <a href="#roadmap">09 / Roadmap</a>
+      <a href="#game">10 / Game concept</a>
+      <a href="#architecture">11 / Architecture</a>
+      <a href="#security">12 / Security</a>
+      <a href="#risks">13 / Risks</a>
+      <a href="#legal">14 / Legal</a>
     </aside>
 
     <article class="paper">
       <section id="abstract" class="paper-section paper-intro">
         <p class="eyebrow">Abstract</p>
         <p class="paper-lead">CapyCrew is an animation-first NFT universe built around a simple idea: the internet is better when participation feels human.</p>
-        <p>The project combines collectible characters, a shared setting called CapyCity, and a planned memecoin called <strong>$MELLOW</strong>. The site, collection, and community are the first public districts. New features ship only when they are real, documented, and safe to use.</p>
+        <p>The project combines collectible characters, a shared setting called CapyCity, and a product loop built around profiles, galleries, monthly missions, rewards, polls, and a public activity feed. The site, collection, and community are the first public districts. New features ship only when they are real, documented, and safe to use.</p>
         <div class="paper-callout"><span class="callout-mark">01</span><div><strong>Scope</strong><p>This document describes the current product and a planned token model. It does not offer securities, guarantee a token generation event, or promise market performance.</p></div></div>
       </section>
 
@@ -72,24 +77,38 @@
         </div>
       </section>
 
+      <section id="mvp" class="paper-section">
+        <div class="paper-kicker">04 / MVP product</div>
+        <h2>The experience is<br>the product.</h2>
+        <p>The first focused web app is designed to give holders a reason to return every month. It is not a collection viewer bolted onto a mint page; it is a member home with a clear loop and visible progress.</p>
+        <div class="loop-grid">
+          <div><b>01</b><strong>Wallet + profile</strong><p>Connect, verify a Capy, and manage traits, animations, badges, and participation history.</p></div>
+          <div><b>02</b><strong>Holder gallery</strong><p>Inspect characters in a collection-style display with trait metadata and animation previews.</p></div>
+          <div><b>03</b><strong>Monthly missions</strong><p>Design districts, submit concepts, vote on drops, complete challenges, and attend events.</p></div>
+          <div><b>04</b><strong>Public activity</strong><p>Follow districts, drops, contributions, mission completions, and community decisions.</p></div>
+        </div>
+      </section>
+
       <section id="tokenomics" class="paper-section">
-        <div class="paper-kicker">04 / Tokenomics</div>
-        <div class="section-title-row"><h2>$MELLOW supply</h2><span class="status-pill">PLANNED MODEL</span></div>
-        <p><strong>$MELLOW</strong> is planned as a community coordination asset with a fixed genesis supply of <strong>1,000,000,000 tokens</strong>. No inflation, mint function, team top-up, or hidden reserve is contemplated in this model. Any later supply change would require a separate public proposal and implementation.</p>
+        <div class="paper-kicker">05 / Tokenomics</div>
+        <div class="section-title-row"><h2>Utility before supply.</h2><span class="status-pill">GATED / NOT LAUNCHED</span></div>
+        <p><strong>$MELLOW</strong> is not the primary product and is not required for the MVP. It may be considered later as a coordination layer only after CapyCrew demonstrates recurring monthly participation, documented rewards, active community decisions, and a transparent treasury process. No token launch date is promised.</p>
+        <p>The map below models an illustrative fixed genesis supply of <strong>1,000,000,000 $MELLOW</strong> with no inflation. Treat every figure in this section as a planning envelope for review rather than a committed number.</p>
+        <div class="paper-callout"><span class="callout-mark">01</span><div><strong>Design rule</strong><p>If CapyCrew cannot explain what the token does for a real user, what demand it creates, and how value flows through the system, the token does not launch.</p></div></div>
         <div class="allocation-chart" aria-label="$MELLOW allocation chart">
           <div class="allocation-visual">
             <div class="allocation-3d-scene" tabindex="0" role="img" aria-label="Interactive 3D $MELLOW allocation model. Drag with a mouse or finger, or use the arrow keys, to rotate it.">
               <div class="allocation-3d-hud"><span>INTERACTIVE MODEL</span><strong>DRAG TO ROTATE</strong></div>
               <svg class="allocation-3d-lines" aria-hidden="true"><path data-line="0"/><path data-line="1"/><path data-line="2"/><path data-line="3"/><path data-line="4"/></svg>
-              <div class="allocation-3d-label label-3d-nft" data-segment="0"><span>NFT HOLDERS</span><strong>20%</strong><small>200M</small></div>
-              <div class="allocation-3d-label label-3d-treasury" data-segment="1"><span>TREASURY</span><strong>20%</strong><small>200M</small></div>
-              <div class="allocation-3d-label label-3d-liquidity" data-segment="2"><span>LIQUIDITY</span><strong>40%</strong><small>400M</small></div>
-              <div class="allocation-3d-label label-3d-growth" data-segment="3"><span>GROWTH + DEV</span><strong>10%</strong><small>100M</small></div>
-              <div class="allocation-3d-label label-3d-team" data-segment="4"><span>TEAM + ADVISORS</span><strong>10%</strong><small>100M</small></div>
+              <div class="allocation-3d-label label-3d-nft" data-segment="0"><span>ECOSYSTEM + MISSIONS</span><strong>40%</strong><small>400M</small></div>
+              <div class="allocation-3d-label label-3d-treasury" data-segment="1"><span>TREASURY + GRANTS</span><strong>25%</strong><small>250M</small></div>
+              <div class="allocation-3d-label label-3d-liquidity" data-segment="2"><span>LIQUIDITY</span><strong>15%</strong><small>150M</small></div>
+              <div class="allocation-3d-label label-3d-growth" data-segment="3"><span>CONTRIBUTORS</span><strong>10%</strong><small>100M</small></div>
+              <div class="allocation-3d-label label-3d-team" data-segment="4"><span>RESERVE</span><strong>10%</strong><small>100M</small></div>
             </div>
             <svg class="allocation-ring" viewBox="0 0 620 460" role="img" aria-labelledby="allocation-ring-title allocation-ring-desc">
               <title id="allocation-ring-title">$MELLOW token allocation</title>
-              <desc id="allocation-ring-desc">NFT holders 20 percent, community treasury 20 percent, liquidity 40 percent, growth and development 10 percent, and team and advisors 10 percent.</desc>
+              <desc id="allocation-ring-desc">Illustrative planning envelope: ecosystem and missions 40 percent, treasury and grants 25 percent, liquidity 15 percent, contributors 10 percent, and reserve 10 percent.</desc>
               <defs>
                 <filter id="allocation-shadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="14" stdDeviation="10" flood-color="#101010" flood-opacity=".24"/></filter>
                 <radialGradient id="allocation-core" cx="35%" cy="28%"><stop offset="0" stop-color="#fff"/><stop offset=".65" stop-color="#f4f0e8"/><stop offset="1" stop-color="#d9d0c2"/></radialGradient>
@@ -103,60 +122,60 @@
               <text class="allocation-chart-total" x="592" y="38" text-anchor="end">FIXED / NO INFLATION</text>
               <g class="allocation-ring-grid" aria-hidden="true"><circle cx="250" cy="225" r="152"/><circle cx="250" cy="225" r="112"/></g>
               <g class="allocation-ring-depth" aria-hidden="true">
-                <circle cx="250" cy="239" r="132" pathLength="100" stroke="#020914" stroke-dasharray="18.5 81.5" stroke-dashoffset="0"/>
-                <circle cx="250" cy="239" r="132" pathLength="100" stroke="#020914" stroke-dasharray="18.5 81.5" stroke-dashoffset="-20"/>
-                <circle cx="250" cy="239" r="132" pathLength="100" stroke="#020914" stroke-dasharray="38.5 61.5" stroke-dashoffset="-40"/>
+                <circle cx="250" cy="239" r="132" pathLength="100" stroke="#020914" stroke-dasharray="38.5 61.5" stroke-dashoffset="0"/>
+                <circle cx="250" cy="239" r="132" pathLength="100" stroke="#020914" stroke-dasharray="23.5 76.5" stroke-dashoffset="-40"/>
+                <circle cx="250" cy="239" r="132" pathLength="100" stroke="#020914" stroke-dasharray="13.5 86.5" stroke-dashoffset="-65"/>
                 <circle cx="250" cy="239" r="132" pathLength="100" stroke="#020914" stroke-dasharray="8.5 91.5" stroke-dashoffset="-80"/>
                 <circle cx="250" cy="239" r="132" pathLength="100" stroke="#020914" stroke-dasharray="8.5 91.5" stroke-dashoffset="-90"/>
               </g>
-              <g class="allocation-segment allocation-segment-nft" tabindex="0" aria-label="NFT holders, 20 percent">
-                <circle cx="250" cy="225" r="132" pathLength="100" stroke="url(#allocation-nft)" stroke-dasharray="18.5 81.5" stroke-dashoffset="0"/>
+              <g class="allocation-segment allocation-segment-nft" tabindex="0" aria-label="Ecosystem and missions, 40 percent, 400,000,000 tokens">
+                <circle cx="250" cy="225" r="132" pathLength="100" stroke="url(#allocation-nft)" stroke-dasharray="38.5 61.5" stroke-dashoffset="0"/>
               </g>
-              <g class="allocation-segment allocation-segment-treasury" tabindex="0" aria-label="Community treasury, 20 percent">
-                <circle cx="250" cy="225" r="132" pathLength="100" stroke="url(#allocation-treasury)" stroke-dasharray="18.5 81.5" stroke-dashoffset="-20"/>
+              <g class="allocation-segment allocation-segment-treasury" tabindex="0" aria-label="Treasury and grants, 25 percent, 250,000,000 tokens">
+                <circle cx="250" cy="225" r="132" pathLength="100" stroke="url(#allocation-treasury)" stroke-dasharray="23.5 76.5" stroke-dashoffset="-40"/>
               </g>
-              <g class="allocation-segment allocation-segment-liquidity" tabindex="0" aria-label="Liquidity, 40 percent">
-                <circle cx="250" cy="225" r="132" pathLength="100" stroke="url(#allocation-liquidity)" stroke-dasharray="38.5 61.5" stroke-dashoffset="-40"/>
+              <g class="allocation-segment allocation-segment-liquidity" tabindex="0" aria-label="Liquidity, 15 percent, 150,000,000 tokens">
+                <circle cx="250" cy="225" r="132" pathLength="100" stroke="url(#allocation-liquidity)" stroke-dasharray="13.5 86.5" stroke-dashoffset="-65"/>
               </g>
-              <g class="allocation-segment allocation-segment-growth" tabindex="0" aria-label="Growth and development, 10 percent">
+              <g class="allocation-segment allocation-segment-growth" tabindex="0" aria-label="Contributors, 10 percent, 100,000,000 tokens">
                 <circle cx="250" cy="225" r="132" pathLength="100" stroke="url(#allocation-growth)" stroke-dasharray="8.5 91.5" stroke-dashoffset="-80"/>
               </g>
-              <g class="allocation-segment allocation-segment-team" tabindex="0" aria-label="Team and advisors, 10 percent">
+              <g class="allocation-segment allocation-segment-team" tabindex="0" aria-label="Reserve, 10 percent, 100,000,000 tokens">
                 <circle cx="250" cy="225" r="132" pathLength="100" stroke="url(#allocation-team)" stroke-dasharray="8.5 91.5" stroke-dashoffset="-90"/>
               </g>
               <circle class="allocation-core-shadow" cx="250" cy="225" r="83"/>
               <circle class="allocation-core" cx="250" cy="225" r="80"/>
               <text class="allocation-core-label" x="250" y="216" text-anchor="middle">1B</text>
               <text class="allocation-core-value" x="250" y="243" text-anchor="middle">$MELLOW SUPPLY</text>
-              <g class="allocation-callout allocation-callout-nft"><path d="M142 129 92 104H14"/><rect x="14" y="72" width="132" height="43"/><text x="27" y="91">NFT HOLDERS</text><text x="27" y="107" class="allocation-callout-value">20% / 200M</text></g>
-              <g class="allocation-callout allocation-callout-treasury"><path d="M332 132 405 104h55"/><rect x="405" y="72" width="170" height="43"/><text x="418" y="91">COMMUNITY TREASURY</text><text x="418" y="107" class="allocation-callout-value">20% / 200M</text></g>
-              <g class="allocation-callout allocation-callout-liquidity"><path d="M360 270 431 311h42"/><rect x="431" y="289" width="144" height="43"/><text x="444" y="308">LIQUIDITY</text><text x="444" y="324" class="allocation-callout-value">40% / 400M</text></g>
-              <g class="allocation-callout allocation-callout-growth"><path d="M164 325 107 377H42"/><rect x="42" y="377" width="154" height="43"/><text x="55" y="396">GROWTH + DEV</text><text x="55" y="412" class="allocation-callout-value">10% / 100M</text></g>
-              <g class="allocation-callout allocation-callout-team"><path d="M279 348 292 390h38"/><rect x="330" y="377" width="158" height="43"/><text x="343" y="396">TEAM + ADVISORS</text><text x="343" y="412" class="allocation-callout-value">10% / 100M</text></g>
+              <g class="allocation-callout allocation-callout-nft"><path d="M142 129 92 104H14"/><rect x="14" y="72" width="158" height="43"/><text x="27" y="91">ECOSYSTEM + MISSIONS</text><text x="27" y="107" class="allocation-callout-value">40% / 400M</text></g>
+              <g class="allocation-callout allocation-callout-treasury"><path d="M332 132 405 104h55"/><rect x="405" y="72" width="170" height="43"/><text x="418" y="91">TREASURY + GRANTS</text><text x="418" y="107" class="allocation-callout-value">25% / 250M</text></g>
+              <g class="allocation-callout allocation-callout-liquidity"><path d="M360 270 431 311h42"/><rect x="431" y="289" width="144" height="43"/><text x="444" y="308">LIQUIDITY</text><text x="444" y="324" class="allocation-callout-value">15% / 150M</text></g>
+              <g class="allocation-callout allocation-callout-growth"><path d="M164 325 107 377H42"/><rect x="42" y="377" width="154" height="43"/><text x="55" y="396">CONTRIBUTORS</text><text x="55" y="412" class="allocation-callout-value">10% / 100M</text></g>
+              <g class="allocation-callout allocation-callout-team"><path d="M279 348 292 390h38"/><rect x="330" y="377" width="158" height="43"/><text x="343" y="396">RESERVE</text><text x="343" y="412" class="allocation-callout-value">10% / 100M</text></g>
             </svg>
           </div>
           <div class="allocation-legend" aria-label="Token allocation legend">
-            <div data-index="01"><i class="allocation-swatch swatch-nft"></i><span>NFT holders</span><strong>20%</strong><small>200,000,000</small></div>
-            <div data-index="02"><i class="allocation-swatch swatch-treasury"></i><span>Community treasury</span><strong>20%</strong><small>200,000,000</small></div>
-            <div data-index="03"><i class="allocation-swatch swatch-liquidity"></i><span>Liquidity</span><strong>40%</strong><small>400,000,000</small></div>
-            <div data-index="04"><i class="allocation-swatch swatch-growth"></i><span>Growth &amp; development</span><strong>10%</strong><small>100,000,000</small></div>
-            <div data-index="05"><i class="allocation-swatch swatch-team"></i><span>Team &amp; advisors</span><strong>10%</strong><small>100,000,000</small></div>
+            <div data-index="01"><i class="allocation-swatch swatch-nft"></i><span>Ecosystem &amp; missions</span><strong>40%</strong><small>400,000,000</small></div>
+            <div data-index="02"><i class="allocation-swatch swatch-treasury"></i><span>Treasury &amp; grants</span><strong>25%</strong><small>250,000,000</small></div>
+            <div data-index="03"><i class="allocation-swatch swatch-liquidity"></i><span>Liquidity</span><strong>15%</strong><small>150,000,000</small></div>
+            <div data-index="04"><i class="allocation-swatch swatch-growth"></i><span>Contributors</span><strong>10%</strong><small>100,000,000</small></div>
+            <div data-index="05"><i class="allocation-swatch swatch-team"></i><span>Reserve</span><strong>10%</strong><small>100,000,000</small></div>
           </div>
         </div>
         <div class="allocation-table-wrap">
           <table class="allocation-table"><caption class="sr-only">$MELLOW token allocation</caption><thead><tr><th scope="col">Allocation</th><th scope="col">Share</th><th scope="col">Tokens</th><th scope="col">Purpose</th><th scope="col">Status</th></tr></thead><tbody>
-            <tr><th scope="row">NFT holders</th><td>20%</td><td>200,000,000</td><td>Reward verified CapyCrew holders for early participation and ongoing membership.</td><td>Snapshot and claim rules must be published before distribution.</td></tr>
-            <tr><th scope="row">Community treasury</th><td>20%</td><td>200,000,000</td><td>Fund creator grants, events, competitions, media, and protocol improvements.</td><td>Spending policy and signer/multisig controls to be published.</td></tr>
-            <tr><th scope="row">Liquidity</th><td>40%</td><td>400,000,000</td><td>Support orderly trading, market depth, and launch-day access.</td><td>Venue, lockup, and management policy to be disclosed.</td></tr>
-            <tr><th scope="row">Growth &amp; development</th><td>10%</td><td>100,000,000</td><td>Marketing, partnerships, audits, infrastructure, and paid contributor work.</td><td>Material paid promotions must be disclosed.</td></tr>
-            <tr><th scope="row">Team &amp; advisors</th><td>10%</td><td>100,000,000</td><td>Compensate long-term building and advisory contributions.</td><td>Vested; no transfer before the cliff.</td></tr>
+            <tr><th scope="row">Ecosystem &amp; missions</th><td>40%</td><td>400,000,000</td><td>Milestone-based rewards for missions, creator work, events, and useful participation. Includes the tier-weighted holder airdrop below.</td><td>No passive emissions; release follows published programs.</td></tr>
+            <tr><th scope="row">Treasury &amp; grants</th><td>25%</td><td>250,000,000</td><td>Fund districts, approved creators, events, commerce experiments, and product work.</td><td>Multisig, budgets, and reporting required.</td></tr>
+            <tr><th scope="row">Liquidity</th><td>15%</td><td>150,000,000</td><td>Provide orderly market access only if a token launch is approved.</td><td>Venue, lockup, and management policy disclosed first.</td></tr>
+            <tr><th scope="row">Contributors</th><td>10%</td><td>100,000,000</td><td>Compensate long-term builders, artists, engineers, and advisors.</td><td>Minimum cliff and staged vesting; wallets disclosed.</td></tr>
+            <tr><th scope="row">Reserve</th><td>10%</td><td>100,000,000</td><td>Cover future risks, strategic partnerships, or a later product need.</td><td>Locked until a public proposal and review.</td></tr>
           </tbody></table>
         </div>
 
         <div id="nft-tier-distribution" class="nft-tier-breakdown">
-          <div class="paper-kicker">NFT holder allocation / rarity weighting</div>
+          <div class="paper-kicker">Inside ecosystem &amp; missions / rarity weighting</div>
           <h3>200M tokens, weighted by tier.</h3>
-          <p>The NFT-holder pool is <strong>20% of the fixed 1,000,000,000 $MELLOW supply</strong>, or <strong>200,000,000 tokens</strong>. Each NFT receives points equal to its rarity level: Common = 1 point through One-of-One = 8 points. A holder’s claim is calculated from the number of NFTs held in each tier and that tier’s point value.</p>
+          <p>The holder airdrop is a program <strong>inside the ecosystem &amp; missions allocation</strong>, not a sixth line item. It models <strong>200,000,000 tokens</strong>: half of that 400,000,000 pool, or 20% of the illustrative genesis supply. The other half stays with missions, creator work, and events. Each NFT receives points equal to its rarity level: Common = 1 point through One-of-One = 8 points. A holder’s claim is calculated from the number of NFTs held in each tier and that tier’s point value.</p>
 
           <div class="tier-chart-layout">
             <div class="tier-donut" role="img" aria-label="NFT holder airdrop shares: Common 17.38 percent, Uncommon 21.73 percent, Rare 19.56 percent, Epic 17.38 percent, Legendary 13.04 percent, Mythic 7.82 percent, Unique 2.74 percent, One-of-One 0.35 percent"></div>
@@ -198,35 +217,35 @@
       </section>
 
       <section id="distribution" class="paper-section">
-        <div class="paper-kicker">05 / Distribution &amp; unlocks</div>
+        <div class="paper-kicker">06 / Distribution &amp; unlocks</div>
         <h2>Transparent timing,<br>no silent supply.</h2>
-        <p>The planned unlock schedule uses a 12-month cliff for insiders, followed by linear monthly release. Community and liquidity distributions are event-driven and must be announced before execution. Percentages below are of total genesis supply.</p>
+        <p>The numbers below are a planning envelope, not a commitment. Final supply, float, allocation, vesting, and launch mechanics require legal, technical, community, and demand review. The design prioritizes low initial float, milestone-gated distribution, and no unlock shock larger than the product can support.</p>
         <div class="allocation-table-wrap">
           <table class="allocation-table"><caption class="sr-only">Planned $MELLOW unlock schedule</caption><thead><tr><th scope="col">Phase</th><th scope="col">Timing</th><th scope="col">Release</th><th scope="col">Cumulative circulating target</th></tr></thead><tbody>
-            <tr><th scope="row">Genesis</th><td>TGE day 0</td><td>Initial liquidity deployment; no insider unlock.</td><td>Up to 40%, depending on deployed depth.</td></tr>
-            <tr><th scope="row">Holder claim window</th><td>Announced snapshot + claim period</td><td>20% to verified eligible wallets; unclaimed tokens follow the published recovery policy.</td><td>Up to 60% with liquidity.</td></tr>
-            <tr><th scope="row">Treasury activation</th><td>After spending policy</td><td>20% held under disclosed controls and released by approved budgets.</td><td>By governance schedule.</td></tr>
-            <tr><th scope="row">Insider cliff</th><td>Month 12</td><td>No team/advisor tokens transfer before month 12.</td><td>10% begins vesting.</td></tr>
-            <tr><th scope="row">Linear vesting</th><td>Months 12–24</td><td>Remaining 10% releases in 12 equal monthly tranches, approximately 0.833% per month.</td><td>100% at month 24.</td></tr>
+            <tr><th scope="row">Launch gate</th><td>Before TGE</td><td>Publish utility, demand map, contract, treasury controls, risk review, and holder eligibility.</td><td>No circulation until gates pass.</td></tr>
+            <tr><th scope="row">Genesis float</th><td>TGE, if approved</td><td>Only the amount required for verified initial utility and orderly liquidity is released.</td><td>Target: low float, disclosed in advance.</td></tr>
+            <tr><th scope="row">Community distribution</th><td>Milestone-based</td><td>Rewards follow completed missions, creator work, events, or grants—not passive holding.</td><td>Event-driven; no automatic emissions.</td></tr>
+            <tr><th scope="row">Treasury</th><td>Governance-approved</td><td>Funds districts, creators, events, and product work under public budgets and signer controls.</td><td>Locked until an approved budget exists.</td></tr>
+            <tr><th scope="row">Contributors</th><td>Long-term vesting</td><td>Minimum 12-month cliff, then staged vesting tied to time and published contributor agreements.</td><td>No launch-day insider unlock.</td></tr>
           </tbody></table>
         </div>
         <p class="paper-updated">TGE means the first publicly confirmed token distribution. Dates are intentionally omitted until contracts, controls, and legal review are complete.</p>
       </section>
 
       <section id="utility" class="paper-section">
-        <div class="paper-kicker">06 / Token utility</div>
+        <div class="paper-kicker">07 / Token utility</div>
         <h2>Coordination,<br>not speculation.</h2>
         <div class="loop-grid">
-          <div><b>01</b><strong>Access</strong><p>$MELLOW may gate holder spaces, drops, or experiments when those products are live.</p></div>
-          <div><b>02</b><strong>Participation</strong><p>It may be used in community activities, rewards, and creative campaigns.</p></div>
-          <div><b>03</b><strong>Governance signal</strong><p>Future proposals may use token or NFT signaling, subject to jurisdictional review.</p></div>
-          <div><b>04</b><strong>Treasury direction</strong><p>Holders may help express preferences for grants and community initiatives.</p></div>
+          <div><b>01</b><strong>Mission coordination</strong><p>If launched, the token may help coordinate optional campaigns, creator challenges, or district events.</p></div>
+          <div><b>02</b><strong>Creator access</strong><p>Approved contributors may use it for transparent collaboration budgets or campaign credits.</p></div>
+          <div><b>03</b><strong>Governance signal</strong><p>It may signal preferences over treasury proposals or future themes where the decision is genuinely binding.</p></div>
+          <div><b>04</b><strong>Holding incentives</strong><p>Any lock or reward mechanism must be funded by real product activity, not unsustainable inflation.</p></div>
         </div>
         <p>$MELLOW is not designed as payment for goods unless expressly stated at checkout, and it does not create a claim against CapyCrew revenue.</p>
       </section>
 
       <section id="governance" class="paper-section">
-        <div class="paper-kicker">07 / Governance</div>
+        <div class="paper-kicker">08 / Governance</div>
         <h2>Slow decisions,<br>published reasons.</h2>
         <p>Before decentralized tooling is ready, the team maintains contracts, treasury controls, and release schedules. As governance matures, proposals should move through public discussion, impact review, implementation specification, execution, and post-execution reporting.</p>
         <div class="paper-facts">
@@ -237,32 +256,68 @@
       </section>
 
       <section id="roadmap" class="paper-section">
-        <div class="paper-kicker">08 / Roadmap</div><h2>Milestones, not<br>manufactured deadlines.</h2>
+        <div class="paper-kicker">09 / Roadmap</div><h2>Milestones, not<br>manufactured deadlines.</h2>
         <div class="roadmap-list">
-          <div class="roadmap-item"><span>01</span><div><strong>Signal / shipped</strong><p>Animated genesis media, official channels, public documentation, and responsive site.</p></div></div>
-          <div class="roadmap-item"><span>02</span><div><strong>District / in progress</strong><p>CapyCity scenes, mint portal, holder tooling, and community showcases.</p></div></div>
-          <div class="roadmap-item"><span>03</span><div><strong>Utility / planned</strong><p>$MELLOW distribution, liquidity, treasury controls, and transparent reporting after review.</p></div></div>
-          <div class="roadmap-item"><span>04</span><div><strong>Expansion / exploratory</strong><p>Physical goods, collaborations, governance modules, and interactive world experiences.</p></div></div>
+          <div class="roadmap-item"><span>01</span><div><strong>Foundation / live</strong><p>Genesis collection, animated media, official channels, responsive site, mint portal, and public documentation.</p></div></div>
+          <div class="roadmap-item"><span>02</span><div><strong>Member loop / MVP</strong><p>Wallet connection, Capy profile, holder gallery, traits and animations, monthly missions, badges, polls, and a public activity feed.</p></div></div>
+          <div class="roadmap-item"><span>03</span><div><strong>CapyCity districts / next</strong><p>Launch themed areas such as Street, Studio, Arcade, and Harbor with their own characters, media, missions, and collaborations.</p></div></div>
+          <div class="roadmap-item"><span>04</span><div><strong>Wearables + creators / planned</strong><p>Introduce clothing, accessories, room items, animations, and an approved creator marketplace with transparent collaboration terms.</p></div></div>
+          <div class="roadmap-item"><span>05</span><div><strong>Events + browser world / exploratory</strong><p>Host showcases, listening sessions, contests, pop-ups, and a lightweight interactive CapyCity where members display their Capy and discover stories.</p></div></div>
+          <div class="roadmap-item"><span>06</span><div><strong>Treasury + token review / gated</strong><p>Consider grants, commerce, fashion, and eventually $MELLOW only after real activity, clear rewards, transparent distribution, and legal review exist.</p></div></div>
         </div>
       </section>
 
-      <section id="architecture" class="paper-section"><div class="paper-kicker">09 / Architecture</div><h2>Document what is live.</h2><p>Contracts, network details, metadata endpoints, claim mechanics, and audit status will be linked here as they are deployed. Until then, treat integrations as prototypes and use only links published on the official domain.</p><div class="paper-facts"><div><span>Contracts</span><strong>Published per deployment</strong></div><div><span>Audits</span><strong>Before material launch</strong></div><div><span>Canonical links</span><strong>capycrew.com only</strong></div></div></section>
+      <section id="game" class="paper-section">
+        <div class="paper-kicker">10 / Game concept</div>
+        <h2>CapyCity:<br>After Hours.</h2>
+        <p>A lightweight browser world where members explore districts, display their Capy, discover stories, and turn monthly missions into visible city changes. The game is an extension of the membership experience—not a speculative promise or a requirement for the NFT to have value as a collectible.</p>
+        <div class="loop-grid">
+          <div><b>01</b><strong>Explore</strong><p>Move through Street, Studio, Arcade, and Harbor using a small, readable browser map.</p></div>
+          <div><b>02</b><strong>Make</strong><p>Submit outfits, music, district props, and story fragments through moderated creator prompts.</p></div>
+          <div><b>03</b><strong>Earn</strong><p>Complete challenges to receive non-transferable badges, art unlocks, early access, or event priority.</p></div>
+          <div><b>04</b><strong>Shape</strong><p>Community votes and treasury grants decide which district ideas become permanent content.</p></div>
+        </div>
+        <div class="paper-callout"><span class="callout-mark">A</span><div><strong>Animation concept / “Signal Pulse”</strong><p>A 12-second loop for the game and social drops: Capy enters from frame left, the card emits a cyan-orange pulse, a district marker blooms underfoot, three trait callouts lock into place, and the camera cuts into the next route. Motion is restrained, readable, and reusable across profile headers, missions, and event screens.</p></div></div>
+      </section>
+
+      <section id="architecture" class="paper-section"><div class="paper-kicker">11 / Architecture</div><h2>Document what is live.</h2><p>Contracts, network details, metadata endpoints, claim mechanics, and audit status will be linked here as they are deployed. Until then, treat integrations as prototypes and use only links published on the official domain.</p><div class="paper-facts"><div><span>Contracts</span><strong>Published per deployment</strong></div><div><span>Audits</span><strong>Before material launch</strong></div><div><span>Canonical links</span><strong>capycrew.com only</strong></div></div></section>
 
       <section id="security" class="paper-section">
-        <div class="paper-kicker">10 / Security &amp; operations</div>
+        <div class="paper-kicker">12 / Security &amp; operations</div>
         <h2>Verify first,<br>always.</h2>
         <p>The project will publish canonical contract addresses, deployment transactions, metadata roots, and known-issue notices. Operational controls should include least-privilege access, timelocked upgrades where feasible, incident disclosure, and independent review before high-risk changes.</p>
         <div class="paper-callout warning"><span class="callout-mark">!</span><div><strong>User protection</strong><p>CapyCrew will never ask for a seed phrase or private key. A wallet signature proves control; it never authorizes token movement unless you approve a separate transaction.</p></div></div>
       </section>
 
       <section id="risks" class="paper-section">
-        <div class="paper-kicker">11 / Risks &amp; legal</div>
+        <div class="paper-kicker">13 / Risks &amp; legal</div>
         <h2>Know the edges.</h2>
         <p>Digital assets are volatile and experimental. Smart contracts, token launches, wallets, bridges, third-party services, phishing, market illiquidity, and changing regulations carry real risk. Tokens and NFTs may lose all value. Never share a seed phrase, verify the contract and URL, and only use funds you can afford to lose.</p>
         <p>This whitepaper is informational, does not constitute financial, investment, legal, accounting, or tax advice, and is not an offer to sell or solicitation to buy any asset where such offer would be unlawful. Availability of features and token distributions may change or be withdrawn. Obtain independent professional advice for your circumstances.</p>
-        <p class="paper-updated">This whitepaper is a living draft. Material changes will be dated and announced through official channels.</p><a class="btn dark" href="/mint">Visit mint portal</a></section>
+      </section>
+
+      <section id="legal" class="paper-section">
+        <div class="paper-kicker">14 / Legal &amp; contact</div>
+        <h2>Where to verify,<br>who to ask.</h2>
+        <p>Only pages and links published on the official CapyCrew domain are canonical. Treat any other address, contract, direct message, or claim portal as untrusted, even when it copies this document word for word.</p>
+        <div class="paper-legal-links">
+          <a href="/privacy"><span>Published</span><strong>Privacy policy</strong></a>
+          <a href="https://x.com/capycrew" target="_blank" rel="noreferrer"><span>Official channel</span><strong>X / @capycrew</strong></a>
+          <a href="https://t.me/capycrew" target="_blank" rel="noreferrer"><span>Official channel</span><strong>Telegram</strong></a>
+          <a href="https://discord.gg/capycrew" target="_blank" rel="noreferrer"><span>Official channel</span><strong>Discord</strong></a>
+        </div>
+        <div class="paper-facts">
+          <div><span>Terms of use</span><strong>Published before any sale</strong></div>
+          <div><span>Jurisdictions</span><strong>Restricted where unlawful</strong></div>
+          <div><span>Contact route</span><strong>Official channels above</strong></div>
+        </div>
+        <p>Full terms, eligibility rules, snapshot timing, and jurisdictional restrictions are published alongside each sale or claim and take precedence over this document wherever the two differ. CapyCrew does not offer the collection or any token where doing so would be unlawful or would require a licence it does not hold.</p>
+        <p class="paper-updated">This whitepaper is a living draft. Material changes will be dated and announced through official channels.</p>
+        <a class="btn dark" href="/mint">Visit mint portal</a>
+      </section>
     </article>
   </div>
 </main>
 {% endblock %}
-{% block scripts %}<script src="{{ url_for('static', path='js/tokenomics3d.js') }}?v=20260824-1" defer></script>{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', path='js/tokenomics3d.js') }}?v=20260827-1" defer></script>
+<script src="{{ url_for('static', path='js/whitepaper.js') }}?v=20260827-1" defer></script>{% endblock %}

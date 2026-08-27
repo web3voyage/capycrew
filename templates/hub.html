@@ -37,43 +37,56 @@
     </div>
   </section>
 
-  <section class="hub-section kentsugi-section" id="kentsugi-studio">
+  <section class="hub-section activity-section" id="activity">
     <div class="wrap">
-      <div class="hub-section-head kentsugi-intro"><div><span class="kicker">03 / Kentsugi Character Studio</span><h2>Direct the<br>character.</h2></div><p>Kentsugi is the creative engine behind CapyCrew: a visual system for turning one canonical Capy into screens, scenes, and a living city.</p></div>
-      <div class="kentsugi-grid kentsugi-showcase" data-character-stage>
-        <div class="character-stage">
-          <div class="stage-hud"><span>LIVE CHARACTER PREVIEW</span><strong id="character-angle">ANGLE / 000°</strong></div>
-          <div class="stage-grid" aria-hidden="true"></div>
-          <div class="stage-loading" id="character-loading">BUILDING CHARACTER / 042</div>
-          <canvas class="character-canvas" id="character-canvas" aria-label="Interactive 3D preview of the full CapyCrew 042 character design"></canvas>
-          <img class="character-fallback" id="character-fallback" src="/media/assets/CapyCrew_042_cutout.png" alt="CapyCrew #042 full character design preview">
-          <div class="stage-caption"><strong>CAPY #042 / GENESIS</strong><span>Street edition · canonical identity locked</span></div>
-        </div>
-        <div class="character-controls">
-          <div class="control-block"><span class="control-label">Design layers</span><button class="layer-toggle is-active" type="button" data-layer="identity" aria-pressed="true">Identity lock <small>face · glasses · card</small></button><button class="layer-toggle is-active" type="button" data-layer="fit" aria-pressed="true">Street fit <small>jacket · shorts · sneakers</small></button><button class="layer-toggle" type="button" data-layer="signal" aria-pressed="false">Signal pass <small>lighting · serial · accent</small></button></div>
-          <div class="control-block"><span class="control-label">Kentsugi output</span><div class="output-row"><span>Preview render</span><b>READY</b></div><div class="output-row"><span>Scene handoff</span><b class="muted">PLANNED</b></div><div class="output-row"><span>Animation export</span><b class="muted">EXPLORING</b></div></div>
-          <p class="control-note">The first release is a guided preview. Prompt-to-scene generation, Blender renders, and wearable exports arrive only after the character system is stable.</p>
-        </div>
+      <div class="hub-section-head"><div><span class="kicker">03 / Public activity</span><h2>What is moving<br>through the city.</h2></div><p>A public feed keeps the club legible: new districts, drops, member contributions, mission completions, and the decisions that shape the next chapter.</p></div>
+      <div class="activity-feed" aria-label="CapyCity activity feed">
+        <article class="activity-item"><span class="activity-time">TODAY / 09:42</span><div><strong>Genesis gallery refreshed</strong><p>Five Capys are now available in the collection display with trait and animation placeholders.</p></div><b>GALLERY</b></article>
+        <article class="activity-item"><span class="activity-time">YESTERDAY / 18:10</span><div><strong>Mission 01 opened</strong><p>Members can propose the mood, material, and sound of CapyCity’s next district.</p></div><b>MISSION</b></article>
+        <article class="activity-item"><span class="activity-time">26 AUG / 14:25</span><div><strong>Studio blueprint approved</strong><p>The canonical Capy identity is now documented as a separate Kentsugi construction layer.</p></div><b>BUILD</b></article>
       </div>
-      <div class="kentsugi-story" aria-label="Kentsugi showcase chapters">
-        <article class="story-step is-active" data-step="0"><span>01 / Character reveal</span><h3>One silhouette. Many worlds.</h3><p>The canonical Capy is treated like a collectible object: backed, lit, and ready to move through every future scene.</p></article>
-        <article class="story-step" data-step="1"><span>02 / Product system</span><h3>Mission control for the crew.</h3><p>The Crew Hub turns identity, missions, proofs, and community decisions into one clear member loop.</p></article>
-        <article class="story-step" data-step="2"><span>03 / Mobile layer</span><h3>A signal that travels.</h3><p>Mobile surfaces orbit the character so the same product language works in a pocket, a post, or a city broadcast.</p></article>
-        <article class="story-step" data-step="3"><span>04 / Future pipeline</span><h3>From plate to CapyCity.</h3><p>Next: scene handoff, animated drops, digital wearables, and a lightweight browser world built from this visual grammar.</p></article>
+    </div>
+  </section>
+
+  <section class="hub-section collection-studio" id="collection-studio">
+    <div class="wrap">
+      <div class="hub-section-head collection-intro"><div><span class="kicker">04 / Collection display</span><h2>Meet the Capys.<br>Read the traits.</h2></div><p>A collection view for the actual product: inspect one character at a time, compare the archive, and see the construction layer separately from the finished artwork.</p></div>
+      <div class="collection-showcase">
+        <div class="collection-stage" data-collection-stage>
+          <div class="stage-hud"><span>CAPYCREW / COLLECTION VIEW</span><strong id="collection-angle">ANGLE / 000°</strong></div>
+          <div class="stage-grid" aria-hidden="true"></div>
+          <div class="stage-loading" id="collection-loading">LOADING CHARACTER / 042</div>
+          <canvas class="character-canvas" id="collection-canvas" aria-label="Interactive 3D wireframe blueprint of CapyCrew character 042"></canvas>
+          <img class="character-fallback" src="/media/assets/CapyCrew_042_cutout.png" alt="CapyCrew #042 finished character">
+          <div class="stage-caption"><strong>CAPY #042 / GENESIS</strong><span>Drag to inspect the approved silhouette</span></div>
+        </div>
+        <aside class="collection-rail" aria-label="CapyCrew collection archive">
+          <div class="rail-head"><span>ARCHIVE / 05 SHOWN</span><span>01—05</span></div>
+          <button class="collection-item is-active" type="button" data-character="042" data-image="/media/assets/CapyCrew_042_cutout.png"><img src="/media/assets/CapyCrew_042_cutout.png" alt="Capy #042"><span><b>#042</b><small>Genesis / street signal</small></span></button>
+          <button class="collection-item" type="button" data-character="118" data-image="/media/assets/Capybara_dressed_as_skater_202608190231.jpeg"><img src="/media/assets/Capybara_dressed_as_skater_202608190231.jpeg" alt="Skater Capy"><span><b>#118</b><small>Skate / city runner</small></span></button>
+          <button class="collection-item" type="button" data-character="207" data-image="/media/assets/Capybara_wearing_puffer_jacket_202608190230.jpeg"><img src="/media/assets/Capybara_wearing_puffer_jacket_202608190230.jpeg" alt="Puffer Capy"><span><b>#207</b><small>Cold front / puffer</small></span></button>
+          <button class="collection-item" type="button" data-character="314" data-image="/media/assets/Capybara_wearing_techwear_attire_202608190230.jpeg"><img src="/media/assets/Capybara_wearing_techwear_attire_202608190230.jpeg" alt="Techwear Capy"><span><b>#314</b><small>Night shift / techwear</small></span></button>
+          <button class="collection-item" type="button" data-character="512" data-image="/media/assets/Capybara_wearing_varsity_jacket_202608190232.jpeg"><img src="/media/assets/Capybara_wearing_varsity_jacket_202608190232.jpeg" alt="Varsity Capy"><span><b>#512</b><small>Campus / varsity</small></span></button>
+          <div class="rail-note">The archive is a sample view. Trait metadata, animation URLs, and badges will attach to each holder profile as they become available.</div>
+        </aside>
+      </div>
+      <div class="blueprint-mockup-grid">
+        <article class="blueprint-card"><div class="kicker">Blueprint / construction layer</div><h3>Mapped before it is styled.</h3><p>Kentsugi keeps the canonical identity stable through bounded volumes, attachment rails, and a repeatable render handoff. Face, muzzle, glasses, card hand, stance, and shoe scale are locked before trait variants are introduced.</p><div class="blueprint-lines"><span>HEAD / 03 VOLUMES</span><span>BODY / 04 VOLUMES</span><span>WARDROBE / 05 RAILS</span><span>HANDOFF / VALIDATED JSON → BLENDER</span></div></article>
+        <article class="finished-mockup"><div class="mockup-label">Finished art / field card</div><img id="collection-mockup-image" src="/media/assets/CapyCrew_042_cutout.png" alt="Finished CapyCrew #042 mockup"><div class="mockup-meta"><strong id="collection-mockup-name">CAPY #042</strong><span id="collection-mockup-trait">street edition · final presentation</span></div></article>
       </div>
     </div>
   </section>
 
   <section class="hub-section hub-split" id="rewards">
     <div class="wrap hub-split-grid">
-      <div class="reward-panel"><div class="kicker">03 / Your proofs</div><h2>Small acts.<br>Visible history.</h2><p>Participation should leave a trace you can keep. Your proofs are non-transferable badges for moments you helped make happen.</p><div class="proof-list"><div class="proof is-earned"><span>01</span><div><strong>Genesis arrival</strong><small>Claimed · Capy #042</small></div><b>LIVE</b></div><div class="proof"><span>02</span><div><strong>District voice</strong><small>Complete Mission 01</small></div><b>OPEN</b></div><div class="proof is-locked"><span>03</span><div><strong>First collaborator</strong><small>Planned for the next chapter</small></div><b>SOON</b></div></div></div>
-      <div class="vote-panel"><div class="kicker">04 / Community signal</div><h2>What should<br>CapyCity feel like?</h2><p>One live proposal. One clear choice. The result guides the next art direction conversation.</p><div class="vote-options" role="group" aria-label="CapyCity district proposal"><button type="button" data-vote="neon" aria-pressed="false">Neon night market <span>42%</span></button><button type="button" data-vote="quiet" aria-pressed="false">Quiet reading room <span>35%</span></button><button type="button" data-vote="rooftop" aria-pressed="false">Rooftop radio club <span>23%</span></button></div><div class="vote-footer"><span id="vote-status">Closes in 04 days</span><button class="text-button" id="vote-submit" type="button">Cast your vote</button></div></div>
+      <div class="reward-panel"><div class="kicker">05 / Your proofs</div><h2>Small acts.<br>Visible history.</h2><p>Participation should leave a trace you can keep. Your proofs are non-transferable badges for moments you helped make happen.</p><div class="proof-list"><div class="proof is-earned"><span>01</span><div><strong>Genesis arrival</strong><small>Claimed · Capy #042</small></div><b>LIVE</b></div><div class="proof"><span>02</span><div><strong>District voice</strong><small>Complete Mission 01</small></div><b>OPEN</b></div><div class="proof is-locked"><span>03</span><div><strong>First collaborator</strong><small>Planned for the next chapter</small></div><b>SOON</b></div></div></div>
+      <div class="vote-panel"><div class="kicker">06 / Community signal</div><h2>What should<br>CapyCity feel like?</h2><p>One live proposal. One clear choice. The result guides the next art direction conversation.</p><div class="vote-options" role="group" aria-label="CapyCity district proposal"><button type="button" data-vote="neon" aria-pressed="false">Neon night market <span>42%</span></button><button type="button" data-vote="quiet" aria-pressed="false">Quiet reading room <span>35%</span></button><button type="button" data-vote="rooftop" aria-pressed="false">Rooftop radio club <span>23%</span></button></div><div class="vote-footer"><span id="vote-status">Closes in 04 days</span><button class="text-button" id="vote-submit" type="button">Cast your vote</button></div></div>
     </div>
   </section>
 
   <section class="hub-section future-section" id="future">
     <div class="wrap">
-      <div class="hub-section-head"><div><span class="kicker">05 / The route ahead</span><h2>Useful things,<br>when ready.</h2></div><p>Future plans are deliberately staged. Each one ships only after the member loop above is working and documented.</p></div>
+      <div class="hub-section-head"><div><span class="kicker">07 / The route ahead</span><h2>Useful things,<br>when ready.</h2></div><p>Future plans are deliberately staged. Each one ships only after the member loop above is working and documented.</p></div>
       <div class="future-controls" role="group" aria-label="Filter future plans"><button class="future-filter is-active" data-filter="all" type="button" aria-pressed="true">All plans</button><button class="future-filter" data-filter="next" type="button" aria-pressed="false">Next chapter</button><button class="future-filter" data-filter="explore" type="button" aria-pressed="false">Exploring</button></div>
       <div class="future-grid"><article class="future-card" data-stage="next"><span class="future-stage">NEXT CHAPTER</span><h3>CapyCity districts</h3><p>Explore themed blocks with stories, broadcasts, and member-led missions.</p><span class="future-quarter">Target: after Genesis launch</span></article><article class="future-card" data-stage="next"><span class="future-stage">NEXT CHAPTER</span><h3>Digital wearables</h3><p>Collect clothing and accessories that give your Capy a living media identity.</p><span class="future-quarter">Target: prototype</span></article><article class="future-card" data-stage="explore"><span class="future-stage">EXPLORING</span><h3>Creator collaborations</h3><p>Open a path for artists, musicians, and designers to build official CapyCrew drops.</p><span class="future-quarter">Needs: contributor model</span></article><article class="future-card" data-stage="explore"><span class="future-stage">EXPLORING</span><h3>CapyCity events</h3><p>Bring the club offline through showcases, pop-ups, and small creative gatherings.</p><span class="future-quarter">Needs: local partners</span></article><article class="future-card" data-stage="explore"><span class="future-stage">EXPLORING</span><h3>Interactive world</h3><p>A lightweight browser world where members can display their Capy and discover stories.</p><span class="future-quarter">Needs: technical brief</span></article><article class="future-card" data-stage="explore"><span class="future-stage">EXPLORING</span><h3>Community grants</h3><p>A transparent pool for member-led art, music, events, and city improvements.</p><span class="future-quarter">Needs: treasury policy</span></article></div>
       <div class="hub-disclaimer"><span>STATUS NOTE</span><p>Planned features are directional, not promises. Eligibility, timing, and availability will be published before any claim, sale, or launch.</p></div>

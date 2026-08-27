@@ -1,4 +1,5 @@
 import os
+import re
 import unittest
 from unittest.mock import AsyncMock, patch
 
@@ -19,12 +20,20 @@ class WebAppTests(unittest.TestCase):
         self.addCleanup(self.environment.stop)
         self.client = TestClient(webapp.app)
 
+    def static_source(self, path):
+        """Static files are served byte-for-byte, so normalise the line endings of a
+        CRLF checkout before matching multi-line source snippets."""
+        response = self.client.get(path)
+        self.assertEqual(response.status_code, 200, path)
+        return response.text.replace("\r\n", "\n")
+
     def test_pages_and_static_mint_client_load(self):
         for path in ("/", "/hub", "/mint", "/about", "/whitepaper", "/store", "/privacy"):
             response = self.client.get(path)
             self.assertEqual(response.status_code, 200, path)
         about = self.client.get("/about")
-        self.assertIn("Digital membership", about.text)
+        self.assertIn("Give holders a reason to return", about.text)
+        self.assertIn("Wallet + Capy profile", about.text)
         self.assertIn('href="/about"', about.text)
         self.assertIn('property="og:image"', about.text)
         self.assertIn("/static/og-image.png", about.text)
@@ -41,18 +50,36 @@ class WebAppTests(unittest.TestCase):
         self.assertIn("/static/js/hub.js", hub.text)
 
     def test_mint_client_blocks_minting_on_the_wrong_network(self):
-        mint_client = self.client.get("/static/js/mint.js")
-        self.assertIn("let networkReady = false", mint_client.text)
-        self.assertIn("Boolean(account) && !networkReady", mint_client.text)
-        self.assertIn('setNetwork("Switch to " + chainName', mint_client.text)
+        mint_client = self.static_source("/static/js/mint.js")
+        self.assertIn("let networkReady = false", mint_client)
+        self.assertIn("Boolean(account) && !networkReady", mint_client)
+        self.assertIn('setNetwork("Switch to " + chainName', mint_client)
 
     def test_mint_client_keeps_connect_verify_and_mint_as_separate_actions(self):
-        mint_client = self.client.get("/static/js/mint.js")
-        self.assertIn('elements.mint.textContent = "Verify wallet"', mint_client.text)
-        self.assertIn("await connectWallet(true);\n      return;", mint_client.text)
-        self.assertIn("await verifyWallet();\n      return;", mint_client.text)
-        self.assertIn('setStatus("Wallet verified. Click Mint now to continue."', mint_client.text)
-        self.assertIn("refreshState({ quiet: true, preserveStatus: true })", mint_client.text)
+        mint_client = self.static_source("/static/js/mint.js")
+        self.assertIn('elements.mint.textContent = "Verify wallet"', mint_client)
+        self.assertIn("await connectWallet(true);\n      return;", mint_client)
+        self.assertIn("await verifyWallet();\n      return;", mint_client)
+        self.assertIn('setStatus("Wallet verified. Click Mint now to continue."', mint_client)
+        self.assertIn("refreshState({ quiet: true, preserveStatus: true })", mint_client)
+
+    def test_whitepaper_navigation_reading_aids_and_legal_block(self):
+        page = self.client.get("/whitepaper")
+        self.assertEqual(page.status_code, 200)
+        anchors = re.findall(r'<a href="#([^"]+)">', page.text)
+        self.assertIn("legal", anchors)
+        for anchor in anchors:
+            self.assertIn('id="%s"' % anchor, page.text, anchor)
+        self.assertIn("/static/css/whitepaper.css", page.text)
+        self.assertIn("/static/js/whitepaper.js", page.text)
+        self.assertIn('class="paper-progress"', page.text)
+        self.assertIn('href="/privacy"', page.text)
+        self.assertIn("https://t.me/capycrew", page.text)
+        self.assertIn("Published before any sale", page.text)
+        reading_aids = self.static_source("/static/js/whitepaper.js")
+        self.assertIn("prefers-reduced-motion", reading_aids)
+        self.assertIn("aria-current", reading_aids)
+        self.assertIn("IntersectionObserver", reading_aids)
 
     def test_config_endpoint_exposes_public_chain_configuration_only(self):
         response = self.client.get("/api/mint/config")

@@ -10,3 +10,37 @@ html,body{max-width:100%;overflow-x:hidden}.hub-page,.hub-page .wrap,.hub-hero-g
 .kentsugi-showcase{grid-template-rows:auto auto}.kentsugi-showcase .character-stage{grid-column:1;grid-row:1 / span 2}.kentsugi-story{grid-column:2;grid-row:1 / span 2}.kentsugi-showcase>.character-controls{grid-column:1;grid-row:2}
 .kentsugi-section>.wrap{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,.45fr);gap:22px}.kentsugi-section>.wrap>.kentsugi-intro{grid-column:1 / -1}.kentsugi-section>.wrap>.kentsugi-grid{grid-column:1;display:block}.kentsugi-section>.wrap>.kentsugi-story{grid-column:2;grid-row:2;display:grid;gap:38vh;padding:15vh 0 22vh}.kentsugi-section .character-controls{display:grid;margin-top:22px}.kentsugi-section .kentsugi-showcase .character-stage{position:sticky;top:74px}.kentsugi-section .kentsugi-showcase{display:block}.kentsugi-section .kentsugi-showcase>.character-stage{width:100%}
 @media(max-width:820px){.kentsugi-section>.wrap{display:block}.kentsugi-section>.wrap>.kentsugi-story{display:grid;grid-template-columns:1fr;gap:14px;padding:24px 0 12px}.kentsugi-section .kentsugi-showcase .character-stage{position:relative;top:auto}}
+
+/* Collection showcase: the inspectable character and the finished mockup are
+   intentionally separate surfaces, following the requested collection-display
+   pattern rather than presenting a flat image as a 3D render. */
+.collection-studio{background:#d9d0c2;color:var(--ink)}
+.collection-intro{max-width:1180px}
+.collection-showcase{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.55fr);gap:14px;align-items:stretch}
+.collection-stage{position:relative;min-height:620px;overflow:hidden;background:radial-gradient(circle at 50% 34%,rgba(214,255,63,.18),transparent 28%),linear-gradient(145deg,#172b33,#060b10 72%);border:2px solid var(--ink);box-shadow:8px 8px 0 var(--ink)}
+.collection-stage .character-canvas{cursor:crosshair}
+.collection-rail{display:grid;align-content:start;gap:9px;padding:14px;background:#f4f0e8;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink)}
+.rail-head{display:flex;justify-content:space-between;padding:4px 2px 12px;border-bottom:2px solid var(--ink);font:10px 'DM Mono',monospace;letter-spacing:.11em}
+.collection-item{display:grid;grid-template-columns:58px 1fr;gap:12px;align-items:center;text-align:left;border:1px solid #b8b0a5;background:#fff;padding:8px;color:var(--ink);cursor:pointer;transition:transform .18s,background .18s}
+.collection-item:hover,.collection-item:focus-visible{transform:translateX(3px);background:#eaff62;outline:none}
+.collection-item.is-active{background:var(--acid);border-color:var(--ink)}
+.collection-item img{width:58px;height:68px;object-fit:contain;background:#e9e4da}
+.collection-item b{display:block;font:700 15px 'Space Grotesk',sans-serif}
+.collection-item small{display:block;margin-top:3px;color:#65605a;font:10px/1.3 'DM Mono',monospace}
+.rail-note{margin-top:6px;padding-top:13px;border-top:1px solid #c9c1b6;color:#65605a;font:11px/1.5 'DM Mono',monospace}
+.blueprint-mockup-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:34px}
+.blueprint-card,.finished-mockup{min-height:330px;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink)}
+.blueprint-card{padding:28px;background:#10151b;color:#f4f0e8}
+.blueprint-card .kicker{color:var(--acid)}
+.blueprint-card h3{margin:28px 0 12px;font-size:clamp(30px,4vw,58px);line-height:.92;letter-spacing:-.06em}
+.blueprint-card p{max-width:500px;color:rgba(244,240,232,.68);line-height:1.6}
+.blueprint-lines{display:grid;gap:8px;margin-top:28px;color:#9aecde;font:10px 'DM Mono',monospace;letter-spacing:.09em}
+.finished-mockup{position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:22px;background:var(--paper);overflow:hidden}
+.mockup-label{font:10px 'DM Mono',monospace;letter-spacing:.13em;text-transform:uppercase}
+.finished-mockup img{display:block;width:min(70%,260px);height:240px;object-fit:contain;align-self:center;filter:drop-shadow(0 16px 16px rgba(0,0,0,.2))}
+.mockup-meta{display:flex;justify-content:space-between;gap:12px;align-items:end;padding-top:12px;border-top:1px solid rgba(16,16,16,.3);font:10px 'DM Mono',monospace;text-transform:uppercase}
+.mockup-meta strong{font:700 18px 'Space Grotesk',sans-serif;letter-spacing:-.04em}
+.mockup-meta span{color:#706b64;text-align:right}
+@media(max-width:820px){.collection-showcase,.blueprint-mockup-grid{grid-template-columns:1fr}.collection-stage{min-height:500px}.blueprint-card,.finished-mockup{min-height:300px}}
+@media(max-width:560px){.collection-stage{min-height:440px}.collection-item{grid-template-columns:50px 1fr}.collection-item img{width:50px;height:58px}.finished-mockup img{width:74%;height:220px}.mockup-meta{display:grid;gap:4px}.mockup-meta span{text-align:left}}
+.activity-section{background:#f4f0e8}.activity-feed{border-top:2px solid var(--ink)}.activity-item{display:grid;grid-template-columns:150px 1fr auto;gap:20px;align-items:start;padding:20px 0;border-bottom:1px solid #bfb7ac}.activity-time,.activity-item>b{font:10px 'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--red)}.activity-item strong{display:block;font-size:18px}.activity-item p{margin:5px 0 0;color:#5a554f;line-height:1.5}.activity-item>b{color:#2b6f56}@media(max-width:560px){.activity-item{grid-template-columns:1fr;gap:8px}.activity-item>b{justify-self:start}}
