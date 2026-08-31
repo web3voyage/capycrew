@@ -1,7 +1,7 @@
 from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from dotenv import load_dotenv
@@ -47,8 +47,59 @@ def mint_enabled() -> bool:
     return env_flag("MINT_ENABLED", True)
 
 
-app = FastAPI(title="CapyCrew / Web3 Voyage", version="1.0.0")
+def public_site_url(request: Request) -> str:
+    """Absolute origin for canonical links, share images, robots.txt, and the sitemap.
+
+    PUBLIC_SITE_URL wins. Render injects RENDER_EXTERNAL_URL into every service, so it is a
+    safe second choice on the deployed host. The request origin is the local fallback.
+    """
+    for name in ("PUBLIC_SITE_URL", "RENDER_EXTERNAL_URL"):
+        candidate = os.getenv(name, "").strip().rstrip("/")
+        if candidate:
+            return candidate if "://" in candidate else f"https://{candidate}"
+    return str(request.base_url).rstrip("/")
+
+
+# The interactive docs stay off by default: this app serves a public marketing site, and the
+# only API surface is three read-only mint endpoints already documented in the README.
+app = FastAPI(
+    title="CapyCrew",
+    version="1.0.0",
+    docs_url="/docs" if env_flag("ENABLE_API_DOCS", False) else None,
+    redoc_url="/redoc" if env_flag("ENABLE_API_DOCS", False) else None,
+    openapi_url="/openapi.json" if env_flag("ENABLE_API_DOCS", False) else None,
+)
 templates = Jinja2Templates(directory=str(ROOT / "templates"))
+
+# Everything the pages need is same-origin except the Google Fonts stylesheet and its font
+# files. mint.js talks only to /api/mint/*; the RPC URL is handed to the wallet extension,
+# never fetched by the page, so connect-src stays on 'self'.
+CONTENT_SECURITY_POLICY = "; ".join(
+    (
+        "default-src 'self'",
+        "script-src 'self'",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "font-src 'self' https://fonts.gstatic.com",
+        "img-src 'self' data:",
+        "media-src 'self'",
+        "connect-src 'self'",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+        "frame-ancestors 'none'",
+    )
+)
+
+
+@app.middleware("http")
+async def security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers.setdefault("Content-Security-Policy", CONTENT_SECURITY_POLICY)
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("X-Frame-Options", "DENY")
+    response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+    response.headers.setdefault("Permissions-Policy", "geolocation=(), microphone=(), camera=()")
+    return response
 
 app.mount("/static", StaticFiles(directory=str(ROOT / "static")), name="static")
 for route, folder in (("/media/assets", "assets"), ("/media/videos", "videos"), ("/media/store", "store")):
@@ -123,7 +174,7 @@ def context(request: Request, **kwargs):
     config = mint_config()
     page = kwargs.get("page", "home")
     mint_open = mint_enabled()
-    site_url = os.getenv("PUBLIC_SITE_URL", str(request.base_url).rstrip("/")).rstrip("/")
+    site_url = public_site_url(request)
     share_titles = {
         "home": "CAPYCREW | A softer internet",
         "hub": "Crew Hub | CAPYCREW",
@@ -132,6 +183,7 @@ def context(request: Request, **kwargs):
         "whitepaper": "CapyCrew Whitepaper",
         "store": "CapyCrew Store",
         "privacy": "CapyCrew Privacy",
+        "404": "Page not found | CAPYCREW",
     }
     share_descriptions = {
         "home": "CapyCrew is a 10,000-piece collectible character project building a relaxed, creative world on the Robinhood Chain.",
@@ -141,6 +193,7 @@ def context(request: Request, **kwargs):
         "whitepaper": "Read the CapyCrew project direction, collection details, and roadmap.",
         "store": "Explore CapyCrew goods and future drops.",
         "privacy": "CapyCrew privacy policy.",
+        "404": "That CapyCity address does not exist. Head back to a district that does.",
     }
     if not mint_open:
         share_titles["mint"] = "Mint / Coming soon | CAPYCREW"
@@ -197,9 +250,57 @@ async def privacy(request: Request):
 async def store(request: Request):
     return templates.TemplateResponse(request=request, name="store.html", context=context(request, page="store"))
 
+# Public page paths, in the order they should be crawled. Also the sitemap source, so a new
+# page only has to be added here once.
+PUBLIC_PAGES = ("/", "/hub", "/mint", "/whitepaper", "/about", "/store", "/privacy")
+
+
+@app.get("/robots.txt", response_class=PlainTextResponse)
+async def robots(request: Request):
+    lines = [
+        "User-agent: *",
+        "Allow: /",
+        "Disallow: /api/",
+        "Disallow: /health",
+        "",
+        f"Sitemap: {public_site_url(request)}/sitemap.xml",
+        "",
+    ]
+    return PlainTextResponse("\n".join(lines))
+
+
+@app.get("/sitemap.xml")
+async def sitemap(request: Request):
+    site_url = public_site_url(request)
+    urls = "".join(
+        f"<url><loc>{site_url}{path}</loc><changefreq>weekly</changefreq></url>"
+        for path in PUBLIC_PAGES
+        if mint_enabled() or path != "/mint"
+    )
+    body = (
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        f"{urls}</urlset>"
+    )
+    return Response(content=body, media_type="application/xml")
+
+
+@app.exception_handler(404)
+async def not_found(request: Request, exc):
+    """Keep wrong URLs inside the site: JSON for the API, the branded page for everything else."""
+    if request.url.path.startswith("/api/"):
+        return JSONResponse({"error": "Not found."}, status_code=404)
+    return templates.TemplateResponse(
+        request=request,
+        name="404.html",
+        context=context(request, page="404"),
+        status_code=404,
+    )
+
+
 @app.get("/health")
 async def health():
-    return {"status": "ok", "service": "web3voyage"}
+    return {"status": "ok", "service": "capycrew"}
 
 def mint_closed_response():
     """503 for every mint API while MINT_ENABLED is off, so the switch is authoritative

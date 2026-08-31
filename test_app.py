@@ -135,6 +135,85 @@ class WebAppTests(unittest.TestCase):
         self.assertIn("mint-button", mint.text)
         self.assertNotIn("IS NOT OPEN", mint.text)
 
+    def test_health_identifies_the_service(self):
+        payload = self.client.get("/health").json()
+        self.assertEqual(payload, {"status": "ok", "service": "capycrew"})
+
+    def test_unknown_paths_render_the_branded_page_and_api_paths_return_json(self):
+        page = self.client.get("/no-such-district")
+        self.assertEqual(page.status_code, 404)
+        self.assertIn("WRONG BLOCK", page.text)
+        self.assertIn('href="/whitepaper"', page.text)
+        api = self.client.get("/api/mint/nothing-here")
+        self.assertEqual(api.status_code, 404)
+        self.assertEqual(api.json(), {"error": "Not found."})
+
+    def test_crawler_files_use_the_public_site_url(self):
+        with patch.dict(os.environ, {"PUBLIC_SITE_URL": "https://capycrew.test"}):
+            robots = self.client.get("/robots.txt")
+            sitemap = self.client.get("/sitemap.xml")
+        self.assertEqual(robots.status_code, 200)
+        self.assertIn("Disallow: /api/", robots.text)
+        self.assertIn("Sitemap: https://capycrew.test/sitemap.xml", robots.text)
+        self.assertEqual(sitemap.status_code, 200)
+        self.assertIn("application/xml", sitemap.headers["content-type"])
+        for path in webapp.PUBLIC_PAGES:
+            self.assertIn("<loc>https://capycrew.test%s</loc>" % path, sitemap.text, path)
+
+    def test_public_site_url_falls_back_to_the_render_origin(self):
+        with patch.dict(os.environ, {"RENDER_EXTERNAL_URL": "capycrew.onrender.com"}):
+            os.environ.pop("PUBLIC_SITE_URL", None)
+            page = self.client.get("/about")
+        self.assertIn('href="https://capycrew.onrender.com/about"', page.text)
+
+    def test_every_response_carries_the_security_headers(self):
+        response = self.client.get("/")
+        self.assertEqual(response.headers["x-content-type-options"], "nosniff")
+        self.assertEqual(response.headers["x-frame-options"], "DENY")
+        self.assertEqual(response.headers["referrer-policy"], "strict-origin-when-cross-origin")
+        policy = response.headers["content-security-policy"]
+        self.assertIn("default-src 'self'", policy)
+        self.assertIn("frame-ancestors 'none'", policy)
+        # The one third-party origin the pages need: the Google Fonts stylesheet in site.css.
+        self.assertIn("https://fonts.googleapis.com", policy)
+
+    def test_interactive_api_docs_are_off_by_default(self):
+        for path in ("/docs", "/redoc", "/openapi.json"):
+            self.assertEqual(self.client.get(path).status_code, 404, path)
+
+    def test_holder_airdrop_models_ten_percent_of_supply(self):
+        page = self.client.get("/whitepaper").text
+        self.assertIn("100M tokens, weighted by tier", page)
+        self.assertIn("<strong>100,000,000 tokens</strong>", page)
+        self.assertIn("10% of the illustrative genesis supply", page)
+        self.assertIn("4,345.9365", page)
+        self.assertNotIn("200,000,000", page)
+        self.assertIn("$CAPY", page)
+        self.assertNotIn("$MELLOW", page)
+        # The eight tier allocations must still add up to the pool exactly.
+        allocations = [17383746, 21729683, 19556714, 17383746, 13037810, 7822686, 2737940, 347675]
+        self.assertEqual(sum(allocations), 100_000_000)
+        for amount in allocations:
+            self.assertIn("<td>{:,}</td>".format(amount), page)
+
+    def test_hub_ships_without_demo_state_or_invented_metrics(self):
+        page = self.client.get("/hub").text
+        for fragment in ("connect-demo", "Preview member state", "UNCONNECTED", "vote-submit",
+                         "data-vote", "data-mission", "68%", "42%", "TODAY /", "YESTERDAY /"):
+            self.assertNotIn(fragment, page, fragment)
+        self.assertIn("Build log", page)
+        self.assertIn("Opens with member accounts", page)
+        hub_script = self.static_source("/static/js/hub.js")
+        self.assertNotIn("startCharacterScene", hub_script)
+        self.assertNotIn("startCharacterShowcase", hub_script)
+        self.assertIn("startCollectionShowcase();", hub_script)
+
+    def test_home_links_to_a_section_that_exists(self):
+        home = self.client.get("/").text
+        self.assertIn('href="/hub#collection-studio"', home)
+        self.assertIn("$CAPY", home)
+        self.assertIn('id="collection-studio"', self.client.get("/hub").text)
+
 
 if __name__ == "__main__":
     unittest.main()

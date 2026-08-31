@@ -117,7 +117,7 @@
     context.fillText('1B', 256, 244);
     context.fillStyle = '#d9362f';
     context.font = '700 31px monospace';
-    context.fillText('$MELLOW SUPPLY', 256, 304);
+    context.fillText('$CAPY SUPPLY', 256, 304);
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
     return texture;

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Page not found - CAPYCREW{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="wrap"><div class="eyebrow">CapyCrew / 404</div><h1>WRONG BLOCK.<br><em>STILL MELLOW.</em></h1><p class="lede">There is no district at this address. Nothing is broken on your side - the page simply does not exist.</p><div class="cta-row"><a class="btn primary" href="/">Back to CapyCity</a><a class="btn" href="/hub">Open the Crew Hub</a></div></div></section>
+<main class="section"><div class="wrap paper">
+<section class="paper-section"><div class="paper-kicker">Where to go instead</div><h2>Every real door<br>on this site.</h2><ul><li><strong><a href="/">Home:</a></strong> the CapyCity introduction, broadcasts, and the crew.</li><li><strong><a href="/hub">Crew Hub:</a></strong> the member loop, collection display, and what ships next.</li><li><strong><a href="/mint">Mint:</a></strong> {{ 'the Genesis mint portal.' if mint_enabled else 'the Genesis mint portal, not open yet.' }}</li><li><strong><a href="/whitepaper">Whitepaper:</a></strong> collection details, the $CAPY model, roadmap, and risks.</li><li><strong><a href="/about">About:</a></strong> what CapyCrew is and who it is for.</li><li><strong><a href="/store">Store:</a></strong> merch studies and future drops.</li><li><strong><a href="/privacy">Privacy:</a></strong> what this site does and does not collect.</li></ul></section>
+<section class="paper-section"><div class="paper-kicker">One safety note</div><h2>Only links on this<br>domain are official.</h2><p>If you arrived here from a link promising a mint, an airdrop, or a claim, treat it as a scam. CapyCrew will never ask for a seed phrase, and official announcements come only from the accounts linked in the footer below.</p></section>
+</div></main>
+{% endblock %}

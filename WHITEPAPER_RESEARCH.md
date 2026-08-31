@@ -23,7 +23,7 @@ Suggested sections:
 3. **NFT Collection** — supply, mint status, metadata, video `animation_url` support, holder benefits, and what is still planned.
 4. **The Signal / Product Loop** — how holders discover drops, content, events, and future experiences. Use a simple visual loop: Discover → Collect → Participate → Shape.
 5. **Community & Governance** — current channels, moderation, proposal process, and what decisions are/are not on-chain.
-6. **$MELLOW token model** — supply and allocation chart, release/vesting notes, distribution mechanics, and explicit status (`planned`, `not launched`, or `live`).
+6. **$CAPY token model** — supply and allocation chart, release/vesting notes, distribution mechanics, and explicit status (`planned`, `not launched`, or `live`).
 7. **Roadmap** — milestone-based and conditional, with dates only where committed. Separate shipped, in progress, and exploratory work.
 8. **Technical architecture** — chain/network, contracts (when deployed), storage, metadata, wallet flow, and security review status.
 9. **Risks & limitations** — smart-contract risk, phishing/scams, market volatility, regulatory uncertainty, liquidity risk, and roadmap uncertainty.
@@ -31,15 +31,19 @@ Suggested sections:
 
 ## Tokenomics presentation
 
-The supplied plan totals 100% of a 1,000,000,000 token supply:
+The shipped model totals 100% of an illustrative 1,000,000,000 token genesis supply:
 
 | Allocation | Share | Tokens | Display guidance |
 |---|---:|---:|---|
-| NFT holders | 20% | 200,000,000 | Say `planned allocation` unless a claim contract and eligibility rules are live. |
-| On-chain holders | 20% | 200,000,000 | Define “on-chain holder” precisely before publishing. |
-| Liquidity | 40% | 400,000,000 | Explain venue, lock/management policy, and whether this is initial or staged liquidity. |
-| Marketing, future development & KOL | 10% | 100,000,000 | Add a disclosure policy and spending governance. |
-| Team (1-year vest) | 10% | 100,000,000 | Clarify cliff, linear release schedule, wallet disclosure, and whether the 1 year starts at TGE. |
+| Ecosystem & missions | 40% | 400,000,000 | Holds the tier-weighted holder airdrop (100,000,000) plus missions, creator work, and events. |
+| Community treasury & grants | 25% | 250,000,000 | Publish spending policy and multisig signers before any release. |
+| Liquidity | 15% | 150,000,000 | Explain venue, lock/management policy, and whether this is initial or staged liquidity. |
+| Contributors | 10% | 100,000,000 | Clarify cliff, linear release schedule, and wallet disclosure. |
+| Reserve | 10% | 100,000,000 | Locked until a public proposal and review. |
+
+The holder airdrop is a program **inside** the ecosystem & missions allocation, not a separate
+line item: 100,000,000 tokens (10% of genesis supply, a quarter of that pool), weighted by
+rarity tier across 23,010 tier points at 4,345.9365 tokens per point.
 
 Use a donut/bar chart plus a plain table. Always show both percentage and exact token count. Include a visible “subject to final legal, technical, and governance review” note. Do not call the token an investment, promise appreciation, or imply a guaranteed holder yield.
 

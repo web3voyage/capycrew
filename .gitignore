@@ -9,3 +9,23 @@ tmp_*.log
 .mypy_cache/
 .DS_Store
 
+# Fundraising working file: will hold traction, financials, and the raise. Keep it local.
+investor-materials.html
+
+# Personal / local working files, unrelated to the deployed site.
+application_answers.txt
+.kentsugi-memory/
+Gemini_Generated_Image_*.jpg
+
+# Source media and generator output. Only the copies under media/ are served, so the
+# originals stay local instead of pushing hundreds of megabytes through the deploy.
+# Every pattern is root-anchored: an unanchored "assets/" would also swallow
+# media/assets/, which IS deployed. Remove a line here if these should be versioned
+# (Git LFS would be the way).
+/assets/
+/store/
+/videos/
+/nft-assets/
+/output/
+/references/
+
