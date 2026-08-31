@@ -13,7 +13,7 @@
   <meta property="og:description" content="{{ og_description|default('CapyCrew - a mellow onchain universe.') }}">
   <meta property="og:image" content="{{ og_image_url|default('/static/og-image.png') }}">
   <meta property="og:image:secure_url" content="{{ og_image_url|default('/static/og-image.png') }}">
-  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:type" content="{{ og_image_type|default('image/png') }}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="{{ og_image_alt|default('CAPYCREW social preview') }}">
@@ -31,7 +31,7 @@
     <a class="brand" href="/">CAPYCREW</a>
     <div class="nav-links">
       <a class="{{ 'active' if page=='hub' else '' }}" href="/hub">Crew Hub</a>
-      <a class="{{ 'active' if page=='mint' else '' }}" href="/mint">Mint</a>
+      <a class="{{ 'active' if page=='mint' else '' }}" href="/mint">{{ 'Mint' if mint_enabled else 'Mint / soon' }}</a>
       <a class="{{ 'active' if page=='about' else '' }}" href="/about">About</a>
       <a class="{{ 'active' if page=='whitepaper' else '' }}" href="/whitepaper">Whitepaper</a>
       <a class="{{ 'active' if page=='store' else '' }}" href="/store">Store</a>
@@ -48,7 +48,7 @@
         </div>
         <div>
           <div class="eyebrow" style="color:var(--acid)">Explore</div>
-          <p><a href="/about">About CapyCrew</a><br><a href="/mint">Mint the crew</a><br><a href="/whitepaper">Read the whitepaper</a><br><a href="/store">Store / coming soon</a><br><a href="/privacy">Privacy policy</a></p>
+          <p><a href="/about">About CapyCrew</a><br><a href="/mint">{{ 'Mint the crew' if mint_enabled else 'Mint / coming soon' }}</a><br><a href="/whitepaper">Read the whitepaper</a><br><a href="/store">Store / coming soon</a><br><a href="/privacy">Privacy policy</a></p>
         </div>
         <div>
           <div class="eyebrow" style="color:var(--acid)">Community</div>

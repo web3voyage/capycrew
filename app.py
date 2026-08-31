@@ -29,6 +29,24 @@ def deployed_contract_address():
     except (OSError, ValueError, TypeError):
         return ""
 
+def env_flag(name: str, default: bool) -> bool:
+    """Read a boolean switch from the environment; an unset or blank value keeps the default."""
+    raw = os.getenv(name, "").strip().lower()
+    if not raw:
+        return default
+    return raw not in {"0", "false", "no", "off"}
+
+
+def mint_enabled() -> bool:
+    """Site-level switch for the mint portal.
+
+    Independent of the contract's own publicMintEnabled flag: that one decides whether a
+    transaction would succeed, this one decides whether the page and its API exist at all.
+    Set MINT_ENABLED=false to hold the portal back, then remove it to open the mint.
+    """
+    return env_flag("MINT_ENABLED", True)
+
+
 app = FastAPI(title="CapyCrew / Web3 Voyage", version="1.0.0")
 templates = Jinja2Templates(directory=str(ROOT / "templates"))
 
@@ -104,6 +122,7 @@ async def contract_read(signature: str, output_type: str, argument_types: tuple 
 def context(request: Request, **kwargs):
     config = mint_config()
     page = kwargs.get("page", "home")
+    mint_open = mint_enabled()
     site_url = os.getenv("PUBLIC_SITE_URL", str(request.base_url).rstrip("/")).rstrip("/")
     share_titles = {
         "home": "CAPYCREW | A softer internet",
@@ -123,15 +142,20 @@ def context(request: Request, **kwargs):
         "store": "Explore CapyCrew goods and future drops.",
         "privacy": "CapyCrew privacy policy.",
     }
+    if not mint_open:
+        share_titles["mint"] = "Mint / Coming soon | CAPYCREW"
+        share_descriptions["mint"] = "The CapyCrew Genesis mint is not open yet. Follow the official channels for the launch signal."
     return {
         "request": request,
         "site_name": "CAPYCREW",
         "site_url": site_url,
+        "mint_enabled": mint_open,
         "canonical_url": site_url + request.url.path,
         "og_title": share_titles.get(page, "CAPYCREW | A softer internet"),
         "og_description": share_descriptions.get(page, share_descriptions["home"]),
-        "og_image_url": site_url + "/static/og-image.png",
-        "og_image_alt": "CAPYCREW NFT minting dApp on Robinhood Chain Testnet",
+        "og_image_url": site_url + "/static/og-capycrew-042.jpg",
+        "og_image_type": "image/jpeg",
+        "og_image_alt": "CapyCrew #042 collectible character in streetwear on a mint green card",
         "mint_contract_address": config["contract_address"],
         "mint_chain_id": str(config["chain_id"]),
         "mint_chain_name": config["chain_name"],
@@ -153,7 +177,9 @@ async def hub(request: Request):
 
 @app.get("/mint", response_class=HTMLResponse)
 async def mint(request: Request):
-    return templates.TemplateResponse(request=request, name="mint.html", context=context(request, page="mint"))
+    # The URL stays live either way so shared links and the whitepaper reference keep working.
+    name = "mint.html" if mint_enabled() else "mint-soon.html"
+    return templates.TemplateResponse(request=request, name=name, context=context(request, page="mint"))
 
 @app.get("/whitepaper", response_class=HTMLResponse)
 async def whitepaper(request: Request):
@@ -175,13 +201,25 @@ async def store(request: Request):
 async def health():
     return {"status": "ok", "service": "web3voyage"}
 
+def mint_closed_response():
+    """503 for every mint API while MINT_ENABLED is off, so the switch is authoritative
+    rather than cosmetic: a cached page or a direct request cannot reach the contract."""
+    return JSONResponse(
+        {"enabled": False, "configured": False, "available": False, "error": "The mint portal is not open yet."},
+        status_code=503,
+    )
+
 @app.get("/api/mint/config")
 async def api_mint_config():
+    if not mint_enabled():
+        return mint_closed_response()
     config = mint_config()
-    return {**config, "configured": bool(config["contract_address"] and config["rpc_url"])}
+    return {**config, "enabled": True, "configured": bool(config["contract_address"] and config["rpc_url"])}
 
 @app.get("/api/mint/wallet/{account}")
 async def api_wallet_mint_state(account: str):
+    if not mint_enabled():
+        return mint_closed_response()
     if not is_address(account):
         return JSONResponse({"error": "Invalid wallet address."}, status_code=400)
     config = mint_config()
@@ -206,6 +244,8 @@ async def api_wallet_mint_state(account: str):
 
 @app.get("/api/mint/status")
 async def api_mint_status():
+    if not mint_enabled():
+        return mint_closed_response()
     config = mint_config()
     if not config["contract_address"]:
         return JSONResponse({"configured": False, "available": False, "error": "Mint contract is not configured."}, status_code=503)
@@ -223,6 +263,7 @@ async def api_mint_status():
         )
         return {
             "configured": True,
+            "enabled": True,
             "available": bool(public_mint_enabled and not minting_closed and total_supply < max_supply),
             "contract_address": config["contract_address"],
             "chain_id": config["chain_id"],

@@ -9,7 +9,7 @@
         <div class="eyebrow">CAPYCREW / MEMBER HOME</div>
         <h1>YOUR CAPY.<br><em>YOUR SIGNAL.</em></h1>
         <p class="hub-lede">A practical home for the people shaping CapyCity. Track what is live, make your next move, and keep your place in the story.</p>
-        <div class="hub-actions"><a class="btn primary" href="/mint">Get a Genesis Capy</a><button class="btn dark" id="connect-demo" type="button" aria-pressed="false">Preview member state</button></div>
+        <div class="hub-actions"><a class="btn {{ 'primary' if mint_enabled else 'dark' }}" href="/mint">{{ 'Get a Genesis Capy' if mint_enabled else 'Mint / coming soon' }}</a><button class="btn dark" id="connect-demo" type="button" aria-pressed="false">Preview member state</button></div>
       </div>
       <div class="member-pass" aria-label="CapyCrew member pass">
         <div class="member-pass-top"><span>MEMBER PASS</span><span>042 / 10K</span></div>

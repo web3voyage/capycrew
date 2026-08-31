@@ -36,14 +36,14 @@ class WebAppTests(unittest.TestCase):
         self.assertIn("Wallet + Capy profile", about.text)
         self.assertIn('href="/about"', about.text)
         self.assertIn('property="og:image"', about.text)
-        self.assertIn("/static/og-image.png", about.text)
+        self.assertIn("/static/og-capycrew-042.jpg", about.text)
         self.assertIn('name="twitter:card" content="summary_large_image"', about.text)
         mint = self.client.get("/mint")
         self.assertIn("mint-button", mint.text)
         self.assertIn("/static/js/mint.js", mint.text)
         self.assertEqual(self.client.get("/static/js/mint.js").status_code, 200)
         self.assertEqual(self.client.get("/static/vendor/ethers.umd.min.js").status_code, 200)
-        self.assertEqual(self.client.get("/static/og-image.png").status_code, 200)
+        self.assertEqual(self.client.get("/static/og-capycrew-042.jpg").status_code, 200)
         hub = self.client.get("/hub")
         self.assertIn("YOUR CAPY", hub.text)
         self.assertIn("Useful things", hub.text)
@@ -111,6 +111,29 @@ class WebAppTests(unittest.TestCase):
         self.assertEqual(payload["mint_price_wei"], str(10**16))
         self.assertFalse(payload["minting_closed"])
         self.assertFalse(payload["metadata_revealed"])
+
+    def test_mint_switch_holds_the_portal_back_without_breaking_the_url(self):
+        with patch.dict(os.environ, {"MINT_ENABLED": "false"}):
+            mint = self.client.get("/mint")
+            self.assertEqual(mint.status_code, 200, "the URL stays live so shared links keep working")
+            self.assertIn("THE MINT", mint.text)
+            self.assertIn("IS NOT OPEN", mint.text)
+            self.assertNotIn("mint-button", mint.text)
+            self.assertNotIn("/static/js/mint.js", mint.text)
+            self.assertIn("Mint / soon", mint.text)
+            self.assertIn("Mint / coming soon", self.client.get("/").text)
+            for path in ("/api/mint/config", "/api/mint/status", "/api/mint/wallet/0x0000000000000000000000000000000000000002"):
+                response = self.client.get(path)
+                self.assertEqual(response.status_code, 503, path)
+                self.assertFalse(response.json()["enabled"], path)
+
+    def test_mint_switch_defaults_to_open(self):
+        with patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("MINT_ENABLED", None)
+            mint = self.client.get("/mint")
+        self.assertEqual(mint.status_code, 200)
+        self.assertIn("mint-button", mint.text)
+        self.assertNotIn("IS NOT OPEN", mint.text)
 
 
 if __name__ == "__main__":
