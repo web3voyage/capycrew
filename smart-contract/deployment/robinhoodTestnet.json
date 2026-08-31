@@ -1,0 +1,8 @@
+{
+  "network": "robinhoodTestnet",
+  "chainId": 46630,
+  "address": "0x45932B62ac56c55bC6ee455B13ec9bbA813DbfC7",
+  "deployer": "0x945182EAB6d332d9319d09E7dc757f70892d2d6D",
+  "transactionHash": "0xff77bc331bdd33c34807b9e11d93dc358a3cf1604dac4e3e740ea4f1a60f3e79",
+  "deployedAt": "2026-08-24T15:47:23.260Z"
+}

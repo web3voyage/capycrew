@@ -1,0 +1,10 @@
+﻿{
+  "name": "CapyCrew Genesis #1",
+  "description": "A mellow onchain collection of CapyCrew characters.",
+  "image": "ipfs://bafybeigxbjyttflhzo2zx6bzjnxrbcxm4hyzjrz3b5iyysvbmphx73gzgu/1.webp",
+  "attributes": [
+    {"trait_type": "Collection", "value": "CapyCrew Genesis"},
+    {"trait_type": "Serial", "value": "0001"},
+    {"trait_type": "Edition", "value": "Genesis"}
+  ]
+}
