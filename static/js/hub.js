@@ -23,8 +23,44 @@
     let renderer;
     try { renderer = new THREE.WebGLRenderer({ canvas, antialias: !/Mobi/i.test(navigator.userAgent), alpha: true }); } catch { fallback(); return; }
     const scene = new THREE.Scene();
+    // The camera used to carry a position and no target, so it kept its default -Z aim
+    // and the wireframe sat outside the frustum entirely: an empty plate, and not even
+    // the fallback, because the renderer itself constructs fine. Frame it from the
+    // group's own bounds rather than a hand-tuned position - it stands 5.3 units tall
+    // about y = 1.47 and 2.5 wide once spun - and let resize() ride the eye back along
+    // a fixed 3/4 axis until all of that clears the frustum at any stage size.
     const camera = new THREE.PerspectiveCamera(29, 1, .1, 40);
-    camera.position.set(3.9, 2.9, 7.2);
+    // The look-at is 1.35, below the group's true centre of 1.465, because the
+    // muzzle at z +1.07 and the foot plates at z +0.73 sit about a unit nearer the
+    // eye than the focus plane: they project larger, and the feet reach further
+    // down than the crown reaches up, which left the silhouette sitting low - 37px
+    // under the top edge against 10px below the feet. Dropping the look-at lifts
+    // it back. Half-extent about this focus is 2.76 above (y tops out at 4.11) and
+    // 2.53 below, so fitting on 2.76 also leaves the slack where perspective
+    // spends it.
+    const focus = new THREE.Vector3(0, 1.35, 0), axis = new THREE.Vector3(3.9, 1.43, 7.2).normalize();
+    // The model has to fit the clear band between the furniture, not the plate:
+    // .stage-hud occupies the top of the plate and .stage-caption the bottom, and
+    // fitting to the whole plate is what put the crown rail through the HUD's
+    // "VIEW" and the foot plates across both caption lines at 430. Measure that
+    // furniture instead of hard-coding it - the HUD is top: 20px plus its own
+    // height, the caption is bottom: 18px plus its own, and the caption doubles to
+    // two stacked rows under 560px, so the bottom band is 44px deep at desktop and
+    // 59px at 430. A single symmetric constant tuned for one of those lands 2px
+    // off the other. The model is centred, so the deeper of the two bands sets the
+    // reservation at both ends, and GAP is the breathing room on top of it.
+    //
+    // GAP is 18 to buy 10px of measured clearance, because FIT is a vertical
+    // half-extent about the focus while the points that actually reach the edge of
+    // the silhouette - crown rail, foot plates - swing through z as the group spins
+    // and project from about a unit nearer the eye than the focus plane. So the
+    // silhouette over-reaches its fitted band: measured 8px at 1440 and 3px at 430.
+    // Correcting FIT instead would be the tidier story, but the surcharge scales
+    // with camera distance and camera distance is what FIT decides, so it is not a
+    // constant; spending it out of the breathing room is honest and monotonic.
+    const FIT = 2.76, GAP = 18;
+    const reserve = () => { const s = stage.getBoundingClientRect(), hud = stage.querySelector('.stage-hud'), cap = stage.querySelector('.stage-caption');
+      return Math.max(hud ? hud.getBoundingClientRect().bottom - s.top : 0, cap ? s.bottom - cap.getBoundingClientRect().top : 0, 0) + GAP; };
     const root = new THREE.Group(); root.rotation.y = -.25; scene.add(root);
     scene.add(new THREE.HemisphereLight(0xbfeee0, 0x071018, 2.2));
     const identity = new THREE.Group(); const outfit = new THREE.Group(); const rails = new THREE.Group(); root.add(identity, outfit, rails);
@@ -49,10 +85,13 @@
     addWire(new THREE.CylinderGeometry(.5, .5, 1, 28), coral, [0, 3.72, 0], [1.14, .18, 1.14], rails);
     addWire(new THREE.CylinderGeometry(.5, .5, 1, 28), accent, [0, 3.94, 0], [.86, .34, .86], rails);
     addWire(new THREE.BoxGeometry(1, 1, 1), accent, [1.15, 1.48, .4], [.12, .4, .12], rails);
-    const resize = () => { const w = stage.clientWidth, h = stage.clientHeight; renderer.setPixelRatio(Math.min(devicePixelRatio || 1, /Mobi/i.test(navigator.userAgent) ? 1 : 1.5)); renderer.setSize(w, h, false); camera.aspect = w / Math.max(h, 1); camera.updateProjectionMatrix(); };
+    const resize = () => { const w = stage.clientWidth, h = stage.clientHeight; renderer.setPixelRatio(Math.min(devicePixelRatio || 1, /Mobi/i.test(navigator.userAgent) ? 1 : 1.5)); renderer.setSize(w, h, false); camera.aspect = w / Math.max(h, 1); const reach = Math.tan(camera.fov * Math.PI / 360), clear = Math.max(.5, (h - reserve() * 2) / h); camera.position.copy(axis).multiplyScalar(Math.max(FIT / (clear * reach), 1.45 / (reach * camera.aspect))).add(focus); camera.lookAt(focus); camera.updateProjectionMatrix(); };
     let target = -.25, rotation = -.25, frame = 0;
     const move = (event) => { const rect = stage.getBoundingClientRect(); target = -.25 + ((event.clientX - rect.left) / rect.width - .5) * .8; angleLabel.textContent = `ANGLE / ${String(Math.round((target + .65) * 240)).padStart(3, '0')}°`; };
     stage.addEventListener('pointermove', move, { passive: true }); addEventListener('resize', resize, { passive: true }); resize(); loading?.classList.add('is-ready');
+    // reserve() measures type, so the first fit can be made against the fallback
+    // metrics: re-fit once DM Mono has actually landed.
+    document.fonts?.ready.then(resize);
     const tick = () => { frame += 1; rotation += (target - rotation) * .065; root.rotation.y = rotation + (reduced ? 0 : Math.sin(frame * .01) * .035); renderer.render(scene, camera); if (!reduced) requestAnimationFrame(tick); }; tick();
   }
   startCollectionShowcase();

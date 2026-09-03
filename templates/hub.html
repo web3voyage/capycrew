@@ -11,7 +11,7 @@
     base.html keeps the city plate and capycity.js off this page (page != 'hub'),
     because the collection stage runs its own WebGL context. three.min.js still
     loads from the shell, so hub.js has its renderer. -#}
-{% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/hub.css') }}?v=20260903-2">{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/hub.css') }}?v=20260903-3">{% endblock %}
 {% block rail %}
 <nav class="folio" aria-label="Sections on this page">
   <span class="folio-rule" aria-hidden="true"><i></i></span>
@@ -343,4 +343,4 @@
   </section>
 </main>
 {% endblock %}
-{% block scripts %}<script src="{{ url_for('static', path='js/hub.js') }}?v=20260903-2" defer></script>{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', path='js/hub.js') }}?v=20260903-5" defer></script>{% endblock %}

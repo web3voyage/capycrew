@@ -1,12 +1,17 @@
 /* Crew Hub - the two things dispatch.css cannot carry.
 
    Everything the old sheet printed as a stacked panel system (the ink hero, the
-   stat band, mission cards, the activity feed, proof rows, the vote panel, the
-   disclaimer, and a global overflow-x hack that broke position: sticky) is gone:
-   the hub is set in dispatch.css's editorial vocabulary now, the same as every
-   other page. What is left is the WebGL collection stage - a dark inspection
-   plate, which is what a wireframe wants behind it - and the filter chips
-   hub.js drives.
+   stat band, mission cards, the activity feed, proof rows, the vote panel and
+   the disclaimer) is gone: the hub is set in dispatch.css's editorial vocabulary
+   now, the same as every other page. What is left is the WebGL collection stage
+   - a dark inspection plate, which is what a wireframe wants behind it - and the
+   filter chips hub.js drives.
+
+   Also gone: this sheet's own `html, body { max-width: 100%; overflow-x: hidden }`.
+   A per-page sheet has no business setting page-level overflow, and dispatch.css
+   already owns it (`body { overflow-x: hidden }`), so the rule was only ever
+   shadowing the shell's. Nothing here depends on it: `.folio` is position: fixed,
+   not sticky, so an ancestor's overflow never reached it either way.
 
    This sheet loads from {% block styles %}, after site.css and dispatch.css, so
    these rules win at equal specificity. It reuses dispatch.css's custom

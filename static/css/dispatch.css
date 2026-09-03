@@ -180,13 +180,23 @@ h2 { font-size: clamp(34px, 4.4vw, 68px); }
 h3 { font-size: 15px; letter-spacing: .02em; line-height: 1.3; }
 h1 em, h2 em, blockquote em { font-style: var(--em-style); color: var(--forest); }
 
-/* All furniture - kickers, folios, captions, labels - is mono. */
+/* All furniture - kickers, folios, captions, labels - is mono.
+
+   margin-block, not margin: two of these selectors are also written onto .shell
+   elements (`shell strip-inner` in the masthead ticker, `sheet-head shell` on
+   every band head), and this block is later in the file than .shell's
+   `margin-inline: auto` at :167, so a shorthand `margin: 0` won the cascade and
+   left both flush at x 0 while the column beside them started at the gutter -
+   the ticker on every page, and `SUPPLY MAP / GENESIS` and its siblings on the
+   whitepaper. Only the block-axis default margin is unwanted here; every element
+   in this list is a p/h*/div whose inline UA margin is already 0. Same trap and
+   same fix as .figures-inner below - see the note there. */
 .kicker, .contents-head, .notes-head, .colophon-label, .hint,
 .strip-inner, .note-head, .sheet-head, .spread-meta, .route-no, .stamp {
   font: 500 10.5px/1.5 var(--mono);
   letter-spacing: .19em;
   text-transform: uppercase;
-  margin: 0;
+  margin-block: 0;
 }
 .kicker { color: var(--forest); }
 .kicker i, .byline i, .frame figcaption i { font-style: normal; color: var(--ink-2); padding: 0 5px; }
@@ -843,6 +853,14 @@ h1 em, h2 em, blockquote em { font-style: var(--em-style); color: var(--forest);
   .front-lead .cta-row .btn-ink,
   .front-lead .cta-row .btn-line { width: 100%; justify-content: center; }
   .figures-inner > div { padding-right: 12px; }
+  /* A five-column ledger scrolls inside .table-wrap at this width, so the prose
+     column is wrapping inside the 720px min-width while the short columns beside
+     it stay one line - which put rows that are 40px tall on desktop past 200px
+     here, most of it empty. Tighter cells hand that column back about 60px of
+     measure and take the row height down with it. It is a mitigation, not a fix:
+     these tables want a stacked layout on a phone. */
+  .ledger-table th, .ledger-table td { padding: 11px 16px; }
+  .ledger-table caption { padding: 16px 18px 13px; }
   .notice { padding: 17px 18px; }
   .sheet-foot { flex-direction: column; align-items: flex-start; gap: 16px; }
   .route-list li { grid-template-columns: minmax(0, 1fr); gap: 6px; }

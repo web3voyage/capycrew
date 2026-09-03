@@ -16,7 +16,7 @@
 
     js/whitepaper.js is gone. Its three jobs - the progress bar, the active rail
     link, and section reveals - are all dispatch.js's now. -#}
-{% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/whitepaper.css') }}?v=20260903-2">{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/whitepaper.css') }}?v=20260903-3">{% endblock %}
 
 {#- Twelve chapters, twelve districts. Every data-rail matches a [data-district]
     below, in document order; the rail hides itself under 1410px, so the front
@@ -39,9 +39,13 @@
 </nav>
 {% endblock %}
 
-{% block content %}
-{#- The reading bar is CSS-driven now: scaleX(var(--page-progress)). -#}
+{#- The reading bar is CSS-driven: scaleX(var(--page-progress)). It renders in
+    base.html's {% block topbar %}, outside .site-content - see the note there. -#}
+{% block topbar %}
 <div class="paper-progress" aria-hidden="true"><span></span></div>
+{% endblock %}
+
+{% block content %}
 <main class="issue">
   <!-- ===== 01 / FRONT ===== -->
   <section class="front" id="front" data-district="front">

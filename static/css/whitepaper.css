@@ -5,8 +5,14 @@
    <html> on every page (that is what fills the folio rail), so the bar reads the
    same custom property instead of carrying a script. js/whitepaper.js is gone;
    its three jobs - progress, active rail link, section reveals - all belong to
-   dispatch.js. */
-.paper-progress { position: fixed; left: 0; top: 0; z-index: 30; width: 100%; height: 3px;
+   dispatch.js.
+
+   z-index 31, and the markup lives in base.html's {% block topbar %} rather than
+   in {% block content %}. Both halves are needed: inside .site-content the bar is
+   sealed in a z-index: 1 stacking context and painted under the sticky masthead
+   whatever number it carries, and as a sibling of the masthead a bare 30 ties and
+   loses on DOM order. It was invisible on both counts before. */
+.paper-progress { position: fixed; left: 0; top: 0; z-index: 31; width: 100%; height: 3px;
   pointer-events: none; background: var(--rule); }
 .paper-progress span { display: block; width: 100%; height: 100%; background: var(--ink);
   transform: scaleX(var(--page-progress, 0)); transform-origin: 0 50%; }
@@ -15,6 +21,13 @@
    under .paper - and .paper is a 820px measure with no auto margin, so inside
    the 1300px shell it would sit hard left of every table beside it. */
 .ledger-band .paper { margin-inline: auto; }
+
+/* .nft-tier-breakdown is the other piece of unscoped site.css markup on this
+   page, and unlike the chart it has no measure of its own, so its intro
+   paragraph ran the full 1300px shell - about 150 characters a line, against the
+   ~74ch the rest of the document is set to. Only the prose needs holding back;
+   the donut, legend and method strip all want the full width. */
+.nft-tier-breakdown > p { max-width: 74ch; }
 
 /* .ledger-table styles its last column as the faint "condition" column, which
    is right for Status and Purpose but not for the tier table's Per NFT figure. */

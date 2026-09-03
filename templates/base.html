@@ -32,7 +32,7 @@
   <!-- dispatch.css comes after site.css on purpose: the shell it defines wins on
        source order, while site.css keeps styling the interior page bodies. -->
   <link rel="stylesheet" href="{{ url_for('static', path='site.css') }}?v=20260903-1">
-  <link rel="stylesheet" href="{{ url_for('static', path='css/dispatch.css') }}?v=20260903-1">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/dispatch.css') }}?v=20260903-2">
   {% block styles %}{% endblock %}
 </head>
 <body data-page="{{ page|default('home') }}">
@@ -46,6 +46,13 @@
   </div>
   {% endif %}
   {% block rail %}{% endblock %}
+  {#- Anything pinned to the very top of the window goes here, not in
+      {% block content %}: .site-content below is `position: relative; z-index: 1`,
+      which makes it a stacking context, so a fixed child of it can never paint
+      over the sticky .masthead (z-index 30) no matter what z-index it carries.
+      That is what killed the whitepaper's reading bar. As a sibling of the
+      masthead it competes in the root stacking context and z-index 31 wins. -#}
+  {% block topbar %}{% endblock %}
   <header class="masthead" id="masthead">
     <div class="mast-strip">
       <div class="shell strip-inner">
