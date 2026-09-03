@@ -1,65 +1,264 @@
 {% extends "base.html" %}
 {% block title %}Mint - CAPYCREW{% endblock %}
 {% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/mint.css') }}?v=20260822-3">{% endblock %}
+
+{#- The one interior page with a live widget in it. The panel, its form, the
+    ethers bundle, js/mint.js and the mint-config JSON block are unchanged: every
+    id, class and data-* attribute js/mint.js looks up survives in the same
+    nesting, because renaming any of them kills the mint button silently. What is
+    new is the editorial furniture around it - front opener, standing figures,
+    route steps, terms table - and none of it puts data-reveal on the panel or on
+    any ancestor of the panel, so no observer failure can hide the buy button.
+
+    The styles block above still links css/mint.css. base.html emits that block
+    after dispatch.css, so the panel's own sheet wins at equal specificity, which
+    is exactly what it is there for. -#}
+{% block rail %}
+<nav class="folio" aria-label="Sections on this page">
+  <span class="folio-rule" aria-hidden="true"><i></i></span>
+  <a href="#front" data-rail="front"><b>01</b><span>Front</span></a>
+  <a href="#portal" data-rail="portal"><b>02</b><span>Portal</span></a>
+  <a href="#steps" data-rail="steps"><b>03</b><span>Steps</span></a>
+  <a href="#terms" data-rail="terms"><b>04</b><span>Terms</span></a>
+</nav>
+{% endblock %}
+
 {% block content %}
-<section class="page-hero"><div class="wrap"><div class="eyebrow">CapyCrew / Genesis mint</div><h1>CLAIM YOUR<br>CAPY.</h1></div></section>
-<main class="section"><div class="wrap mint-layout">
-  <section class="card mint-panel" aria-labelledby="mint-title">
-    <div class="eyebrow">{{ mint_chain_name }}</div>
-    <h2 id="mint-title">Mint portal</h2>
-    <p class="mint-intro">Connect and verify your wallet, choose up to five Genesis NFTs, then click Mint now and confirm one transaction. Metadata is pre-shuffled before upload and revealed after minting closes.</p>
+<main class="issue">
 
-    <div class="mint-stats" aria-label="Live collection details">
-      <div><span>Live price / NFT</span><strong id="mint-price">Loading...</strong></div>
-      <div><span>Minted</span><strong id="minted-supply">Loading...</strong></div>
-      <div><span>Your public mints</span><strong id="wallet-minted">-- / 5</strong></div>
-      <div><span>Metadata</span><strong id="metadata-status">HIDDEN</strong></div>
+  <!-- ===== 01 / FRONT ===== -->
+  <section class="front" id="front" data-district="front">
+    <div class="shell front-grid">
+
+      <div class="front-lead">
+        <p class="kicker" data-reveal>01 &mdash; CapyCrew <i>/</i> Genesis mint</p>
+        <h1 data-reveal data-reveal-delay="1">Claim your<br><em>Capy.</em></h1>
+        <span class="rule" data-rule data-reveal-delay="2" aria-hidden="true"></span>
+        <p class="standfirst" data-reveal data-reveal-delay="2">The Genesis mint runs from this page: connect a
+          wallet, choose up to five, and confirm one transaction on {{ mint_chain_name }}.</p>
+        <p class="byline" data-reveal data-reveal-delay="3">Filed from CapyCity <i>/</i> {{ mint_chain_name }}
+          <i>/</i> 10,000 characters</p>
+        {#- No bare "btn" token in new markup: site.css still owns .btn and would
+            print its 4px offset shadow through, which dispatch.css sets nothing
+            to beat. The mint button itself is the documented exception and keeps
+            its own classes - see the note above it. -#}
+        <div class="cta-row" data-reveal data-reveal-delay="3">
+          <a class="btn-ink" href="#portal">Open the portal</a>
+          <a class="btn-line" href="/whitepaper">Read the whitepaper</a>
+        </div>
+      </div>
+
+      <figure class="plate front-plate" data-reveal data-reveal-delay="2">
+        <div class="plate-frame">
+          <video autoplay muted loop playsinline preload="metadata"
+                 src="/media/videos/Capy_%23042_rises_with_NFT_202608191210.mp4"></video>
+          <span class="reg reg-tl" aria-hidden="true"></span><span class="reg reg-tr" aria-hidden="true"></span>
+          <span class="reg reg-bl" aria-hidden="true"></span><span class="reg reg-br" aria-hidden="true"></span>
+        </div>
+        <figcaption><b>Fig. 1</b><span>Genesis 042 rises &mdash; motion study, CapyCity core.</span></figcaption>
+      </figure>
     </div>
-
-    <div class="mint-network-row">
-      <span class="eyebrow">Network</span>
-      <div class="mint-network-actions">
-        <span id="network-status" class="status-pill" data-tone="neutral">Checking...</span>
-        <button class="network-switch" id="switch-network" type="button" hidden>Switch network</button>
-        <button class="network-switch" id="refresh-mint" type="button">Refresh</button>
-      </div>
-    </div>
-
-
-    <form class="form mint-form" id="mint-form">
-      <label for="mint-quantity">Quantity</label>
-      <select id="mint-quantity" aria-describedby="quantity-help">
-        <option value="1">1 NFT</option>
-        <option value="2">2 NFTs</option>
-        <option value="3">3 NFTs</option>
-        <option value="4">4 NFTs</option>
-        <option value="5">5 NFTs</option>
-      </select>
-      <small id="quantity-help">Maximum 5 public mints per wallet.</small>
-      <div class="mint-actions">
-        <button class="btn primary" id="mint-button" type="submit" disabled>Connect wallet</button>
-      </div>
-      <div class="mint-wallet-row"><div class="mint-wallet" id="wallet-address">No wallet connected</div><button class="network-switch" id="disconnect-wallet" type="button" hidden>Disconnect</button></div>
-      <div class="status" id="wallet-status" role="status" aria-live="polite" aria-atomic="true">Loading collection state...</div>
-      <div class="mint-links">
-        <a class="mint-explorer-link" id="contract-link" target="_blank" rel="noreferrer" hidden>View contract on explorer</a>
-        <a class="mint-explorer-link" id="explorer-link" target="_blank" rel="noreferrer" hidden>View transaction</a>
-      </div>
-    </form>
   </section>
 
-  <aside class="card mint-details">
-    <div class="eyebrow">Drop details</div>
-    <h3>Genesis collection</h3>
-    <div class="collection-preview-hero" style="margin:1rem 0;text-align:center">
-      <img id="nft-preview" src="/static/hidden-nft.webp" alt="Unrevealed CapyCrew Genesis NFT" width="400" height="400" loading="eager" decoding="async" style="width:min(320px,80%);aspect-ratio:1;object-fit:contain;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03)">
-      <p class="mint-preview-caption" id="mint-preview-label" style="font-size:12px;opacity:.6;margin-top:6px">Hidden metadata — revealed after minting closes</p>
+  <!-- ===== STANDING FIGURES: the mint terms, set as a table of record ===== -->
+  {#- The unit lives in the dt, never appended to the dd: .figures-inner tracks
+      are minmax(0, 1fr), so a dd wider than a fifth of the shell spills over its
+      neighbour's rule instead of the grid growing. "5 per wallet" is that case. -#}
+  <div class="figures" data-reveal>
+    <dl class="shell figures-inner">
+      <div><dt>Collection</dt><dd data-count="10000">10,000</dd></div>
+      <div><dt>Genesis</dt><dd>No. 042</dd></div>
+      <div><dt>Public limit <span>per wallet</span></dt><dd>5</dd></div>
+      <div><dt>Network</dt><dd>{{ mint_chain_name }}</dd></div>
+      <div><dt>Mint</dt><dd>Open<a class="fn" href="#fn-2" id="fnref-2"><sup>2</sup></a></dd></div>
+    </dl>
+  </div>
+
+  <!-- ===== 02 / THE PORTAL (the live widget, wrapped, not restyled) ===== -->
+  <section class="band" id="portal" data-district="portal">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">02 &mdash; The portal</p>
+        <h2>One wallet.<br><em>One transaction.</em></h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">Connect and verify a wallet, choose up to five Genesis NFTs, then confirm one
+          transaction. The panel reads the collection state from the contract itself.</p>
+      </header>
+
+      {#- ===================== THE WIDGET - DO NOT RESTYLE =====================
+          Everything from .notes-grid down to the close of .mint-layout is the
+          live mint panel, carried over verbatim from the previous mint page.
+          js/mint.js looks up #mint-form, #mint-button, #mint-quantity,
+          #mint-price, #minted-supply, #wallet-minted, #metadata-status,
+          #network-status, #switch-network, #refresh-mint, #wallet-address,
+          #wallet-status, #disconnect-wallet, #contract-link, #explorer-link and
+          #mint-config by id, so no id, class or data-* below may be renamed and
+          no node may move to a different parent.
+
+          .notes-grid is the only new thing here: it is the one wrapper in
+          dispatch.css that gives the panel its 48px of air under the band head
+          and a real margin column beside it. It carries NO data-reveal, and
+          neither does any other ancestor of the panel - [data-reveal] sets
+          opacity:0 until dispatch.js sees it, and the buy button must never
+          depend on a script that is not the mint script. -#}
+      <div class="notes-grid">
+        <div class="mint-layout">
+          <section class="card mint-panel" aria-labelledby="mint-title">
+            <div class="eyebrow">{{ mint_chain_name }}</div>
+            <h2 id="mint-title">Mint portal</h2>
+            <p class="mint-intro">Connect and verify your wallet, choose up to five Genesis NFTs, then click Mint now and confirm one transaction. Metadata is pre-shuffled before upload and revealed after minting closes.</p>
+
+            <div class="mint-stats" aria-label="Live collection details">
+              <div><span>Live price / NFT</span><strong id="mint-price">Loading...</strong></div>
+              <div><span>Minted</span><strong id="minted-supply">Loading...</strong></div>
+              <div><span>Your public mints</span><strong id="wallet-minted">-- / 5</strong></div>
+              <div><span>Metadata</span><strong id="metadata-status">HIDDEN</strong></div>
+            </div>
+
+            <div class="mint-network-row">
+              <span class="eyebrow">Network</span>
+              <div class="mint-network-actions">
+                <span id="network-status" class="status-pill" data-tone="neutral">Checking...</span>
+                <button class="network-switch" id="switch-network" type="button" hidden>Switch network</button>
+                <button class="network-switch" id="refresh-mint" type="button">Refresh</button>
+              </div>
+            </div>
+
+            {#- The mint button is the documented exception to the no-bare-btn
+                rule: css/mint.css targets `.mint-actions .btn` and site.css
+                targets `.btn.primary` / `.mint-form .btn`, so class="btn primary"
+                stays exactly as it is. -#}
+            <form class="form mint-form" id="mint-form">
+              <label for="mint-quantity">Quantity</label>
+              <select id="mint-quantity" aria-describedby="quantity-help">
+                <option value="1">1 NFT</option>
+                <option value="2">2 NFTs</option>
+                <option value="3">3 NFTs</option>
+                <option value="4">4 NFTs</option>
+                <option value="5">5 NFTs</option>
+              </select>
+              <small id="quantity-help">Maximum 5 public mints per wallet.</small>
+              <div class="mint-actions">
+                <button class="btn primary" id="mint-button" type="submit" disabled>Connect wallet</button>
+              </div>
+              <div class="mint-wallet-row"><div class="mint-wallet" id="wallet-address">No wallet connected</div><button class="network-switch" id="disconnect-wallet" type="button" hidden>Disconnect</button></div>
+              <div class="status" id="wallet-status" role="status" aria-live="polite" aria-atomic="true">Loading collection state...</div>
+              <div class="mint-links">
+                <a class="mint-explorer-link" id="contract-link" target="_blank" rel="noreferrer" hidden>View contract on explorer</a>
+                <a class="mint-explorer-link" id="explorer-link" target="_blank" rel="noreferrer" hidden>View transaction</a>
+              </div>
+            </form>
+          </section>
+
+          <aside class="card mint-details">
+            <div class="eyebrow">Drop details</div>
+            <h3>Genesis collection</h3>
+            <div class="collection-preview-hero" style="margin:1rem 0;text-align:center">
+              <img id="nft-preview" src="/static/hidden-nft.webp" alt="Unrevealed CapyCrew Genesis NFT" width="400" height="400" loading="eager" decoding="async" style="width:min(320px,80%);aspect-ratio:1;object-fit:contain;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03)">
+              <p class="mint-preview-caption" id="mint-preview-label" style="font-size:12px;opacity:.6;margin-top:6px">Hidden metadata — revealed after minting closes</p>
+            </div>
+            <p>Fixed supply: 10,000<br>Public limit: 5 per wallet<br>Network: {{ mint_chain_name }}</p>
+            <p class="mint-disclosure">Metadata is pre-shuffled off-chain before minting and committed in the published shuffle manifest. Token IDs mint sequentially, then the collection reveal switches to the fixed IPFS sequence.</p>
+            <div class="badge">Testnet mint</div>
+          </aside>
+        </div>
+        {#- ================== END OF THE WIDGET ================== -#}
+
+        <aside class="margin-note" data-reveal data-reveal-delay="2">
+          <p class="note-head">Live figures</p>
+          <p>Price, minted supply, and the mints already used by the connected wallet are read from the
+            contract. Refresh re-reads them on demand.</p>
+          <p class="note-meta">Mint terms<a class="fn" href="#fn-2"><sup>2</sup></a></p>
+        </aside>
+      </div>
+
+      <p class="notice" data-reveal><b>Verify before you sign.</b> Always confirm the contract address through
+        official CapyCrew channels before signing anything. CapyCrew NFTs are collectibles and access passes:
+        they do not represent equity, ownership in a company, or a guaranteed financial
+        return.<a class="fn" href="#fn-3" id="fnref-3"><sup>3</sup></a></p>
     </div>
-    <p>Fixed supply: 10,000<br>Public limit: 5 per wallet<br>Network: {{ mint_chain_name }}</p>
-    <p class="mint-disclosure">Metadata is pre-shuffled off-chain before minting and committed in the published shuffle manifest. Token IDs mint sequentially, then the collection reveal switches to the fixed IPFS sequence.</p>
-    <div class="badge">Testnet mint</div>
-  </aside>
-</div></main>
+  </section>
+
+  <!-- ===== 03 / HOW TO MINT ===== -->
+  <section class="band" id="steps" data-district="steps">
+    <div class="shell route-grid">
+      <header class="route-intro" data-reveal>
+        <p class="kicker">03 &mdash; How to mint</p>
+        <h2>Four steps<br><em>to a Capy.</em></h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">The mint button always carries the next step: connect, switch network, verify,
+          then mint.</p>
+      </header>
+      {#- dispatch.js reveals .route-list li itself and fills --route-progress
+          down the spine, so the items carry no data-reveal of their own. -#}
+      <ol class="route-list">
+        <li><span class="route-no">01</span>
+          <span class="route-body"><b>Connect and verify</b>
+          <span>Connect a browser wallet and sign the verification message. If the wallet is on the wrong
+            chain, the portal offers the switch to {{ mint_chain_name }} first.</span></span></li>
+        <li><span class="route-no">02</span>
+          <span class="route-body"><b>Choose up to five</b>
+          <span>Pick a quantity between one and five Genesis NFTs. Maximum 5 public mints per
+            wallet.</span></span></li>
+        <li><span class="route-no">03</span>
+          <span class="route-body"><b>Confirm one transaction</b>
+          <span>Click Mint now, then confirm the transaction and its payment in your wallet. The receipt links
+            straight to the explorer.</span></span></li>
+        <li><span class="route-no">04</span>
+          <span class="route-body"><b>Wait for the reveal</b><em data-status="next">After close</em>
+          <span>Metadata is pre-shuffled before upload and revealed after minting closes.</span></span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== 04 / TERMS ===== -->
+  <section class="band ledger-band" id="terms" data-district="terms">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">04 &mdash; Terms</p>
+        <h2>Supply, limits,<br><em>and the reveal.</em></h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">What the contract enforces, in the same words the portal uses. Nothing on this
+          page overrides what your wallet shows you at signing time.</p>
+      </header>
+
+      {#- .table-wrap is required: the ledger is min-width 720px and scrolls
+          inside it rather than pushing the measure open. The note column runs
+          last because .ledger-table sets the last cell of a row as the faint
+          condition column. No price figure is printed here on purpose - the
+          live price belongs to the contract read in the portal above. -#}
+      <div class="table-wrap" data-reveal>
+        <table class="ledger-table">
+          <caption>Table 4.1 &mdash; Genesis mint terms</caption>
+          <thead>
+            <tr><th scope="col">Item</th><th scope="col" class="num">Value</th><th scope="col">Note</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Collection</th><td class="num">10,000</td>
+              <td>Fixed supply: 10,000. Token IDs mint sequentially.</td></tr>
+            <tr><th scope="row">Public limit</th><td class="num">5 per wallet</td>
+              <td>Maximum 5 public mints per wallet, and up to five in a single transaction.</td></tr>
+            <tr><th scope="row">Network</th><td class="num">{{ mint_chain_name }}</td>
+              <td>Testnet mint. The portal switches the wallet's network for you if it is on another chain.</td></tr>
+            <tr><th scope="row">Price</th><td class="num">Live read</td>
+              <td>Live price per NFT is read from the contract and printed in the portal above.</td></tr>
+            <tr><th scope="row">Metadata</th><td class="num">Pre-shuffled</td>
+              <td>Pre-shuffled off-chain before minting and committed in the published shuffle manifest, then
+                the collection reveal switches to the fixed IPFS sequence after minting closes.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="figure-note" data-reveal>Contract and transaction links appear in the portal once a wallet is
+        connected. Standing notes for the whole issue are in the <a href="#fn-2">colophon</a>.</p>
+    </div>
+  </section>
+</main>
+
+{#- Verbatim from the previous mint page and in this order: the JSON data block
+    first (the Content-Security-Policy allows application/json data blocks but
+    blocks inline executable script, so this must never become a running
+    script), then the ethers bundle, then js/mint.js, which reads
+    window.ethers and #mint-config on DOMContentLoaded. -#}
 <script id="mint-config" type="application/json">{{ {
   "contractAddress": mint_contract_address,
   "chainId": mint_chain_id,

@@ -32,8 +32,8 @@ class WebAppTests(unittest.TestCase):
             response = self.client.get(path)
             self.assertEqual(response.status_code, 200, path)
         about = self.client.get("/about")
-        self.assertIn("Give holders a reason to return", about.text)
-        self.assertIn("Wallet + Capy profile", about.text)
+        self.assertIn("Give holders a reason<br><em>to return.</em>", about.text)
+        self.assertIn("Wallet and Capy profile", about.text)
         self.assertIn('href="/about"', about.text)
         self.assertIn('property="og:image"', about.text)
         self.assertIn("/static/og-capycrew-042.jpg", about.text)
@@ -45,7 +45,8 @@ class WebAppTests(unittest.TestCase):
         self.assertEqual(self.client.get("/static/vendor/ethers.umd.min.js").status_code, 200)
         self.assertEqual(self.client.get("/static/og-capycrew-042.jpg").status_code, 200)
         hub = self.client.get("/hub")
-        self.assertIn("YOUR CAPY", hub.text)
+        # The editorial headline sets its own case and breaks mid-sentence.
+        self.assertIn("Your Capy.<br><em>Your signal.</em>", hub.text)
         self.assertIn("Useful things", hub.text)
         self.assertIn("/static/js/hub.js", hub.text)
 
@@ -71,12 +72,17 @@ class WebAppTests(unittest.TestCase):
         for anchor in anchors:
             self.assertIn('id="%s"' % anchor, page.text, anchor)
         self.assertIn("/static/css/whitepaper.css", page.text)
-        self.assertIn("/static/js/whitepaper.js", page.text)
         self.assertIn('class="paper-progress"', page.text)
         self.assertIn('href="/privacy"', page.text)
         self.assertIn("https://t.me/capycrew", page.text)
         self.assertIn("Published before any sale", page.text)
-        reading_aids = self.static_source("/static/js/whitepaper.js")
+        # The reading aids moved into the shared dispatch layer: the progress bar
+        # is CSS reading --page-progress, and the rail marker, section reveals and
+        # reduced-motion guard all live in dispatch.js now.
+        self.assertIn("/static/js/dispatch.js", page.text)
+        self.assertNotIn("/static/js/whitepaper.js", page.text)
+        self.assertIn("--page-progress", self.static_source("/static/css/whitepaper.css"))
+        reading_aids = self.static_source("/static/js/dispatch.js")
         self.assertIn("prefers-reduced-motion", reading_aids)
         self.assertIn("aria-current", reading_aids)
         self.assertIn("IntersectionObserver", reading_aids)
@@ -116,8 +122,10 @@ class WebAppTests(unittest.TestCase):
         with patch.dict(os.environ, {"MINT_ENABLED": "false"}):
             mint = self.client.get("/mint")
             self.assertEqual(mint.status_code, 200, "the URL stays live so shared links keep working")
-            self.assertIn("THE MINT", mint.text)
-            self.assertIn("IS NOT OPEN", mint.text)
+            # The editorial headline sets its own case and breaks mid-sentence,
+            # so match the two halves rather than the old all-caps string.
+            self.assertIn("The mint", mint.text)
+            self.assertIn("is not open.", mint.text)
             self.assertNotIn("mint-button", mint.text)
             self.assertNotIn("/static/js/mint.js", mint.text)
             self.assertIn("Mint / soon", mint.text)
@@ -142,7 +150,7 @@ class WebAppTests(unittest.TestCase):
     def test_unknown_paths_render_the_branded_page_and_api_paths_return_json(self):
         page = self.client.get("/no-such-district")
         self.assertEqual(page.status_code, 404)
-        self.assertIn("WRONG BLOCK", page.text)
+        self.assertIn("Wrong block.", page.text)
         self.assertIn('href="/whitepaper"', page.text)
         api = self.client.get("/api/mint/nothing-here")
         self.assertEqual(api.status_code, 404)
@@ -194,7 +202,9 @@ class WebAppTests(unittest.TestCase):
         allocations = [17383746, 21729683, 19556714, 17383746, 13037810, 7822686, 2737940, 347675]
         self.assertEqual(sum(allocations), 100_000_000)
         for amount in allocations:
-            self.assertIn("<td>{:,}</td>".format(amount), page)
+            # The cell may carry presentation attributes (class="num" right-aligns
+            # the figure columns); what matters is that it is printed as a cell.
+            self.assertRegex(page, r"<td[^>]*>" + re.escape("{:,}".format(amount)) + r"</td>")
 
     def test_hub_ships_without_demo_state_or_invented_metrics(self):
         page = self.client.get("/hub").text

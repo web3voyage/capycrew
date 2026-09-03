@@ -33,17 +33,14 @@
 (() => {
   'use strict';
 
-  /* Two hosts, one city. Standalone the scene owns the viewport and a dock
+  /* Two hosts, one city. Standalone the scene owns the viewport and the dock
      flies it. Dropped into a page it becomes the plate behind the type: same
-     city, same metre, but the page's own scroll flies the camera.
-     #scene-stage is the shipped site's id, #city-stage the concept's; both are
-     embeds, and #city is the only full-frame host. */
+     city, same metre, but the page's own scroll flies the camera. */
   const stage = document.getElementById('city')
-    || document.getElementById('scene-stage')
     || document.getElementById('city-stage');
   const T = window.THREE;
   if (!stage) return;
-  const EMBED = stage.id !== 'city';
+  const EMBED = stage.id === 'city-stage';
   const doc = document.documentElement;
 
   /* Every way this can fail ends here, and says why. A dead plate looks
@@ -55,9 +52,9 @@
     if (window.console && console.warn) console.warn('CapyCity: no city. ' + why);
   };
   if (!T || !T.MeshToonMaterial) {
-    return dead('three.js is not loaded. Check the'
-      + ' <script src="/static/three.min.js"> tag in base.html - it has to come'
-      + ' before this file, and it must not be deferred past it.');
+    return dead('three.js is not loaded. Check the <script src="../three.min.js">'
+      + ' path - a root-absolute /static/... src resolves to the drive root when'
+      + ' the page is opened as a file:// URL.');
   }
   if (!T.WebGLRenderTarget || !T.ShaderMaterial) {
     return dead('this three.js build has no render targets or shader materials,'
@@ -101,7 +98,7 @@
      stage rather than off :root on purpose: custom properties inherit, so a
      sheet that declares them on :root still resolves here, but a host that
      would rather keep the city's paints out of its global scope can put them
-     on the stage element instead and nothing else changes. That matters because
+     on #city-stage instead and nothing else changes. That matters because
      these are one-word names - --mark, --plate, --head, --trim, --post - and
      several of them would be a poor neighbour in a page-wide stylesheet.
 

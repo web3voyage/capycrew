@@ -1,0 +1,790 @@
+/* ==========================================================================
+   CapyCrew redesign concept 02 - "The CapyCity Dispatch"
+   Editorial direction: ink on paper, print apparatus, daylight city plate.
+   Same section architecture as concept 01, rebuilt in a print language.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --body: "Space Grotesk", system-ui, sans-serif;
+  --mono: "DM Mono", ui-monospace, monospace;
+  --serif: "Fraunces", Georgia, "Times New Roman", serif;
+
+  /* ---- paper ---- */
+  --paper: #f4f0e8;
+  --paper-2: #fffdf8;
+  --paper-3: #ebe5d8;
+  --ink: #101010;
+  --ink-2: #4a473f;
+  --ink-3: #6f6a5e;            /* 4.7:1 on paper only - see below */
+  /* --ink-3 is the furniture tone, and it earns its 4.74:1 against opaque
+     paper. Over the open plate it does not - 2.8:1 - so a label in --ink-3
+     must have paper of its own behind it: .figures, .margin-note, .notice,
+     .table-wrap, .spread, .masthead, .dock and .colophon all do, and the
+     thinnest of them (.masthead, .94 of --paper) still carries it at 4.6:1
+     because the wash composites before the panel does. Every label that sits
+     on the open plate - bylines, captions, hints, the folio, the route
+     numbers and statuses - is set in --ink-2 instead. */
+  --rule: rgba(16, 16, 16, .16);
+  --rule-2: rgba(16, 16, 16, .34);
+  --forest: #1c4a3b;           /* accent for text: 8.9:1 */
+  --acid: #c2ee2c;             /* fill only, always with ink on top */
+  --amber: #e4712f;            /* graphic only, never small text */
+  --shadow: 0 18px 40px rgba(16, 16, 16, .13);
+  --shadow-2: 0 30px 64px rgba(16, 16, 16, .18);
+
+  /* ---- city plate --------------------------------------------------------
+     CapyCity is a lit, cel-shaded scene now rather than a flat print of one,
+     so the plate needs a whole paint palette instead of four ink tones. It is
+     still the Dispatch's palette: forest, sage, brick and paper for the built
+     city, ink for every post and pole, amber and acid held back for accents.
+     capycity.js reads all 63 names below off :root by name, so the plate and
+     the page can never drift apart - which also means these names are a
+     contract. Do not reuse --mark, --plate, --head, --trim or --chrome for
+     page chrome, however much they sound like print apparatus: they are the
+     road markings, the number plates, the headlamps, the window trim and the
+     bumpers. The two --city-* tones below are the CSS skyline's, used only
+     when there is no canvas at all. */
+  --city-bld: #1f5a8c;  --city-ghost: #ff4b3e;
+
+  /* sky: real blue overhead, dissolving toward paper at the horizon. The spread
+     between --sky-mid and --cloud is what makes the cloud bank visible at all;
+     do not close it. */
+  --sky-top: #1275c0;   --sky-mid: #4fb0e0;    --sky-low: #b9e0ee;
+  --sun: #ffe9a3;       --cloud: #ffffff;
+
+  /* ground: dark asphalt against pale flags - the widest value step in the
+     scene, and the one that draws the avenue. */
+  --road: #39424c;      --road-2: #454f5a;     --mark: #fff8d8;
+  --kerb: #8c8676;      --kerb-top: #efe8d2;
+  --walk: #f2ead6;      --walk-2: #e3d9bf;     --grate: #23282e;
+
+  /* buildings: brick, ochre, teal, cream, indigo, saffron. Authored for channel
+     spread rather than saturation - the wash keeps 0.22 of (max - min), so a
+     dark rich paint arrives grey and a bright vivid one arrives coloured. */
+  --bld-a: #d94f3d;     --bld-b: #e8933a;      --bld-c: #2f9e8f;
+  --bld-d: #f0e2c0;     --bld-e: #3d5fa8;      --bld-f: #e6c548;
+  --trim: #fffaea;      --roof: #2b3138;       --roof-2: #1b1f24;
+  --glass: #17313d;     --glass-lit: #ffd968;
+  --awning-a: #ff4b3e;  --awning-b: #1f7fbf;   --awning-c: #d6ff3f;
+
+  /* planting */
+  --trunk: #6b4a30;     --leaf-a: #35a04a;     --leaf-b: #1f7f3c;
+  --leaf-c: #7cc94a;    --soil: #4a3a28;
+
+  /* traffic: four vivid, one white, one graphite - the pale and dark bodies are
+     what stop a queue reading as one long coloured smear */
+  --car-1: #ff4b3e;     --car-2: #1f7fbf;      --car-3: #ffc93c;
+  --car-4: #f4f1e6;     --car-5: #2fa88f;      --car-6: #2b3138;
+  --taxi: #ffb01f;      --tyre: #1b1f24;       --rim: #d8d3c4;
+  --chrome: #eae5d6;    --plate: #fffaea;
+  --head: #fff6cf;      --tail: #ff3a2a;
+
+  /* street furniture: posts, tyres, glass and roofs go near-black on purpose.
+     Under a .78 wash pure black lands on rgb(190,187,181) and pure white on
+     rgb(246,243,236), so value is the only other lever there is. */
+  --post: #3a4149;      --lamp-glow: #ffe9a3;
+  --sig-red: #ff2f21;   --sig-amber: #ffb01f;  --sig-green: #2fd05f;
+  --sig-off: #262b30;
+
+  /* the crew: the capybaras stay believably capybara, so the colour is carried
+     by the eight fits rather than by the fur */
+  --capy: #b98a5e;      --capy-2: #a2744c;     --capy-dark: #6d4a2e;
+  --capy-nose: #3a2a20;
+  --fit-1: #ff4b3e;     --fit-2: #1f7fbf;      --fit-3: #d6ff3f;
+  --fit-4: #ffc93c;     --fit-5: #2fa88f;      --fit-6: #f06ba8;
+  --fit-7: #f4f1e6;     --fit-8: #7d5cc9;
+
+  --shell: 1300px;
+  --gutter: clamp(18px, 4vw, 44px);
+  --band-y: clamp(78px, 10vh, 136px);
+  --ease: cubic-bezier(.2, .75, .25, 1);
+  color-scheme: light;
+}
+
+/* Display face is switchable from the concept dock, so the type stance can be
+   judged as an A/B rather than argued about. */
+[data-face="serif"] {
+  --display: var(--serif);
+  --display-vs: "opsz" 110, "wght" 620, "SOFT" 26, "WONK" 1;
+  --display-ls: -.018em; --display-lh: .95;
+  --em-style: italic;
+}
+[data-face="grotesk"] {
+  --display: "Archivo", system-ui, sans-serif;
+  --display-vs: "wdth" 112, "wght" 800;
+  --display-ls: -.042em; --display-lh: .88;
+  --em-style: normal;
+}
+/* ==================== BASE ==================== */
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 16px/1.6 var(--body);
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+img, video { display: block; max-width: 100%; }
+:focus-visible { outline: 2px solid var(--forest); outline-offset: 3px; }
+
+.shell { width: min(var(--shell), calc(100% - var(--gutter) * 2)); margin-inline: auto; }
+
+h1, h2, h3, .wordmark, .ghost, blockquote {
+  font-family: var(--display);
+  font-variation-settings: var(--display-vs);
+  letter-spacing: var(--display-ls);
+  line-height: var(--display-lh);
+  font-weight: 400;
+  margin: 0;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(50px, 7vw, 116px); }
+h2 { font-size: clamp(34px, 4.4vw, 68px); }
+h3 { font-size: 15px; letter-spacing: .02em; line-height: 1.3; }
+h1 em, h2 em, blockquote em { font-style: var(--em-style); color: var(--forest); }
+
+/* All furniture - kickers, folios, captions, labels - is mono. */
+.kicker, .dock-label, .contents-head, .notes-head, .colophon-label, .hint,
+.strip-inner, .note-head, .sheet-head, .spread-meta, .route-no, .stamp {
+  font: 500 10.5px/1.5 var(--mono);
+  letter-spacing: .19em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.kicker { color: var(--forest); }
+.kicker i, .byline i, .frame figcaption i { font-style: normal; color: var(--ink-2); padding: 0 5px; }
+.imprint i { font-style: normal; color: var(--ink-3); padding: 0 5px; }
+
+.standfirst {
+  max-width: 34ch; margin: 26px 0 0;
+  font-family: var(--serif); font-variation-settings: "opsz" 28, "wght" 400, "SOFT" 40, "WONK" 0;
+  font-size: clamp(19px, 1.75vw, 25px); line-height: 1.34; color: var(--ink-2);
+}
+.byline { margin: 22px 0 0; font: 500 10.5px var(--mono); letter-spacing: .16em;
+  text-transform: uppercase; color: var(--ink-2); }
+.band-note { max-width: 46ch; margin: 22px 0 0; color: var(--ink-2); font-size: 15px; }
+.figure-note { max-width: 62ch; margin: 26px 0 0; color: var(--ink-2); font-size: 13.5px;
+  font-style: italic; }
+/* ==================== PRINT APPARATUS ====================
+   Hairline rules that draw themselves in, footnote markers, and the plate
+   (a framed image with registration crosses) used everywhere on the page. */
+.rule { display: block; height: 1px; margin: 30px 0 0; background: var(--ink);
+  opacity: .8; transform: scaleX(0); transform-origin: left center;
+  transition: transform .8s var(--ease); }
+.rule.is-in { transform: scaleX(1); }
+
+.fn { color: var(--forest); }
+.fn sup { font: 500 9px var(--mono); padding-left: 2px; vertical-align: super; }
+.fn:hover sup { text-decoration: underline; }
+
+.plate { margin: 0; }
+.plate-frame { position: relative; overflow: hidden; background: var(--paper-2);
+  border: 1px solid var(--rule-2); box-shadow: var(--shadow); }
+.plate-frame video, .plate-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Registration crosses sit in the corners, just inside the trim. */
+.reg { position: absolute; width: 13px; height: 13px; pointer-events: none; z-index: 2;
+  mix-blend-mode: multiply; opacity: .85; }
+.reg::before, .reg::after { content: ""; position: absolute; background: var(--paper-2); }
+.reg::before { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-.5px); }
+.reg::after { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-.5px); }
+.reg-tl { left: 9px; top: 9px; } .reg-tr { right: 9px; top: 9px; }
+.reg-bl { left: 9px; bottom: 9px; } .reg-br { right: 9px; bottom: 9px; }
+
+.plate figcaption, .frame figcaption, .good figcaption, .spread figcaption {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  margin-top: 12px; padding-top: 9px; border-top: 1px solid var(--rule); }
+.plate figcaption b, .good figcaption b { font: 500 10.5px var(--mono); letter-spacing: .16em;
+  text-transform: uppercase; color: var(--forest); }
+.plate figcaption span, .good figcaption span { font-size: 13px; color: var(--ink-2); font-style: italic; }
+
+/* ==================== BUTTONS ==================== */
+.btn { display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 22px;
+  border: 1px solid transparent; font: 500 11px var(--mono); letter-spacing: .15em;
+  text-transform: uppercase; transition: background .25s, color .25s, border-color .25s,
+  transform .25s var(--ease), box-shadow .25s; }
+.btn em { font-style: normal; opacity: .6; }
+.btn-ink { background: var(--ink); color: var(--paper); }
+.btn-ink:hover { background: var(--forest); transform: translateY(-2px); box-shadow: var(--shadow); }
+.btn-line { border-color: var(--ink); color: var(--ink); }
+.btn-line:hover { background: var(--acid); border-color: var(--acid); transform: translateY(-2px); }
+/* ==================== ENVIRONMENT: the city as a press plate ====================
+   Concept 03 runs live behind the type. capycity.js mounts its canvas into
+   #city-stage, reads the palette above off :root, and flies the camera down
+   the avenue on page scroll. Here the city is printed rather than displayed:
+   washed back to paper strength and screened through grain, because on this
+   direction type always leads. */
+#city-stage { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  /* The scene's own sky ramp, so the first paint and the WebGL frame that
+     replaces it are the same sky instead of two different creams. */
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 44%, var(--sky-low) 100%); }
+#city-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* The wash, and the reason the page is readable. Solid paper at the head and
+   foot of every screen, thinning to a window through the middle band - but
+   never past .78. That floor is measured against black rather than against the
+   palette, because the toon ramp multiplies every paint down by its darkest
+   step: .78 paper over pure black is rgb(190,187,181), which carries 16.5px
+   --ink-2 body copy at 4.85:1, --forest kickers at 5.25:1 and --ink headlines
+   at 9.96:1.
+
+   Then .city-grain multiplies over the wash - z-index 3 against the wash's 2 -
+   and takes about 2.9% off the backdrop where both line sets cross, so what a
+   line of type actually sits on is rgb(185,182,176): --ink-2 4.57:1, --forest
+   4.95:1, --ink 9.38:1. Still over 4.5, but by 0.07, not by 0.35. So .78 is a
+   floor with almost nothing under it, and the two numbers that can eat the rest
+   are in this block and the next: thin the wash or thicken the grain and the
+   body copy fails. Both figures are kept here because the wash-only one is what
+   you get if you measure the gradient on its own and wonder why it disagrees.
+
+   Small mono furniture in --ink-3 does not clear that - 2.66:1 - so it either
+   sits on a panel of its own or moves to --ink-2; see the note on --ink-3 at the
+   top of this file.
+
+   THE VERTICAL PROFILE BELOW IS NOT A TUNING KNOB. The stage is position:fixed
+   inside a document that scrolls, so a line of body copy passes through every
+   vertical position in this gradient on its way up the screen. Every stop is
+   therefore load-bearing, including the solid ones at the head and foot.
+
+   The HORIZONTAL axis is the one place there is slack, and .city-haze takes it
+   as a mask. Type lives inside .shell, which is centred and never wider than
+   --shell, so beyond that column plus 40px of safety there is no body copy at
+   any scroll position and nothing to protect. The mask multiplies the wash's
+   alpha, so the margins land at about .84 x .62 = .52 and the city reads at
+   roughly twice its strength out there - the sky, the skyline and the cloud bank
+   all sit in that band. Both stops collapse to zero width once the viewport is
+   narrower than --shell + 80px, which is where the margins stop existing, so
+   narrow screens keep the full wash without a media query. */
+.city-haze { position: absolute; inset: 0; z-index: 2; background:
+  linear-gradient(180deg, var(--paper) 0%, rgba(244, 240, 232, .84) 16%,
+    rgba(244, 240, 232, .78) 46%, rgba(244, 240, 232, .85) 76%, var(--paper) 100%);
+  --haze-hold: max(0px, calc((100% - var(--shell)) / 2 - 40px));
+  -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, .62) 0,
+    #000 var(--haze-hold), #000 calc(100% - var(--haze-hold)), rgba(0, 0, 0, .62) 100%);
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, .62) 0,
+    #000 var(--haze-hold), #000 calc(100% - var(--haze-hold)), rgba(0, 0, 0, .62) 100%); }
+
+/* Fine laid-paper tooth, multiplied over everything. */
+.city-grain { position: absolute; inset: 0; z-index: 3; mix-blend-mode: multiply; opacity: .55;
+  background-image: repeating-linear-gradient(0deg, transparent 0 2px, rgba(16, 16, 16, .035) 2px 3px),
+    repeating-linear-gradient(90deg, transparent 0 3px, rgba(16, 16, 16, .022) 3px 4px); }
+
+/* CSS-only skyline for anyone who never gets a canvas, with the amber
+   misregistration ghost this direction is built around. capycity.js raises
+   data-renderer="webgl" the moment its canvas is in - including under
+   prefers-reduced-motion, where it renders one still frame and stops - so the
+   print only ever shows when there is genuinely no city to show. */
+.city-fallback { position: absolute; inset: auto 0 6%; z-index: 1; height: 46%; opacity: .34;
+  background: var(--city-bld);
+  clip-path: polygon(0 100%, 0 54%, 7% 54%, 7% 30%, 19% 30%, 19% 66%, 33% 66%, 33% 17%,
+    48% 17%, 48% 60%, 63% 60%, 63% 34%, 79% 34%, 79% 8%, 90% 8%, 90% 44%, 100% 44%, 100% 100%); }
+.city-fallback::after { content: ""; position: absolute; inset: 0; transform: translate(7px, -5px);
+  background: var(--city-ghost); opacity: .5; clip-path: inherit; }
+#city-stage[data-renderer="webgl"] .city-fallback { display: none; }
+
+/* is-dead is the hard failure: no THREE, or the context refused. The skyline
+   is then the only city the issue has, so it is printed at full strength and
+   the wash thins to let it read. .74 is safe here for the reason .78 is the
+   floor everywhere else: with no canvas the backdrop is the sky ramp with a
+   .34 skyline over it, never black, so body copy lands at 6.6:1 rather than the
+   4.1:1 that .74 over black would give. The plate stays decorative either way -
+   it is aria-hidden, and no reader is told what they are missing. */
+#city-stage.is-dead .city-fallback { opacity: .58; }
+#city-stage.is-dead .city-haze { background:
+  linear-gradient(180deg, var(--paper) 0%, rgba(244, 240, 232, .8) 20%,
+    rgba(244, 240, 232, .74) 62%, var(--paper) 100%); }
+
+.issue, .masthead, .colophon { position: relative; z-index: 1; }
+
+/* ==================== FOLIO RAIL ==================== */
+.folio { position: fixed; z-index: 25; left: 20px; top: 50%; transform: translateY(-50%);
+  display: grid; gap: 1px;
+  /* The rail is the one piece of type that lives in the margin, and the margin
+     is exactly where .city-haze thins its mask - so the folio cannot borrow the
+     plate's wash the way the rest of the page does. It carries its own, by the
+     same rule set for small mono furniture higher up: put it on a panel. Worst
+     case is the thinned wash over a black plate, rgb(127,125,121); .9 paper over
+     that is rgb(232,229,221), which holds --ink-2 at 7.4:1. The grain never
+     reaches it either - that sits inside the stage at z-index 3, this is at 25.
+     Padding only, no negative margin: .folio-rule is absolute at left: 0, so
+     moving this box moves the progress rule with it. */
+  padding: 10px 12px 10px 15px;
+  background: rgba(244, 240, 232, .9); }
+.folio-rule { position: absolute; left: 0; top: 3px; bottom: 3px; width: 1px; background: var(--rule); }
+.folio-rule i { position: absolute; left: -1px; top: 0; width: 3px; background: var(--ink);
+  height: calc(100% * var(--page-progress, 0)); transition: height .18s linear; }
+.folio a { display: flex; align-items: baseline; gap: 8px; padding: 5px 0;
+  font: 500 9.5px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2);
+  transition: color .25s, transform .25s var(--ease); }
+/* The section name stays folded away until the margin can actually hold it. The
+   rail sits at left: 20px and a name starts 37px further in, so it needs about
+   125px of clear paper; the shell only leaves that once the viewport passes
+   1560px - below 1388px the gutter is what sets the margin, and at 1440px it is
+   70px, which puts the name straight under the headline. So below 1560px the
+   folio is what a printed one is: numbers in the margin. The name is kept for
+   screen readers but taken out of layout, because an invisible link box is
+   still a link box, and at 1440px it was covering the first 55px of the lede. */
+.folio a span { position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (min-width: 1560px) {
+  .folio a span { position: static; width: auto; height: auto; overflow: visible;
+    clip-path: none; opacity: 0; transform: translateX(-5px);
+    transition: opacity .3s var(--ease), transform .3s var(--ease); }
+  .folio:hover a span, .folio a.is-here span { opacity: 1; transform: none; }
+}
+.folio a:hover, .folio a.is-here { color: var(--forest); transform: translateX(3px); }
+.folio a.is-here b { box-shadow: inset 0 -6px 0 var(--acid); }
+
+/* ==================== CONCEPT DOCK (would not ship) ==================== */
+.dock { position: fixed; z-index: 40; right: 18px; bottom: 18px; display: grid; gap: 6px;
+  padding: 13px; border: 1px solid var(--rule-2); background: rgba(255, 253, 248, .93);
+  backdrop-filter: blur(10px); box-shadow: var(--shadow-2); }
+.dock-label { color: var(--ink-3); }
+.dock button { cursor: pointer; border: 1px solid var(--rule); background: transparent; color: var(--ink-2);
+  padding: 8px 13px; text-align: left; font: 500 10.5px var(--mono); letter-spacing: .12em;
+  text-transform: uppercase; transition: all .2s var(--ease); }
+.dock button em { font-style: normal; color: var(--ink-3); }
+.dock button:hover { border-color: var(--rule-2); color: var(--ink); }
+.dock button.is-active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.dock button.is-active em { color: rgba(244, 240, 232, .6); }
+.dock-link { margin-top: 3px; font: 500 9.5px var(--mono); letter-spacing: .12em;
+  text-transform: uppercase; color: var(--forest); }
+.dock-link:hover { text-decoration: underline; }
+/* ==================== MASTHEAD ==================== */
+/* The masthead is sticky, so anchor targets keep clear of it. */
+[id] { scroll-margin-top: 96px; }
+
+.masthead { position: sticky; top: 0; z-index: 30; background: rgba(244, 240, 232, .94);
+  backdrop-filter: blur(12px); border-bottom: 2px solid var(--ink); }
+
+.mast-strip { overflow: hidden; max-height: 40px; border-bottom: 1px solid var(--rule);
+  transition: max-height .4s var(--ease), opacity .3s var(--ease); }
+.strip-inner { display: flex; align-items: center; gap: 22px; height: 32px; color: var(--ink-3);
+  white-space: nowrap; }
+.strip-inner span { font-size: 9.5px; }
+.strip-live { display: inline-flex; align-items: center; gap: 6px; color: var(--forest); }
+.strip-live i { width: 5px; height: 5px; border-radius: 50%; background: var(--forest);
+  animation: blink 2.6s var(--ease) infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+.strip-end { margin-left: auto; font-style: italic; text-transform: none; letter-spacing: .06em; }
+
+.mast-inner { display: flex; align-items: center; gap: 30px; height: 68px;
+  transition: height .4s var(--ease); }
+.wordmark { font-size: 30px; letter-spacing: -.01em; transition: font-size .4s var(--ease); }
+
+.mast-nav { display: flex; gap: 24px; margin-left: auto; }
+.mast-nav a { position: relative; padding: 3px 1px; font: 500 10.5px var(--mono); letter-spacing: .15em;
+  text-transform: uppercase; color: var(--ink-2); transition: color .2s, box-shadow .25s var(--ease); }
+.mast-nav a em { font-style: normal; color: var(--ink-3); }
+.mast-nav a:hover { color: var(--ink); box-shadow: inset 0 -8px 0 var(--acid); }
+
+.mast-cta { padding: 10px 15px; background: var(--ink); color: var(--paper);
+  font: 500 10px var(--mono); letter-spacing: .16em; text-transform: uppercase;
+  transition: background .25s; }
+.mast-cta em { font-style: normal; opacity: .55; }
+.mast-cta:hover { background: var(--forest); }
+
+/* Condensed after the first scroll - the folio strip retires, the mark shrinks. */
+.masthead.is-stuck .mast-strip { max-height: 0; opacity: 0; }
+.masthead.is-stuck .mast-inner { height: 56px; }
+.masthead.is-stuck .wordmark { font-size: 21px; }
+
+/* ==================== 01 / FRONT PAGE ==================== */
+.front { padding: clamp(46px, 7vh, 88px) 0 clamp(44px, 6vh, 76px); }
+.front-grid { display: grid; grid-template-columns: minmax(0, 1.42fr) minmax(268px, .92fr);
+  grid-template-areas: "lead plate" "contents plate";
+  align-items: start; gap: clamp(30px, 4vw, 64px) clamp(30px, 4.5vw, 68px); }
+.front-lead { grid-area: lead; }
+.front-plate { grid-area: plate; }
+.contents { grid-area: contents; }
+
+.front-lead h1 { margin-top: 16px; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+
+.front-plate .plate-frame { aspect-ratio: 4 / 5; }
+/* ---- contents list, with dotted leaders ---- */
+.contents { border-top: 1px solid var(--ink); padding-top: 14px; max-width: 560px; }
+.contents-head { color: var(--forest); }
+.contents ol { list-style: none; margin: 12px 0 0; padding: 0; }
+.contents li + li { border-top: 1px solid var(--rule); }
+.contents a { display: grid; grid-template-columns: 26px auto 1fr; align-items: baseline; gap: 11px;
+  padding: 9px 0; transition: color .2s; }
+.contents a::after { content: ""; border-bottom: 1px dotted var(--rule-2); transform: translateY(-4px); }
+.contents b { font: 500 10.5px var(--mono); letter-spacing: .1em; color: var(--ink-2); }
+.contents span { font-size: 14.5px; color: var(--ink-2); }
+.contents a:hover span { color: var(--ink); box-shadow: inset 0 -8px 0 var(--acid); }
+
+/* ==================== STANDING FIGURES ==================== */
+/* Nearly opaque, because the standing figures are labelled in --ink-3 and the
+   plate runs live behind them. */
+.figures { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
+  background: rgba(255, 253, 248, .92); }
+.figures-inner { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 0; }
+.figures-inner > div { padding: 15px 18px 16px 0; border-right: 1px solid var(--rule); }
+.figures-inner > div + div { padding-left: 18px; }
+.figures-inner > div:last-child { border-right: 0; }
+.figures dt { font: 500 9.5px var(--mono); letter-spacing: .2em; text-transform: uppercase;
+  color: var(--ink-3); }
+.figures dd { margin: 7px 0 0; font-family: var(--display); font-variation-settings: var(--display-vs);
+  font-size: clamp(17px, 1.6vw, 23px); letter-spacing: -.01em; line-height: 1.05;
+  font-variant-numeric: tabular-nums; }
+.figures dd span { font: 500 11px var(--mono); letter-spacing: .04em; color: var(--forest); }
+.figures dd.is-soon { color: var(--ink-2); font-style: var(--em-style); }
+
+/* ==================== BANDS ==================== */
+.band { position: relative; padding: var(--band-y) 0; border-top: 1px solid var(--rule); }
+.band-head { max-width: 780px; }
+.band-head .kicker { margin-bottom: 15px; }
+.band-head .rule { margin-top: 26px; }
+.band-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 44px;
+  max-width: none; }
+.band-head-row .band-note { margin: 0 0 5px; }
+
+/* ==================== 02 / DISPATCHES ==================== */
+.deck { display: grid; grid-template-columns: minmax(0, 1fr) minmax(250px, 340px);
+  gap: clamp(22px, 3vw, 42px); margin-top: 46px; align-items: start; }
+.deck-stage .plate-frame { aspect-ratio: 16 / 9; }
+.deck-stage video { transition: opacity .3s var(--ease); }
+.deck-stage.is-swapping video { opacity: 0; }
+
+/* The channel list is set as a running order: numbered, ruled, right-aligned label. */
+.running-order { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+.running-order li + li { border-top: 1px solid var(--rule); }
+.running-order button { display: grid; grid-template-columns: 26px auto 1fr; align-items: baseline;
+  gap: 12px; width: 100%; padding: 15px 4px; cursor: pointer; border: 0; background: transparent;
+  text-align: left; color: inherit; transition: background .22s, padding-left .25s var(--ease); }
+.running-order b { font: 500 10.5px var(--mono); letter-spacing: .1em; color: var(--ink-2); }
+.running-order span { font-family: var(--display); font-variation-settings: var(--display-vs);
+  font-size: 21px; letter-spacing: -.01em; }
+.running-order em { justify-self: end; font: 500 9.5px var(--mono); letter-spacing: .15em;
+  text-transform: uppercase; font-style: normal; color: var(--ink-2); }
+.running-order button:hover { background: rgba(255, 253, 248, .8); padding-left: 10px; }
+.running-order button.is-active { background: var(--acid); }
+.running-order button.is-active b, .running-order button.is-active em { color: var(--ink); }
+/* ==================== 03 / CONTACT SHEET ==================== */
+.sheet-head { display: flex; justify-content: space-between; gap: 20px; margin-top: 44px;
+  padding-top: 10px; border-top: 1px solid var(--ink); color: var(--ink-2); }
+
+.sheet { margin-top: 18px; padding-bottom: 22px; overflow-x: auto; overscroll-behavior-inline: contain;
+  scroll-snap-type: x proximity; scrollbar-width: none; cursor: grab; }
+.sheet::-webkit-scrollbar { display: none; }
+.sheet.is-dragging { cursor: grabbing; scroll-snap-type: none; }
+.sheet-track { display: flex; gap: 20px; width: max-content;
+  padding-inline: max(var(--gutter), calc((100vw - var(--shell)) / 2)); }
+
+.frame { position: relative; flex: none; width: min(310px, 72vw); margin: 0; scroll-snap-align: center;
+  opacity: .74; filter: saturate(.5) contrast(.96);
+  transition: opacity .5s var(--ease), filter .5s var(--ease), transform .5s var(--ease); }
+.frame .plate-frame { aspect-ratio: 4 / 5; border-color: var(--rule); box-shadow: none;
+  transition: border-color .5s, box-shadow .5s; }
+.frame figcaption b { font-family: var(--display); font-variation-settings: var(--display-vs);
+  font-size: 20px; letter-spacing: -.01em; text-transform: none; color: var(--ink); }
+.frame figcaption span { font: 500 9.5px var(--mono); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-2); font-style: normal; margin-left: auto; }
+
+/* The plate nearest the centre of the viewport is the one being read. */
+.frame.is-focus { opacity: 1; filter: none; }
+.frame.is-focus .plate-frame { border-color: var(--ink); box-shadow: var(--shadow); }
+.frame.is-focus::before { content: ""; position: absolute; left: -7px; top: -7px; width: 18px; height: 18px;
+  border-left: 1px solid var(--amber); border-top: 1px solid var(--amber); }
+
+.sheet-foot { display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  flex-wrap: wrap; }
+.hint { color: var(--ink-2); }
+
+/* ==================== 04 / NOTES ==================== */
+.notes-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(210px, 268px);
+  gap: clamp(28px, 4vw, 60px); margin-top: 48px; align-items: start; }
+
+/* Body copy in this band is set in the serif, in real columns, with rules. */
+.columns { columns: 2; column-gap: 38px; column-rule: 1px solid var(--rule);
+  font-family: var(--serif); font-variation-settings: "opsz" 14, "wght" 400, "SOFT" 30, "WONK" 0;
+  font-size: 16.5px; line-height: 1.62; color: var(--ink-2); hyphens: auto; }
+.columns p { margin: 0 0 1.1em; }
+.columns h3 { break-after: avoid; margin: 1.4em 0 .5em; color: var(--forest);
+  font-family: var(--mono); font-variation-settings: normal; font-weight: 500; font-size: 10.5px;
+  letter-spacing: .19em; text-transform: uppercase; }
+.notes-list { break-inside: avoid; margin: 0 0 1.2em; padding-left: 1.1em; }
+.notes-list li { margin-bottom: .5em; }
+.notes-list b { color: var(--ink); font-weight: 600; }
+
+.lead-para::first-letter { float: left; font-family: var(--serif);
+  font-variation-settings: "opsz" 144, "wght" 700, "SOFT" 0, "WONK" 1;
+  font-size: 4.2em; line-height: .78; padding: .06em .1em 0 0; color: var(--forest); }
+
+.margin-note { position: sticky; top: 120px; padding: 20px; border: 1px solid var(--rule-2);
+  background: rgba(255, 253, 248, .86); }
+.note-head { color: var(--forest); margin-bottom: 12px; }
+.margin-note p { margin: 0 0 12px; font-size: 13.5px; line-height: 1.55; color: var(--ink-2); }
+.margin-note p:last-child { margin-bottom: 0; }
+.note-meta { padding-top: 12px; border-top: 1px solid var(--rule); color: var(--ink-3) !important;
+  font-size: 12.5px !important; font-style: italic; }
+/* ==================== PULL QUOTE ==================== */
+.pull { padding: clamp(54px, 7vw, 96px) 0; background: var(--paper-3);
+  border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
+.pull blockquote { position: relative; margin: 0; max-width: 22ch;
+  font-size: clamp(38px, 5.4vw, 84px); }
+.pull blockquote::before { content: "\201C"; position: absolute; left: -.62em; top: -.08em;
+  color: var(--amber); opacity: .5; }
+.pull-attr { margin: 26px 0 0; padding-top: 14px; border-top: 1px solid var(--rule-2);
+  max-width: 44ch; font: 500 10.5px var(--mono); letter-spacing: .16em; text-transform: uppercase;
+  color: var(--ink-3); }
+
+/* ==================== 05 / PRODUCT STUDY (two-page spread) ==================== */
+.spread { position: relative; margin-top: 46px; padding: clamp(30px, 4vw, 58px) clamp(24px, 3.4vw, 52px);
+  background: var(--paper-2); border: 1px solid var(--rule-2); box-shadow: var(--shadow-2);
+  display: grid; grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 62px); align-items: end;
+  transform: perspective(1500px) rotateY(var(--tx, 0deg)) rotateX(var(--ty, 0deg));
+  transition: transform .55s var(--ease); }
+
+.spread-meta { position: absolute; inset: 14px 18px auto; display: flex; justify-content: space-between;
+  color: var(--ink-3); }
+
+/* The centre gutter: a hairline with the shadow a bound spread would cast. */
+.spread-gutter { position: absolute; top: 8%; bottom: 8%; left: calc(50% + 8px); width: 1px;
+  background: var(--rule-2); }
+.spread-gutter::before, .spread-gutter::after { content: ""; position: absolute; top: 0; bottom: 0;
+  width: 26px; }
+.spread-gutter::before { right: 0; background: linear-gradient(90deg, transparent, rgba(16, 16, 16, .06)); }
+.spread-gutter::after { left: 0; background: linear-gradient(90deg, rgba(16, 16, 16, .06), transparent); }
+
+.spread figure { margin: 0; }
+.spread-recto { margin-top: 26px; }
+.spread-verso { max-width: 236px; justify-self: center; }
+.spread figcaption { border-top-color: var(--rule-2); }
+.spread figcaption b { font: 500 10px var(--mono); letter-spacing: .16em; text-transform: uppercase;
+  color: var(--forest); }
+.spread figcaption span { font-size: 12.5px; color: var(--ink-3); font-style: italic; }
+
+/* Editor's marks: circled letter, hairline label. */
+.mark { position: absolute; z-index: 4; display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 11px 7px 8px; background: var(--paper); border: 1px solid var(--rule-2);
+  font: 500 9.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); }
+.mark i { display: grid; place-items: center; width: 17px; height: 17px; border-radius: 50%;
+  border: 1px solid var(--amber); font-style: normal; color: var(--ink); }
+.mark-a { top: 20%; right: 4%; transform: rotate(1.6deg); }
+.mark-b { left: 5%; bottom: 7%; transform: rotate(-1.4deg); }
+/* ==================== 06 / LEDGER ==================== */
+.ledger-band { background: linear-gradient(180deg, var(--paper) 0%, var(--paper-3) 100%); }
+
+/* The gating notice reads as a stamped editor's warning, not a marketing box. */
+.notice { max-width: 74ch; margin: 40px 0 0; padding: 20px 24px; background: var(--paper-2);
+  border: 1px solid var(--rule); border-left: 3px solid var(--ink);
+  color: var(--ink-2); font-size: 14.5px; line-height: 1.62; }
+.notice b { color: var(--ink); font-weight: 600;
+  box-shadow: inset 0 -.62em 0 var(--acid); }         /* highlighter pass, ink stays on top */
+
+.table-wrap { margin-top: 34px; overflow-x: auto; background: var(--paper-2);
+  border: 1px solid var(--rule-2); box-shadow: var(--shadow); }
+.ledger-table { width: 100%; min-width: 720px; border-collapse: collapse; text-align: left;
+  font-variant-numeric: tabular-nums; }
+.ledger-table caption { padding: 20px 24px 16px; text-align: left; max-width: 74ch;
+  font: 500 10.5px var(--mono); letter-spacing: .13em; text-transform: uppercase;
+  color: var(--ink-3); line-height: 1.7; }
+.ledger-table th, .ledger-table td { padding: 15px 24px; border-top: 1px solid var(--rule);
+  vertical-align: baseline; }
+.ledger-table thead th { border-top: 1px solid var(--ink); border-bottom: 2px solid var(--ink);
+  font: 500 10px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--ink); }
+.ledger-table tbody th { font-family: var(--body); font-weight: 600; font-size: 15px; color: var(--ink);
+  white-space: nowrap; }
+.ledger-table td { color: var(--ink-2); font-size: 14px; }
+.ledger-table .num { text-align: right; white-space: nowrap; color: var(--ink);
+  font-family: var(--mono); font-size: 13.5px; }
+.ledger-table thead .num { text-align: right; }
+.ledger-table tbody tr:hover { background: var(--paper); }
+.ledger-table td:last-child { color: var(--ink-3); font-size: 13px; line-height: 1.6; }
+.ledger-table .total th, .ledger-table .total td { border-top: 3px double var(--ink);
+  padding-top: 17px; padding-bottom: 22px; color: var(--ink); }
+.ledger-table .total .num { font-weight: 500; }
+.ledger-table .total td:last-child { color: var(--ink-2); }
+/* ==================== 07 / ROUTE ==================== */
+.route-grid { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+  gap: clamp(34px, 5vw, 86px); align-items: start; }
+.route-intro { position: sticky; top: 148px; }
+
+.route-list { position: relative; margin: 0; padding: 0; list-style: none; counter-reset: none; }
+/* A single rule runs the length of the route; the ink fill tracks scroll. */
+.route-list::before, .route-list::after { content: ""; position: absolute; left: 54px;
+  top: 14px; bottom: 14px; width: 1px; }
+.route-list::before { background: var(--rule-2); }
+.route-list::after { background: var(--ink); transform: scaleY(var(--route-progress, 0));
+  transform-origin: top center; transition: transform .25s linear; }
+
+.route-list li { position: relative; display: grid; grid-template-columns: 54px minmax(0, 1fr);
+  gap: 0 36px; padding: 30px 0; border-top: 1px solid var(--rule); }
+.route-list li:first-child { border-top: 0; padding-top: 4px; }
+.route-list li::after { content: ""; position: absolute; left: 49px; top: 40px; z-index: 2;
+  width: 9px; height: 9px; border-radius: 50%; background: var(--paper);
+  border: 1px solid var(--ink); transition: background .4s var(--ease); }
+.route-list li:first-child::after { top: 14px; }
+.route-list li.is-in::after { background: var(--acid); }
+
+.route-no { padding-top: 9px; color: var(--ink-2); }
+.route-body { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline;
+  gap: 10px 20px; }
+.route-body b { font-family: var(--display); font-variation-settings: var(--display-vs);
+  letter-spacing: var(--display-ls); font-weight: 400; font-size: clamp(25px, 3vw, 40px);
+  line-height: 1.02; color: var(--ink); }
+.route-body > span { grid-column: 1 / -1; max-width: 52ch; margin-top: 2px;
+  color: var(--ink-2); font-size: 14.5px; line-height: 1.6; }
+
+.route-body em { justify-self: end; padding: 5px 10px 4px; font-style: normal;
+  font: 500 9.5px var(--mono); letter-spacing: .15em; text-transform: uppercase; white-space: nowrap; }
+.route-body em[data-status="live"] { background: var(--acid); color: var(--ink); }
+.route-body em[data-status="next"] { border: 1px solid var(--ink); color: var(--ink); }
+.route-body em[data-status="planned"] { border: 1px solid var(--rule-2); color: var(--ink-2); }
+.route-body em[data-status="exploring"] { border: 1px dashed var(--rule-2); color: var(--ink-2); }
+/* ==================== 08 / GOODS ==================== */
+.goods-band { border-top: 1px solid var(--rule); }
+.goods-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(18px, 2.4vw, 34px); margin-top: 46px; }
+.good { margin: 0; }
+.good .plate-frame { aspect-ratio: 4 / 5; transition: transform .5s var(--ease); }
+.good:hover .plate-frame { transform: translateY(-6px); }
+.good img { transition: transform 1.1s var(--ease); }
+.good:hover img { transform: scale(1.04); }
+
+/* Rubber stamp - amber rule, ink text, sitting off-square like a real one. */
+.stamp { position: absolute; top: 14px; right: 12px; z-index: 3; padding: 6px 12px 5px;
+  background: rgba(244, 240, 232, .9); border: 1px solid var(--amber); color: var(--ink);
+  transform: rotate(-7deg); }
+
+/* ==================== COLOPHON ==================== */
+.colophon { position: relative; z-index: 1; overflow: hidden; padding: clamp(64px, 8vw, 108px) 0 42px;
+  background: var(--paper-3); border-top: 2px solid var(--ink); }
+.colophon .ghost { position: absolute; left: 50%; bottom: -.22em; transform: translateX(-50%);
+  font-size: clamp(120px, 22vw, 340px); line-height: .8; white-space: nowrap;
+  color: var(--ink); opacity: .05; pointer-events: none; }
+
+.notes-apparatus { padding-bottom: 40px; border-bottom: 1px solid var(--rule-2); }
+.notes-head { color: var(--ink-3); }
+.fn-list { margin: 20px 0 0; padding: 0; list-style: none;
+  columns: 2; column-gap: 54px; column-rule: 1px solid var(--rule); }
+.fn-list li { break-inside: avoid; margin: 0 0 14px; padding-left: 24px; text-indent: -24px;
+  max-width: 62ch; color: var(--ink-3); font-size: 12.5px; line-height: 1.62; }
+.fn-list b { color: var(--ink-2); font-weight: 500; font-family: var(--mono); font-size: 11.5px;
+  padding-right: 5px; }
+.fn-list a { color: var(--forest); text-decoration: none; padding-left: 3px; }
+.fn-list a:hover { box-shadow: inset 0 -6px 0 var(--acid); }
+/* Following a footnote marker marks the note, the way a finger would. */
+.fn-list li:target { color: var(--ink-2); }
+.fn-list li:target b { box-shadow: inset 0 -7px 0 var(--acid); }
+
+.colophon-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, .8fr));
+  gap: clamp(28px, 4vw, 64px); padding: 44px 0; }
+.colophon-brand p { margin: 12px 0 0; max-width: 34ch; color: var(--ink-2); font-size: 14.5px; }
+.imprint { color: var(--ink-3) !important; font-size: 12.5px !important; font-style: italic;
+  line-height: 1.65; }
+.colophon-label { color: var(--forest); margin-bottom: 16px; }
+.colophon-label-2 { margin-top: 26px; }
+.colophon-grid a { display: block; margin-bottom: 9px; color: var(--ink-2); text-decoration: none;
+  font-size: 14.5px; width: fit-content; }
+.colophon-grid a:hover { color: var(--ink); box-shadow: inset 0 -8px 0 var(--acid); }
+.socials { display: flex; flex-wrap: wrap; gap: 8px; }
+.socials a { margin: 0; padding: 7px 14px; border: 1px solid var(--rule-2);
+  font: 500 10px var(--mono); letter-spacing: .16em; text-transform: uppercase; }
+.socials a:hover { border-color: var(--ink); box-shadow: none; background: var(--acid); color: var(--ink); }
+
+.copyright { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin: 0;
+  padding-top: 22px; border-top: 1px solid var(--rule-2);
+  font: 500 10px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); }
+/* ==================== REVEAL ====================
+   Everything arrives the way ink meets paper: a short rise, no bounce. */
+[data-reveal] { opacity: 0; transform: translateY(22px);
+  transition: opacity .85s var(--ease), transform .85s var(--ease); }
+[data-reveal].is-in { opacity: 1; transform: none; }
+[data-reveal-delay="1"] { transition-delay: .08s; }
+[data-reveal-delay="2"] { transition-delay: .16s; }
+[data-reveal-delay="3"] { transition-delay: .24s; }
+[data-reveal-delay="4"] { transition-delay: .32s; }
+
+/* ==================== RESPONSIVE ==================== */
+/* The folio needs real margin, not nearly enough of it. Its number box runs from
+   35px (rail at 20 plus 15 of padding) to about 54px once the 3px hover shift is
+   counted, and the shell's left edge is 44px flat until the viewport passes
+   1388px, after which it opens at (100vw - 1300) / 2. So the paper only clears
+   the rail from 1408px up, and it was being drawn from 1241px: at 1280px the
+   numbers sat on the lede, and because each one is a link, the top of the lede
+   was covered by eight anchors. Same reasoning as the section names above, one
+   step further out - names want 1560px, numbers want 1410px, and below that the
+   rail is not a margin mark, it is an overlay. */
+@media (max-width: 1410px) {
+  .folio { display: none; }
+}
+
+@media (max-width: 1100px) {
+  .front-grid { grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "lead" "plate" "contents"; }
+  .front-plate { max-width: 620px; }
+  .contents { max-width: 620px; }
+
+  .figures-inner { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .figures-inner > div { border-bottom: 1px solid var(--rule); }
+  .figures-inner > div:nth-child(3n) { border-right: 0; }
+  .figures-inner > div:nth-child(3n + 1) { padding-left: 0; }
+
+  .deck { grid-template-columns: minmax(0, 1fr); }
+  .notes-grid { grid-template-columns: minmax(0, 1fr); }
+  .margin-note { position: static; max-width: 640px; }
+
+  .spread { grid-template-columns: minmax(0, 1fr); padding-top: 56px; }
+  .spread-gutter, .mark { display: none; }
+  .spread-recto { margin-top: 0; }
+  .spread-verso { justify-self: start; }
+
+  .route-grid { grid-template-columns: minmax(0, 1fr); }
+  .route-intro { position: static; }
+  .goods-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 860px) {
+  .mast-nav { display: none; }
+  .strip-end { display: none; }
+  .columns { columns: 1; column-rule: 0; }
+  .figures-inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .figures-inner > div:nth-child(2n) { border-right: 0; }
+  .figures-inner > div:nth-child(2n + 1) { padding-left: 0; }
+  .fn-list { columns: 1; column-rule: 0; }
+  .colophon-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 36px 0; }
+  .colophon-brand { grid-column: 1 / -1; }
+  .pull blockquote { max-width: none; }
+  .band-head-row { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .band-head-row .band-note { margin: 0; }
+}
+
+@media (max-width: 620px) {
+  :root { --band-y: 62px; }
+  .strip-inner { gap: 14px; overflow-x: auto; scrollbar-width: none; }
+  .strip-inner::-webkit-scrollbar { display: none; }
+  .mast-inner { gap: 16px; height: 60px; }
+  .wordmark { font-size: 25px; }
+  .dock { right: 10px; bottom: 10px; padding: 9px; }
+  .dock-link { display: none; }
+
+  .cta-row .btn { width: 100%; justify-content: center; }
+  .figures-inner > div { padding-right: 12px; }
+  .notice { padding: 17px 18px; }
+  .sheet-foot { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .route-list li { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .route-list::before, .route-list::after, .route-list li::after { display: none; }
+  .route-body { grid-template-columns: minmax(0, 1fr); }
+  .route-body em { justify-self: start; }
+  .copyright { flex-direction: column; gap: 8px; }
+}
+
+/* ==================== REDUCED MOTION ====================
+   The page still works as a page: everything visible, nothing moving. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important; }
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .rule { transform: scaleX(1) !important; }
+  .spread { transform: none !important; }
+  .frame { opacity: 1 !important; filter: none !important; }
+}

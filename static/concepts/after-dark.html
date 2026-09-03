@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en" data-theme="night" data-hour="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>CapyCrew concept - CapyCity After Dark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="after-dark.css">
+</head>
+<body>
+
+<!-- ============ ENVIRONMENT: full-bleed CapyCity, scroll-driven ============ -->
+<div id="city-stage" aria-hidden="true" data-city="capycity">
+  <div class="city-fallback"></div>
+  <div class="city-scrim"></div>
+  <div class="city-grain"></div>
+</div>
+
+<!-- ============ CONCEPT-ONLY CONTROL (not part of the shipped design) ====== -->
+<div class="theme-dock" role="group" aria-label="Design direction preview">
+  <span class="dock-label">Direction</span>
+  <button type="button" data-theme-set="night" class="is-active">01 / After Dark</button>
+  <button type="button" data-theme-set="paper">02 / Editorial</button>
+  <button type="button" data-theme-set="chrome">03 / Chrome</button>
+</div>
+
+<!-- ============ DISTRICT RAIL: where you are in the city ============ -->
+<nav class="district-rail" aria-label="Districts">
+  <span class="rail-progress" aria-hidden="true"><i></i></span>
+  <a href="#world" data-rail="world"><b>01</b><span>Skyline</span></a>
+  <a href="#signal" data-rail="signal"><b>02</b><span>Signal</span></a>
+  <a href="#crew" data-rail="crew"><b>03</b><span>Crew</span></a>
+  <a href="#hub" data-rail="hub"><b>04</b><span>Hub</span></a>
+  <a href="#roadmap" data-rail="roadmap"><b>05</b><span>Route</span></a>
+</nav>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="wordmark" href="#world">CAPYCREW<i aria-hidden="true"></i></a>
+    <div class="nav-links">
+      <a href="#signal">Crew Hub</a>
+      <a href="#crew">Mint</a>
+      <a href="#hub">About</a>
+      <a href="#roadmap">Whitepaper</a>
+      <a href="#roadmap">Store</a>
+    </div>
+    <a class="nav-cta" href="#crew">Mint <em>soon</em></a>
+  </div>
+</header>
+<main class="flow">
+
+  <!-- ============ 01 / HERO ============ -->
+  <section class="hero" id="world" data-district="world">
+    <div class="shell hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow" data-reveal>01 &mdash; CapyCity <i>/</i> night cycle</p>
+        <h1 data-reveal data-reveal-delay="1">Stay <em>mellow.</em><br>Go onchain.</h1>
+        <p class="lede" data-reveal data-reveal-delay="2">An animation-first character universe, a shared city, and a crew
+          building better internet rituals &mdash; 10,000 capybaras deep.</p>
+        <div class="cta-row" data-reveal data-reveal-delay="3">
+          <a class="btn btn-primary" href="#signal">Open the Crew Hub</a>
+          <a class="btn btn-ghost" href="#crew">Mint <em>/ soon</em></a>
+        </div>
+        <dl class="spec-strip" data-reveal data-reveal-delay="4">
+          <div><dt>Genesis</dt><dd>042</dd></div>
+          <div><dt>Characters</dt><dd data-count="10000">10,000</dd></div>
+          <div><dt>Supply</dt><dd>1B <span>$CAPY</span></dd></div>
+        </dl>
+      </div>
+
+      <div class="hero-portal" data-reveal data-reveal-delay="2">
+        <div class="portal">
+          <video autoplay muted loop playsinline preload="auto"
+                 src="../../media/videos/Capy_%23042_rises_with_NFT_202608191210.mp4"></video>
+          <span class="portal-scan" aria-hidden="true"></span>
+          <span class="portal-ring" aria-hidden="true"></span>
+        </div>
+        <p class="portal-tag"><b>Genesis 042</b><span>Live in CapyCity</span></p>
+      </div>
+    </div>
+    <a class="scroll-hint" href="#signal" aria-label="Descend into the city"><span></span>Descend</a>
+  </section>
+
+  <!-- ============ DATA STRIP (replaces the marquee) ============ -->
+  <div class="datastrip" data-reveal>
+    <div class="shell datastrip-inner">
+      <div><span>Collection</span><strong data-count="10000">10,000</strong></div>
+      <div><span>Token supply</span><strong>1,000,000,000 $CAPY</strong></div>
+      <div><span>Network</span><strong>Robinhood Chain</strong></div>
+      <div class="live"><span>Status</span><strong><i aria-hidden="true"></i>Testnet live</strong></div>
+    </div>
+  </div>
+  <!-- ============ 02 / SIGNAL: transmission deck ============ -->
+  <section class="band signal" id="signal" data-district="signal">
+    <div class="shell">
+      <div class="band-head" data-reveal>
+        <p class="kicker">02 &mdash; The signal</p>
+        <h2>Broadcasts from<br>the district.</h2>
+        <p class="band-note">Animated clips, city transmissions, and collectible moments move through
+          CapyCity all day. Pick a channel.</p>
+      </div>
+
+      <div class="deck" data-reveal data-reveal-delay="1">
+        <figure class="deck-stage">
+          <video id="deck-player" autoplay muted loop playsinline preload="auto"
+                 src="../../media/videos/Capy_%23042_rises_with_NFT_202608191210.mp4"></video>
+          <span class="deck-frame" aria-hidden="true"></span>
+          <figcaption><b id="deck-title">Rise / 005</b><span id="deck-sub">Genesis reveal &mdash; CapyCity core</span></figcaption>
+        </figure>
+        <div class="deck-list" role="tablist" aria-label="Transmissions">
+          <button type="button" role="tab" aria-selected="true" class="is-active"
+                  data-src="../../media/videos/Capy_%23042_rises_with_NFT_202608191210.mp4"
+                  data-title="Rise / 005" data-sub="Genesis reveal &mdash; CapyCity core">
+            <video muted loop playsinline preload="metadata" src="../../media/videos/Capy_%23042_rises_with_NFT_202608191210.mp4"></video><b>Rise / 005</b></button>
+          <button type="button" role="tab" aria-selected="false"
+                  data-src="../../media/videos/Zoom_into_futuristic_CapyCity_202608191211.mp4"
+                  data-title="City / 001" data-sub="Approach vector &mdash; downtown grid">
+            <video muted loop playsinline preload="metadata" src="../../media/videos/Zoom_into_futuristic_CapyCity_202608191211.mp4"></video><b>City / 001</b></button>
+          <button type="button" role="tab" aria-selected="false"
+                  data-src="../../media/videos/Capybara_wearing_streetwear_202608191149.mp4"
+                  data-title="Street / 003" data-sub="Fit check &mdash; block level">
+            <video muted loop playsinline preload="metadata" src="../../media/videos/Capybara_wearing_streetwear_202608191149.mp4"></video><b>Street / 003</b></button>
+          <button type="button" role="tab" aria-selected="false"
+                  data-src="../../media/videos/Capybara_counting_project_perks_202608191148.mp4"
+                  data-title="Perks / 002" data-sub="Holder utility &mdash; ledger read">
+            <video muted loop playsinline preload="metadata" src="../../media/videos/Capybara_counting_project_perks_202608191148.mp4"></video><b>Perks / 002</b></button>
+          <button type="button" role="tab" aria-selected="false"
+                  data-src="../../media/videos/CapyCrew_logo_forms_on_screen_202608191209.mp4"
+                  data-title="Mark / 004" data-sub="Identity system &mdash; broadcast bumper">
+            <video muted loop playsinline preload="metadata" src="../../media/videos/CapyCrew_logo_forms_on_screen_202608191209.mp4"></video><b>Mark / 004</b></button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ============ 03 / CREW: casting reel ============ -->
+  <section class="band crew" id="crew" data-district="crew">
+    <div class="shell band-head band-head-row" data-reveal>
+      <div>
+        <p class="kicker">03 &mdash; Meet the crew</p>
+        <h2>Different fits.<br>Same frequency.</h2>
+      </div>
+      <p class="band-note">Every capybara is one character actor in one wardrobe system. Drag the reel.</p>
+    </div>
+
+    <div class="reel" tabindex="0" role="region" aria-label="CapyCrew character reel">
+      <div class="reel-track">
+        <figure class="cast"><img src="../../media/assets/Capybara_dressed_as_skater_202608190231.jpeg" alt="CapyCrew Skater 014" loading="lazy">
+          <figcaption><b>Skater</b><span>014 / deck rat</span></figcaption></figure>
+        <figure class="cast"><img src="../../media/assets/Capybara_wearing_captain_hat_202608191119.jpeg" alt="CapyCrew Captain 027" loading="lazy">
+          <figcaption><b>Captain</b><span>027 / harbour watch</span></figcaption></figure>
+        <figure class="cast"><img src="../../media/assets/Capybara_wearing_gorpcore_fashion_202608190231.jpeg" alt="CapyCrew Gorpcore 031" loading="lazy">
+          <figcaption><b>Gorpcore</b><span>031 / trail unit</span></figcaption></figure>
+        <figure class="cast"><img src="../../media/assets/Capybara_wearing_maritime_uniform_202608190423.jpeg" alt="CapyCrew Maritime 042" loading="lazy">
+          <figcaption><b>Maritime</b><span>042 / genesis</span></figcaption></figure>
+        <figure class="cast"><img src="../../media/assets/Capybara_wearing_puffer_jacket_202608190230.jpeg" alt="CapyCrew Puffer 056" loading="lazy">
+          <figcaption><b>Puffer</b><span>056 / cold front</span></figcaption></figure>
+        <figure class="cast"><img src="../../media/assets/Capybara_wearing_techwear_attire_202608190230.jpeg" alt="CapyCrew Techwear 073" loading="lazy">
+          <figcaption><b>Techwear</b><span>073 / night shift</span></figcaption></figure>
+        <figure class="cast"><img src="../../media/assets/Capybara_wearing_varsity_jacket_202608190232.jpeg" alt="CapyCrew Varsity 088" loading="lazy">
+          <figcaption><b>Varsity</b><span>088 / home game</span></figcaption></figure>
+      </div>
+    </div>
+    <div class="shell reel-foot" data-reveal>
+      <span class="hint">Scroll, drag, or use arrow keys</span>
+      <a class="btn btn-ghost" href="#hub">See the wardrobe system</a>
+    </div>
+  </section>
+  <!-- ============ 04 / HUB: dimensional product board ============ -->
+  <section class="band hub" id="hub" data-district="hub">
+    <div class="shell">
+      <div class="band-head" data-reveal>
+        <p class="kicker">04 &mdash; Product preview</p>
+        <h2>The crew has<br>a home now.</h2>
+        <p class="band-note">Identity, missions, proofs, and community signal on one operating surface.</p>
+      </div>
+
+      <div class="board" data-tilt data-reveal data-reveal-delay="1">
+        <div class="board-meta"><span>Crew hub / product study</span><span>01 &mdash; 04</span></div>
+        <div class="board-floor" aria-hidden="true"></div>
+        <div class="board-glow" aria-hidden="true"></div>
+        <figure class="board-desktop">
+          <span class="chip">Desktop / member home</span>
+          <img src="../crew-hub-desktop.png" alt="Desktop preview of the CapyCrew member hub" loading="lazy" width="1440" height="1100">
+        </figure>
+        <figure class="board-mobile">
+          <span class="chip">Mobile / signal pass</span>
+          <img src="../crew-hub-mobile.png" alt="Mobile preview of the CapyCrew member hub" loading="lazy" width="390" height="844">
+        </figure>
+        <span class="board-pin pin-a" aria-hidden="true">Kent / 042</span>
+        <span class="board-pin pin-b" aria-hidden="true">Live / crew hub</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 / ROADMAP: drawn route ============ -->
+  <section class="band route" id="roadmap" data-district="roadmap">
+    <div class="shell route-grid">
+      <div class="route-intro" data-reveal>
+        <p class="kicker">05 &mdash; Roadmap</p>
+        <h2>Keep moving<br>with intention.</h2>
+        <p class="band-note">The route is lit by deliverables, not hype. Earn each district before building
+          the next one.</p>
+      </div>
+      <ol class="route-list">
+        <li data-reveal><span class="route-index">01</span><span class="route-dot" aria-hidden="true"></span>
+          <span class="route-body"><b>Crew Hub</b><em data-status="live">Live</em>
+          <span>Missions, proofs, one community signal, a clear member loop.</span></span></li>
+        <li data-reveal data-reveal-delay="1"><span class="route-index">02</span><span class="route-dot" aria-hidden="true"></span>
+          <span class="route-body"><b>Districts</b><em data-status="next">Next</em>
+          <span>CapyCity scenes, holder tools, and community-led drops.</span></span></li>
+        <li data-reveal data-reveal-delay="2"><span class="route-index">03</span><span class="route-dot" aria-hidden="true"></span>
+          <span class="route-body"><b>Wearables</b><em data-status="planned">Planned</em>
+          <span>Digital clothing, accessories, and media identity layers.</span></span></li>
+        <li data-reveal data-reveal-delay="3"><span class="route-index">04</span><span class="route-dot" aria-hidden="true"></span>
+          <span class="route-body"><b>Expansion</b><em data-status="exploring">Exploring</em>
+          <span>Physical goods, collaborations, events, interactive world modules.</span></span></li>
+      </ol>
+    </div>
+  </section>
+</main>
+<footer class="foot">
+  <span class="foot-ghost" aria-hidden="true">CAPYCREW</span>
+  <div class="shell foot-grid">
+    <div>
+      <div class="wordmark">CAPYCREW<i aria-hidden="true"></i></div>
+      <p>Stay mellow. Build onchain.</p>
+      <small>Copyright 2026 CapyCrew. All rights reserved.</small>
+    </div>
+    <div>
+      <p class="foot-label">Explore</p>
+      <a href="#hub">About CapyCrew</a><a href="#crew">Mint / coming soon</a>
+      <a href="#roadmap">Whitepaper</a><a href="#roadmap">Store / soon</a>
+    </div>
+    <div>
+      <p class="foot-label">Community</p>
+      <div class="socials"><a href="#world">X</a><a href="#world">Telegram</a><a href="#world">Discord</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="../three.min.js"></script>
+<script src="after-dark.js" defer></script>
+<!-- The city on the plate. Second, and deferred, so the direction is on the root
+     element before CapyCity reads the palette out of it. -->
+<script src="capycity.js" defer></script>
+</body>
+</html>

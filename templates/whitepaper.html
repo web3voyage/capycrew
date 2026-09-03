@@ -1,100 +1,290 @@
 {% extends "base.html" %}
 {% block title %}Whitepaper — CAPYCREW{% endblock %}
-{% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/whitepaper.css') }}?v=20260827-1">{% endblock %}
+
+{#- 06 / The ledger. This is the one interior page that keeps a stylesheet and a
+    script of its own, and both are load-bearing:
+
+    - css/whitepaper.css draws the reading-progress bar. It no longer needs a
+      script: the bar reads --page-progress, which dispatch.js sets on <html> on
+      every page.
+    - site.css scopes the entire interactive allocation chart under `.paper`
+      (.paper .allocation-visual, .paper .allocation-3d-scene, and the
+      .is-3d-ready display swap). The chart block below therefore keeps a
+      `class="paper"` wrapper - drop it and the chart loses every rule it has.
+    - js/tokenomics3d.js mounts into .allocation-3d-scene and needs
+      .allocation-visual, [data-line] and [data-segment] intact.
+
+    js/whitepaper.js is gone. Its three jobs - the progress bar, the active rail
+    link, and section reveals - are all dispatch.js's now. -#}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/whitepaper.css') }}?v=20260903-2">{% endblock %}
+
+{#- Twelve chapters, twelve districts. Every data-rail matches a [data-district]
+    below, in document order; the rail hides itself under 1410px, so the front
+    page contents list carries the same map for narrower screens. -#}
+{% block rail %}
+<nav class="folio" aria-label="Sections on this page">
+  <span class="folio-rule" aria-hidden="true"><i></i></span>
+  <a href="#front" data-rail="front"><b>01</b><span>Front</span></a>
+  <a href="#abstract" data-rail="abstract"><b>02</b><span>Abstract</span></a>
+  <a href="#world" data-rail="world"><b>03</b><span>World</span></a>
+  <a href="#loop" data-rail="loop"><b>04</b><span>Loop</span></a>
+  <a href="#tokenomics" data-rail="tokenomics"><b>05</b><span>Supply</span></a>
+  <a href="#distribution" data-rail="distribution"><b>06</b><span>Flow</span></a>
+  <a href="#governance" data-rail="governance"><b>07</b><span>Rules</span></a>
+  <a href="#roadmap" data-rail="roadmap"><b>08</b><span>Route</span></a>
+  <a href="#game" data-rail="game"><b>09</b><span>Game</span></a>
+  <a href="#architecture" data-rail="architecture"><b>10</b><span>Ops</span></a>
+  <a href="#risks" data-rail="risks"><b>11</b><span>Risks</span></a>
+  <a href="#legal" data-rail="legal"><b>12</b><span>Legal</span></a>
+</nav>
+{% endblock %}
+
 {% block content %}
+{#- The reading bar is CSS-driven now: scaleX(var(--page-progress)). -#}
 <div class="paper-progress" aria-hidden="true"><span></span></div>
-<section class="page-hero paper-hero">
-  <div class="wrap paper-hero-grid">
-    <div>
-      <div class="eyebrow">CAPYCREW / WHITEPAPER V2.0 · AUGUST 2026</div>
-      <h1>THE CAPY<br><em>EXPERIENCE.</em></h1>
-      <p class="lede">A creative internet club where a collectible character becomes your identity, your membership pass, and your way to help shape CapyCity.</p>
+<main class="issue">
+  <!-- ===== 01 / FRONT ===== -->
+  <section class="front" id="front" data-district="front">
+    <div class="shell front-grid">
+
+      <div class="front-lead">
+        <p class="kicker" data-reveal>01 &mdash; Whitepaper v2.0 <i>/</i> August 2026</p>
+        <h1 data-reveal data-reveal-delay="1">The Capy<br><em>experience.</em></h1>
+        <span class="rule" data-rule data-reveal-delay="2" aria-hidden="true"></span>
+        <p class="standfirst" data-reveal data-reveal-delay="2">A creative internet club where a collectible
+          character becomes your identity, your membership pass, and your way to help shape CapyCity.</p>
+        <p class="byline" data-reveal data-reveal-delay="3">Living draft <i>/</i> Last reviewed 27 Aug 2026
+          <i>/</i> Filed from CapyCity</p>
+        {#- No bare "btn" token: site.css still owns .btn and would print its 4px
+            offset shadow through, which dispatch.css sets nothing to beat. -#}
+        <div class="cta-row" data-reveal data-reveal-delay="3">
+          <a class="btn-ink" href="/hub">Open the Crew Hub</a>
+          <a class="btn-line" href="/about">Read the notes</a>
+        </div>
+      </div>
+
+      <figure class="plate front-plate" data-reveal data-reveal-delay="2">
+        <div class="plate-frame">
+          <video autoplay muted loop playsinline preload="metadata"
+                 src="/media/videos/CapyCrew_logo_forms_on_screen_202608191209.mp4"></video>
+          <span class="reg reg-tl" aria-hidden="true"></span><span class="reg reg-tr" aria-hidden="true"></span>
+          <span class="reg reg-bl" aria-hidden="true"></span><span class="reg reg-br" aria-hidden="true"></span>
+        </div>
+        <figcaption><b>Fig. 1</b><span>Identity system &mdash; the mark forms on screen.</span></figcaption>
+      </figure>
+
+      {#- Every href here is an id that exists on this page, and every .contents
+          anchor holds exactly a <b> and a <span>: the dotted leader is a third
+          grid cell drawn by ::after. -#}
+      <aside class="contents" data-reveal data-reveal-delay="4">
+        <p class="contents-head">Contents</p>
+        <ol>
+          <li><a href="#abstract"><b>02</b><span>Abstract</span></a></li>
+          <li><a href="#world"><b>03</b><span>The world and the collection</span></a></li>
+          <li><a href="#loop"><b>04</b><span>The signal loop and the MVP</span></a></li>
+          <li><a href="#tokenomics"><b>05</b><span>Tokenomics</span></a></li>
+          <li><a href="#nft-tier-distribution"><b>&mdash;</b><span>NFT tier airdrop</span></a></li>
+          <li><a href="#distribution"><b>06</b><span>Distribution and utility</span></a></li>
+          <li><a href="#governance"><b>07</b><span>Governance</span></a></li>
+          <li><a href="#roadmap"><b>08</b><span>Roadmap</span></a></li>
+          <li><a href="#game"><b>09</b><span>Game concept</span></a></li>
+          <li><a href="#architecture"><b>10</b><span>Architecture and security</span></a></li>
+          <li><a href="#risks"><b>11</b><span>Risks</span></a></li>
+          <li><a href="#legal"><b>12</b><span>Legal and contact</span></a></li>
+        </ol>
+      </aside>
     </div>
-    <div class="paper-meta" aria-label="Whitepaper metadata">
-      <span>Document status</span><strong>Living draft</strong>
-      <span>Last reviewed</span><strong>27 Aug 2026</strong>
-      <span>Network</span><strong>To be announced</strong>
-    </div>
+  </section>
+  <!-- ===== STANDING FIGURES: the old paper-meta block, set as a table of record ===== -->
+  <div class="figures" data-reveal>
+    <dl class="shell figures-inner">
+      <div><dt>Document status</dt><dd>Living draft</dd></div>
+      <div><dt>Last reviewed</dt><dd>27 Aug 2026</dd></div>
+      <div><dt>Network</dt><dd>To be announced</dd></div>
+      {#- The unit lives in the dt, not the dd: .figures-inner tracks are
+          minmax(0, 1fr), so a dd wider than a fifth of the shell spills over its
+          neighbour's rule instead of the grid growing. -#}
+      <div><dt>Envelope <span>$CAPY</span></dt><dd>1,000,000,000<a class="fn" href="#fn-1" id="fnref-1"><sup>1</sup></a></dd></div>
+      <div><dt>Token</dt><dd class="is-soon">Not launched</dd></div>
+    </dl>
   </div>
-</section>
 
-<main class="section paper-shell">
-  <div class="wrap paper-layout">
-    <aside class="paper-rail" aria-label="Whitepaper sections">
-      <div class="paper-rail-label">On this page</div>
-      <a href="#abstract">Abstract</a>
-      <a href="#world">01 / The world</a>
-      <a href="#collection">02 / Collection</a>
-      <a href="#loop">03 / Signal loop</a>
-      <a href="#mvp">04 / MVP product</a>
-      <a href="#tokenomics">05 / Tokenomics</a>
-      <a href="#nft-tier-distribution">NFT tier airdrop</a>
-      <a href="#distribution">06 / Distribution</a>
-      <a href="#utility">07 / Utility</a>
-      <a href="#governance">08 / Governance</a>
-      <a href="#roadmap">09 / Roadmap</a>
-      <a href="#game">10 / Game concept</a>
-      <a href="#architecture">11 / Architecture</a>
-      <a href="#security">12 / Security</a>
-      <a href="#risks">13 / Risks</a>
-      <a href="#legal">14 / Legal</a>
-    </aside>
+  <!-- ===== 02 / ABSTRACT ===== -->
+  <section class="band" id="abstract" data-district="abstract">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">02 &mdash; Abstract</p>
+        <h2>The internet is better<br>when it feels human.</h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">What this document is, what it describes, and what it deliberately does not
+          promise.</p>
+      </header>
 
-    <article class="paper">
-      <section id="abstract" class="paper-section paper-intro">
-        <p class="eyebrow">Abstract</p>
-        <p class="paper-lead">CapyCrew is an animation-first NFT universe built around a simple idea: the internet is better when participation feels human.</p>
-        <p>The project combines collectible characters, a shared setting called CapyCity, and a product loop built around profiles, galleries, monthly missions, rewards, polls, and a public activity feed. The site, collection, and community are the first public districts. New features ship only when they are real, documented, and safe to use.</p>
-        <div class="paper-callout"><span class="callout-mark">01</span><div><strong>Scope</strong><p>This document describes the current product and a planned token model. It does not offer securities, guarantee a token generation event, or promise market performance.</p></div></div>
-      </section>
+      {#- .columns is the only real prose measure in this design: two columns with
+          a rule, set in the serif. Running copy that is not in .columns, .notice,
+          .band-note or .figure-note has no width cap and runs the full shell. -#}
+      <div class="notes-grid">
+        <div class="columns" data-reveal data-reveal-delay="1">
+          <p class="lead-para">CapyCrew is an animation-first NFT universe built around a simple idea: the
+            internet is better when participation feels human.</p>
+          <p>The project combines collectible characters, a shared setting called CapyCity, and a product loop
+            built around profiles, galleries, monthly missions, rewards, polls, and a public activity feed. The
+            site, collection, and community are the first public districts. New features ship only when they
+            are real, documented, and safe to use.</p>
+        </div>
 
-      <section id="world" class="paper-section">
-        <div class="paper-kicker">01 / The world</div>
+        <aside class="margin-note" data-reveal data-reveal-delay="2">
+          <p class="note-head">Scope</p>
+          <p>This document describes the current product and a planned token model. It does not offer
+            securities, guarantee a token generation event, or promise market performance.</p>
+          <p class="note-meta">Collectibles and access passes<a class="fn" href="#fn-3" id="fnref-3"><sup>3</sup></a></p>
+        </aside>
+      </div>
+    </div>
+  </section>
+  <!-- ===== 03 / THE WORLD + THE COLLECTION ===== -->
+  <section class="band" id="world" data-district="world">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">03 &mdash; The world</p>
         <h2>Stay mellow.<br>Build the signal.</h2>
-        <p>CapyCity is a soft-edged onchain setting for characters, moving image, and collective experiments. Every release should stand on its own while adding another piece to the wider story.</p>
-        <div class="paper-callout"><span class="callout-mark">02</span><div><strong>Principle</strong><p>Playful on the surface, specific underneath. No artificial urgency and no promises that depend on a future launch.</p></div></div>
-      </section>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">The setting, and the format the characters are published in.</p>
+      </header>
 
-      <section id="collection" class="paper-section">
-        <div class="paper-kicker">02 / Collection</div>
-        <h2>Characters with a<br>media identity.</h2>
-        <p>Animated CapyCrew NFTs are the membership layer. Each token can carry a still cover, a video <code>animation_url</code>, metadata, and access rights that expand only when the relevant product is live.</p>
-        <div class="paper-facts">
-          <div><span>Standard</span><strong>ERC-721A</strong></div>
-          <div><span>Format</span><strong>Image + video</strong></div>
-          <div><span>Storage target</span><strong>IPFS / Arweave</strong></div>
+      <div class="notes-grid">
+        <div class="columns" data-reveal data-reveal-delay="1">
+          <p class="lead-para">CapyCity is a soft-edged onchain setting for characters, moving image, and
+            collective experiments. Every release should stand on its own while adding another piece to the
+            wider story.</p>
+
+          {#- h3 inside .columns is re-set as a mono forest subhead, so it needs no
+              class. The id is the one the old section carried, so any link to
+              /whitepaper#collection still lands. -#}
+          <h3 id="collection">Characters with a media identity</h3>
+          <p>Animated CapyCrew NFTs are the membership layer. Each token can carry a still cover, a video
+            <code>animation_url</code>, metadata, and access rights that expand only when the relevant product
+            is live.</p>
+          <ul class="notes-list">
+            <li><b>Standard.</b> ERC-721A</li>
+            <li><b>Format.</b> Image + video</li>
+            <li><b>Storage target.</b> IPFS / Arweave</li>
+          </ul>
         </div>
-      </section>
 
-      <section id="loop" class="paper-section">
-        <div class="paper-kicker">03 / The signal loop</div>
-        <h2>Discover → collect<br>→ participate → shape.</h2>
-        <div class="loop-grid">
-          <div><b>01</b><strong>Discover</strong><p>Find a drop, story, or community moment through official channels.</p></div>
-          <div><b>02</b><strong>Collect</strong><p>Use a compatible wallet and verify the contract before signing.</p></div>
-          <div><b>03</b><strong>Participate</strong><p>Join showcases, holder tooling, and experiments that are actually live.</p></div>
-          <div><b>04</b><strong>Shape</strong><p>Feedback and proposals help decide what deserves the next district.</p></div>
+        <aside class="margin-note" data-reveal data-reveal-delay="2">
+          <p class="note-head">Principle</p>
+          <p>Playful on the surface, specific underneath. No artificial urgency and no promises that depend on
+            a future launch.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 04 / THE SIGNAL LOOP + THE MVP ===== -->
+  <section class="band" id="loop" data-district="loop">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">04 &mdash; The signal loop</p>
+        <h2>Discover &rarr; collect<br>&rarr; participate &rarr; shape.</h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">How a member arrives, and what the first focused web app has to carry once they
+          do.</p>
+      </header>
+
+      <div class="notes-grid">
+        <div class="columns" data-reveal data-reveal-delay="1">
+          {#- .notes-list keeps its markers, so an <ol> numbers itself 1-4: the same
+              four steps the old .loop-grid printed as 01-04. -#}
+          <ol class="notes-list">
+            <li><b>Discover.</b> Find a drop, story, or community moment through official channels.</li>
+            <li><b>Collect.</b> Use a compatible wallet and verify the contract before signing.</li>
+            <li><b>Participate.</b> Join showcases, holder tooling, and experiments that are actually live.</li>
+            <li><b>Shape.</b> Feedback and proposals help decide what deserves the next district.</li>
+          </ol>
+
+          <h3 id="mvp">The experience is the product</h3>
+          <p>The first focused web app is designed to give holders a reason to return every month. It is not a
+            collection viewer bolted onto a mint page; it is a member home with a clear loop and visible
+            progress.</p>
+          <ol class="notes-list">
+            <li><b>Wallet + profile.</b> Connect, verify a Capy, and manage traits, animations, badges, and
+              participation history.</li>
+            <li><b>Holder gallery.</b> Inspect characters in a collection-style display with trait metadata and
+              animation previews.</li>
+            <li><b>Monthly missions.</b> Design districts, submit concepts, vote on drops, complete challenges,
+              and attend events.</li>
+            <li><b>Public activity.</b> Follow districts, drops, contributions, mission completions, and
+              community decisions.</li>
+          </ol>
         </div>
-      </section>
 
-      <section id="mvp" class="paper-section">
-        <div class="paper-kicker">04 / MVP product</div>
-        <h2>The experience is<br>the product.</h2>
-        <p>The first focused web app is designed to give holders a reason to return every month. It is not a collection viewer bolted onto a mint page; it is a member home with a clear loop and visible progress.</p>
-        <div class="loop-grid">
-          <div><b>01</b><strong>Wallet + profile</strong><p>Connect, verify a Capy, and manage traits, animations, badges, and participation history.</p></div>
-          <div><b>02</b><strong>Holder gallery</strong><p>Inspect characters in a collection-style display with trait metadata and animation previews.</p></div>
-          <div><b>03</b><strong>Monthly missions</strong><p>Design districts, submit concepts, vote on drops, complete challenges, and attend events.</p></div>
-          <div><b>04</b><strong>Public activity</strong><p>Follow districts, drops, contributions, mission completions, and community decisions.</p></div>
+        <aside class="margin-note" data-reveal data-reveal-delay="2">
+          <p class="note-head">Filed elsewhere</p>
+          <p>The member product also runs on the <a href="/about">about page</a> as project scope, and the Crew
+            Hub publishes each line as it ships.</p>
+          <p class="note-meta">Staged and conditional<a class="fn" href="#fn-5" id="fnref-5"><sup>5</sup></a></p>
+        </aside>
+      </div>
+    </div>
+  </section>
+  <!-- ===== PULL QUOTE: the design rule, in brief ===== -->
+  <aside class="pull" data-reveal>
+    <div class="shell">
+      <blockquote>If CapyCrew cannot explain what the token does &hellip;
+        <em>the token does not launch.</em></blockquote>
+      <p class="pull-attr">Design rule &mdash; printed in full under 05 / Tokenomics</p>
+    </div>
+  </aside>
+
+  <!-- ===== 05 / TOKENOMICS ===== -->
+  <section class="band ledger-band" id="tokenomics" data-district="tokenomics">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">05 &mdash; Tokenomics</p>
+        <h2>Utility before<br>supply.</h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">What $CAPY would be for, and the envelope every figure in this section belongs
+          to.</p>
+      </header>
+    </div>
+
+    {#- The old .status-pill, re-set as a filed strip. .sheet-head is in the mono
+        micro-type group, so it carries the gating language in small caps. -#}
+    <div class="sheet-head shell" data-reveal><span>Supply map / genesis</span><span>Gated &mdash; not launched</span></div>
+
+    <div class="shell">
+      <div class="notes-grid">
+        <div class="columns" data-reveal data-reveal-delay="1">
+          <p class="lead-para"><strong>$CAPY</strong> is not the primary product and is not required for the
+            MVP. It may be considered later as a coordination layer only after CapyCrew demonstrates recurring
+            monthly participation, documented rewards, active community decisions, and a transparent treasury
+            process. No token launch date is promised.</p>
+          <p>The map below models an illustrative fixed genesis supply of
+            <strong>1,000,000,000 $CAPY</strong> with no inflation. Treat every figure in this section as a
+            planning envelope for review rather than a committed number.</p>
         </div>
-      </section>
 
-      <section id="tokenomics" class="paper-section">
-        <div class="paper-kicker">05 / Tokenomics</div>
-        <div class="section-title-row"><h2>Utility before supply.</h2><span class="status-pill">GATED / NOT LAUNCHED</span></div>
-        <p><strong>$CAPY</strong> is not the primary product and is not required for the MVP. It may be considered later as a coordination layer only after CapyCrew demonstrates recurring monthly participation, documented rewards, active community decisions, and a transparent treasury process. No token launch date is promised.</p>
-        <p>The map below models an illustrative fixed genesis supply of <strong>1,000,000,000 $CAPY</strong> with no inflation. Treat every figure in this section as a planning envelope for review rather than a committed number.</p>
-        <div class="paper-callout"><span class="callout-mark">01</span><div><strong>Design rule</strong><p>If CapyCrew cannot explain what the token does for a real user, what demand it creates, and how value flows through the system, the token does not launch.</p></div></div>
+        {#- Second reference to note 1: the id fnref-1 already belongs to the
+            figures row above, so this marker carries the href only. -#}
+        <aside class="margin-note" data-reveal data-reveal-delay="2">
+          <p class="note-head">Not launched</p>
+          <p>The token is gated. Nothing in this section is a date, a price, or a commitment.</p>
+          <p class="note-meta">Illustrative envelope<a class="fn" href="#fn-1"><sup>1</sup></a></p>
+        </aside>
+      </div>
+
+      <p class="notice" data-reveal><b>Design rule.</b> If CapyCrew cannot explain what the token does for a
+        real user, what demand it creates, and how value flows through the system, the token does not
+        launch.</p>
+    </div>
+    {#- KEEP class="paper" on the wrapper below. Every rule this chart has in
+        site.css is written `.paper .allocation-...`, including the .is-3d-ready
+        swap that reveals the 3D model, so dropping the class silently kills the
+        chart. tokenomics3d.js mounts into .allocation-3d-scene and needs
+        .allocation-visual, [data-line] and [data-segment] intact. -#}
+    <div class="shell">
+      <div class="paper" data-reveal>
         <div class="allocation-chart" aria-label="$CAPY allocation chart">
           <div class="allocation-visual">
             <div class="allocation-3d-scene" tabindex="0" role="img" aria-label="Interactive 3D $CAPY allocation model. Drag with a mouse or finger, or use the arrow keys, to rotate it.">
@@ -162,162 +352,381 @@
             <div data-index="05"><i class="allocation-swatch swatch-team"></i><span>Reserve</span><strong>10%</strong><small>100,000,000</small></div>
           </div>
         </div>
-        <div class="allocation-table-wrap">
-          <table class="allocation-table"><caption class="sr-only">$CAPY token allocation</caption><thead><tr><th scope="col">Allocation</th><th scope="col">Share</th><th scope="col">Tokens</th><th scope="col">Purpose</th><th scope="col">Status</th></tr></thead><tbody>
-            <tr><th scope="row">Ecosystem &amp; missions</th><td>40%</td><td>400,000,000</td><td>Milestone-based rewards for missions, creator work, events, and useful participation. Includes the tier-weighted holder airdrop below.</td><td>No passive emissions; release follows published programs.</td></tr>
-            <tr><th scope="row">Treasury &amp; grants</th><td>25%</td><td>250,000,000</td><td>Fund districts, approved creators, events, commerce experiments, and product work.</td><td>Multisig, budgets, and reporting required.</td></tr>
-            <tr><th scope="row">Liquidity</th><td>15%</td><td>150,000,000</td><td>Provide orderly market access only if a token launch is approved.</td><td>Venue, lockup, and management policy disclosed first.</td></tr>
-            <tr><th scope="row">Contributors</th><td>10%</td><td>100,000,000</td><td>Compensate long-term builders, artists, engineers, and advisors.</td><td>Minimum cliff and staged vesting; wallets disclosed.</td></tr>
-            <tr><th scope="row">Reserve</th><td>10%</td><td>100,000,000</td><td>Cover future risks, strategic partnerships, or a later product need.</td><td>Locked until a public proposal and review.</td></tr>
-          </tbody></table>
+      </div>
+      <p class="figure-note" data-reveal><b>Fig. 5.1</b> &mdash; the allocation model. Drag it to rotate, or read
+        the same five lines as a table below.</p>
+      {#- .table-wrap is required: .ledger-table is min-width 720px and scrolls
+          inside it. .num right-aligns in mono tabular figures; td:last-child is
+          styled as the faint condition column, which is what Status is. -#}
+      <div class="table-wrap" data-reveal>
+        <table class="ledger-table">
+          <caption>Table 5.2 &mdash; $CAPY token allocation, illustrative genesis envelope</caption>
+          <thead><tr><th scope="col">Allocation</th><th scope="col" class="num">Share</th><th scope="col" class="num">Tokens</th><th scope="col">Purpose</th><th scope="col">Status</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Ecosystem &amp; missions</th><td class="num">40%</td><td class="num">400,000,000</td><td>Milestone-based rewards for missions, creator work, events, and useful participation. Includes the tier-weighted holder airdrop below.</td><td>No passive emissions; release follows published programs.</td></tr>
+            <tr><th scope="row">Treasury &amp; grants</th><td class="num">25%</td><td class="num">250,000,000</td><td>Fund districts, approved creators, events, commerce experiments, and product work.</td><td>Multisig, budgets, and reporting required.</td></tr>
+            <tr><th scope="row">Liquidity</th><td class="num">15%</td><td class="num">150,000,000</td><td>Provide orderly market access only if a token launch is approved.</td><td>Venue, lockup, and management policy disclosed first.</td></tr>
+            <tr><th scope="row">Contributors</th><td class="num">10%</td><td class="num">100,000,000</td><td>Compensate long-term builders, artists, engineers, and advisors.</td><td>Minimum cliff and staged vesting; wallets disclosed.</td></tr>
+            <tr><th scope="row">Reserve</th><td class="num">10%</td><td class="num">100,000,000</td><td>Cover future risks, strategic partnerships, or a later product need.</td><td>Locked until a public proposal and review.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {#- The holder airdrop keeps its own id and its site.css styling: unlike the
+        allocation chart, .nft-tier-breakdown, .tier-donut, .tier-legend,
+        .tier-method and .tier-table are unscoped, so they work outside .paper. -#}
+    <div class="shell">
+      <div id="nft-tier-distribution" class="nft-tier-breakdown" data-reveal>
+        <p class="kicker">Inside ecosystem &amp; missions <i>/</i> rarity weighting</p>
+        <h3>100M tokens, weighted by tier.</h3>
+        <p>The holder airdrop is a program <strong>inside the ecosystem &amp; missions allocation</strong>, not
+          a sixth line item. It models <strong>100,000,000 tokens</strong>: a quarter of that 400,000,000 pool,
+          or 10% of the illustrative genesis supply. The remaining 300,000,000 stays with missions, creator
+          work, and events. Each NFT receives points equal to its rarity level: Common = 1 point through
+          One-of-One = 8 points. A holder&rsquo;s claim is calculated from the number of NFTs held in each tier
+          and that tier&rsquo;s point value.</p>
+        <div class="tier-chart-layout">
+          <div class="tier-donut" role="img" aria-label="NFT holder airdrop shares: Common 17.38 percent, Uncommon 21.73 percent, Rare 19.56 percent, Epic 17.38 percent, Legendary 13.04 percent, Mythic 7.82 percent, Unique 2.74 percent, One-of-One 0.35 percent"></div>
+          <div class="tier-legend" aria-label="NFT tier airdrop legend">
+            <div><i class="tier-swatch tier-common"></i><span>Common</span><strong>17.38%</strong></div>
+            <div><i class="tier-swatch tier-uncommon"></i><span>Uncommon</span><strong>21.73%</strong></div>
+            <div><i class="tier-swatch tier-rare"></i><span>Rare</span><strong>19.56%</strong></div>
+            <div><i class="tier-swatch tier-epic"></i><span>Epic</span><strong>17.38%</strong></div>
+            <div><i class="tier-swatch tier-legendary"></i><span>Legendary</span><strong>13.04%</strong></div>
+            <div><i class="tier-swatch tier-mythic"></i><span>Mythic</span><strong>7.82%</strong></div>
+            <div><i class="tier-swatch tier-unique"></i><span>Unique</span><strong>2.74%</strong></div>
+            <div><i class="tier-swatch tier-one"></i><span>One-of-One</span><strong>0.35%</strong></div>
+          </div>
         </div>
 
-        <div id="nft-tier-distribution" class="nft-tier-breakdown">
-          <div class="paper-kicker">Inside ecosystem &amp; missions / rarity weighting</div>
-          <h3>100M tokens, weighted by tier.</h3>
-          <p>The holder airdrop is a program <strong>inside the ecosystem &amp; missions allocation</strong>, not a sixth line item. It models <strong>100,000,000 tokens</strong>: a quarter of that 400,000,000 pool, or 10% of the illustrative genesis supply. The remaining 300,000,000 stays with missions, creator work, and events. Each NFT receives points equal to its rarity level: Common = 1 point through One-of-One = 8 points. A holder’s claim is calculated from the number of NFTs held in each tier and that tier’s point value.</p>
-
-          <div class="tier-chart-layout">
-            <div class="tier-donut" role="img" aria-label="NFT holder airdrop shares: Common 17.38 percent, Uncommon 21.73 percent, Rare 19.56 percent, Epic 17.38 percent, Legendary 13.04 percent, Mythic 7.82 percent, Unique 2.74 percent, One-of-One 0.35 percent"></div>
-            <div class="tier-legend" aria-label="NFT tier airdrop legend">
-              <div><i class="tier-swatch tier-common"></i><span>Common</span><strong>17.38%</strong></div>
-              <div><i class="tier-swatch tier-uncommon"></i><span>Uncommon</span><strong>21.73%</strong></div>
-              <div><i class="tier-swatch tier-rare"></i><span>Rare</span><strong>19.56%</strong></div>
-              <div><i class="tier-swatch tier-epic"></i><span>Epic</span><strong>17.38%</strong></div>
-              <div><i class="tier-swatch tier-legendary"></i><span>Legendary</span><strong>13.04%</strong></div>
-              <div><i class="tier-swatch tier-mythic"></i><span>Mythic</span><strong>7.82%</strong></div>
-              <div><i class="tier-swatch tier-unique"></i><span>Unique</span><strong>2.74%</strong></div>
-              <div><i class="tier-swatch tier-one"></i><span>One-of-One</span><strong>0.35%</strong></div>
-            </div>
-          </div>
-
-          <div class="tier-method">
-            <div><span>Total NFTs</span><strong>10,000</strong></div>
-            <div><span>Total tier points</span><strong>23,010</strong></div>
-            <div><span>Value per point</span><strong>4,345.9365</strong></div>
-            <div><span>Formula</span><strong>NFTs × level</strong></div>
-          </div>
-
-          <div class="allocation-table-wrap tier-table-wrap">
-            <table class="allocation-table tier-table"><caption class="sr-only">NFT tier airdrop calculation</caption><thead><tr><th scope="col">Tier</th><th scope="col">Level / points per NFT</th><th scope="col">NFTs</th><th scope="col">Tier points</th><th scope="col">Share of pool</th><th scope="col">Tier allocation</th><th scope="col">Per NFT</th></tr></thead><tbody>
-              <tr><th scope="row">Common</th><td>1</td><td>4,000</td><td>4,000</td><td>17.3837%</td><td>17,383,746</td><td>4,346</td></tr>
-              <tr><th scope="row">Uncommon</th><td>2</td><td>2,500</td><td>5,000</td><td>21.7297%</td><td>21,729,683</td><td>8,692</td></tr>
-              <tr><th scope="row">Rare</th><td>3</td><td>1,500</td><td>4,500</td><td>19.5567%</td><td>19,556,714</td><td>13,038</td></tr>
-              <tr><th scope="row">Epic</th><td>4</td><td>1,000</td><td>4,000</td><td>17.3837%</td><td>17,383,746</td><td>17,384</td></tr>
-              <tr><th scope="row">Legendary</th><td>5</td><td>600</td><td>3,000</td><td>13.0378%</td><td>13,037,810</td><td>21,730</td></tr>
-              <tr><th scope="row">Mythic</th><td>6</td><td>300</td><td>1,800</td><td>7.8227%</td><td>7,822,686</td><td>26,076</td></tr>
-              <tr><th scope="row">Unique</th><td>7</td><td>90</td><td>630</td><td>2.7379%</td><td>2,737,940</td><td>30,422</td></tr>
-              <tr><th scope="row">One-of-One</th><td>8</td><td>10</td><td>80</td><td>0.3477%</td><td>347,675</td><td>34,767</td></tr>
-              <tr class="tier-total"><th scope="row">Total</th><td>—</td><td>10,000</td><td>23,010</td><td>100%</td><td>100,000,000</td><td>—</td></tr>
-            </tbody></table>
-          </div>
-          <p class="paper-updated">Example: a wallet holding two Rare NFTs and one Mythic NFT has 12 claim points (2 × 3 + 1 × 6), multiplied by the final published point value. Snapshot timing, eligibility, claim window, and treatment of unclaimed tokens must be published before distribution.</p>
+        <div class="tier-method">
+          <div><span>Total NFTs</span><strong>10,000</strong></div>
+          <div><span>Total tier points</span><strong>23,010</strong></div>
+          <div><span>Value per point</span><strong>4,345.9365</strong></div>
+          <div><span>Formula</span><strong>NFTs &times; level</strong></div>
         </div>
-        <div class="paper-callout warning"><span class="callout-mark">!</span><div><strong>Read this first</strong><p>$CAPY is a planned coordination layer, not an investment product. Ownership of an NFT or token does not confer equity, dividends, revenue share, voting control, or repayment rights unless a separate legal instrument says otherwise.</p></div></div>
-      </section>
+      </div>
 
-      <section id="distribution" class="paper-section">
-        <div class="paper-kicker">06 / Distribution &amp; unlocks</div>
+      <div class="table-wrap" data-reveal>
+        <table class="ledger-table">
+          <caption>Table 5.3 &mdash; NFT tier airdrop calculation</caption>
+          <thead><tr><th scope="col">Tier</th><th scope="col" class="num">Level / points per NFT</th><th scope="col" class="num">NFTs</th><th scope="col" class="num">Tier points</th><th scope="col" class="num">Share of pool</th><th scope="col" class="num">Tier allocation</th><th scope="col" class="num">Per NFT</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Common</th><td class="num">1</td><td class="num">4,000</td><td class="num">4,000</td><td class="num">17.3837%</td><td class="num">17,383,746</td><td class="num">4,346</td></tr>
+            <tr><th scope="row">Uncommon</th><td class="num">2</td><td class="num">2,500</td><td class="num">5,000</td><td class="num">21.7297%</td><td class="num">21,729,683</td><td class="num">8,692</td></tr>
+            <tr><th scope="row">Rare</th><td class="num">3</td><td class="num">1,500</td><td class="num">4,500</td><td class="num">19.5567%</td><td class="num">19,556,714</td><td class="num">13,038</td></tr>
+            <tr><th scope="row">Epic</th><td class="num">4</td><td class="num">1,000</td><td class="num">4,000</td><td class="num">17.3837%</td><td class="num">17,383,746</td><td class="num">17,384</td></tr>
+            <tr><th scope="row">Legendary</th><td class="num">5</td><td class="num">600</td><td class="num">3,000</td><td class="num">13.0378%</td><td class="num">13,037,810</td><td class="num">21,730</td></tr>
+            <tr><th scope="row">Mythic</th><td class="num">6</td><td class="num">300</td><td class="num">1,800</td><td class="num">7.8227%</td><td class="num">7,822,686</td><td class="num">26,076</td></tr>
+            <tr><th scope="row">Unique</th><td class="num">7</td><td class="num">90</td><td class="num">630</td><td class="num">2.7379%</td><td class="num">2,737,940</td><td class="num">30,422</td></tr>
+            <tr><th scope="row">One-of-One</th><td class="num">8</td><td class="num">10</td><td class="num">80</td><td class="num">0.3477%</td><td class="num">347,675</td><td class="num">34,767</td></tr>
+            <tr class="total"><th scope="row">Total</th><td class="num">&mdash;</td><td class="num">10,000</td><td class="num">23,010</td><td class="num">100%</td><td class="num">100,000,000</td><td class="num">&mdash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="figure-note" data-reveal>Example: a wallet holding two Rare NFTs and one Mythic NFT has 12 claim
+        points (2 &times; 3 + 1 &times; 6), multiplied by the final published point value. Snapshot timing,
+        eligibility, claim window, and treatment of unclaimed tokens must be published before distribution.</p>
+
+      <p class="notice" data-reveal><b>Read this first.</b> $CAPY is a planned coordination layer, not an
+        investment product. Ownership of an NFT or token does not confer equity, dividends, revenue share,
+        voting control, or repayment rights unless a separate legal instrument says
+        otherwise.<a class="fn" href="#fn-3"><sup>3</sup></a></p>
+    </div>
+  </section>
+  <!-- ===== 06 / DISTRIBUTION + UTILITY ===== -->
+  <section class="band" id="distribution" data-district="distribution">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">06 &mdash; Distribution &amp; unlocks</p>
         <h2>Transparent timing,<br>no silent supply.</h2>
-        <p>The numbers below are a planning envelope, not a commitment. Final supply, float, allocation, vesting, and launch mechanics require legal, technical, community, and demand review. The design prioritizes low initial float, milestone-gated distribution, and no unlock shock larger than the product can support.</p>
-        <div class="allocation-table-wrap">
-          <table class="allocation-table"><caption class="sr-only">Planned $CAPY unlock schedule</caption><thead><tr><th scope="col">Phase</th><th scope="col">Timing</th><th scope="col">Release</th><th scope="col">Cumulative circulating target</th></tr></thead><tbody>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">When supply could move, and what the token would coordinate if it ever does.</p>
+      </header>
+
+      <div class="notes-grid">
+        <div class="columns" data-reveal data-reveal-delay="1">
+          <p class="lead-para">The numbers below are a planning envelope, not a commitment. Final supply,
+            float, allocation, vesting, and launch mechanics require legal, technical, community, and demand
+            review. The design prioritizes low initial float, milestone-gated distribution, and no unlock shock
+            larger than the product can support.</p>
+
+          <h3 id="utility">Coordination, not speculation</h3>
+          <ol class="notes-list">
+            <li><b>Mission coordination.</b> If launched, the token may help coordinate optional campaigns,
+              creator challenges, or district events.</li>
+            <li><b>Creator access.</b> Approved contributors may use it for transparent collaboration budgets
+              or campaign credits.</li>
+            <li><b>Governance signal.</b> It may signal preferences over treasury proposals or future themes
+              where the decision is genuinely binding.</li>
+            <li><b>Holding incentives.</b> Any lock or reward mechanism must be funded by real product
+              activity, not unsustainable inflation.</li>
+          </ol>
+          <p>$CAPY is not designed as payment for goods unless expressly stated at checkout, and it does not
+            create a claim against CapyCrew revenue.</p>
+        </div>
+
+        <aside class="margin-note" data-reveal data-reveal-delay="2">
+          <p class="note-head">Reading the table</p>
+          <p>Every phase is a gate rather than a date. Nothing circulates until the gate above it has
+            passed.</p>
+        </aside>
+      </div>
+    </div>
+    <div class="shell">
+      <div class="table-wrap" data-reveal>
+        <table class="ledger-table">
+          <caption>Table 6.1 &mdash; planned $CAPY unlock schedule</caption>
+          <thead><tr><th scope="col">Phase</th><th scope="col">Timing</th><th scope="col">Release</th><th scope="col">Cumulative circulating target</th></tr></thead>
+          <tbody>
             <tr><th scope="row">Launch gate</th><td>Before TGE</td><td>Publish utility, demand map, contract, treasury controls, risk review, and holder eligibility.</td><td>No circulation until gates pass.</td></tr>
             <tr><th scope="row">Genesis float</th><td>TGE, if approved</td><td>Only the amount required for verified initial utility and orderly liquidity is released.</td><td>Target: low float, disclosed in advance.</td></tr>
-            <tr><th scope="row">Community distribution</th><td>Milestone-based</td><td>Rewards follow completed missions, creator work, events, or grants—not passive holding.</td><td>Event-driven; no automatic emissions.</td></tr>
+            <tr><th scope="row">Community distribution</th><td>Milestone-based</td><td>Rewards follow completed missions, creator work, events, or grants&mdash;not passive holding.</td><td>Event-driven; no automatic emissions.</td></tr>
             <tr><th scope="row">Treasury</th><td>Governance-approved</td><td>Funds districts, creators, events, and product work under public budgets and signer controls.</td><td>Locked until an approved budget exists.</td></tr>
             <tr><th scope="row">Contributors</th><td>Long-term vesting</td><td>Minimum 12-month cliff, then staged vesting tied to time and published contributor agreements.</td><td>No launch-day insider unlock.</td></tr>
-          </tbody></table>
-        </div>
-        <p class="paper-updated">TGE means the first publicly confirmed token distribution. Dates are intentionally omitted until contracts, controls, and legal review are complete.</p>
-      </section>
+          </tbody>
+        </table>
+      </div>
+      <p class="figure-note" data-reveal>TGE means the first publicly confirmed token distribution. Dates are
+        intentionally omitted until contracts, controls, and legal review are complete.</p>
+    </div>
+  </section>
 
-      <section id="utility" class="paper-section">
-        <div class="paper-kicker">07 / Token utility</div>
-        <h2>Coordination,<br>not speculation.</h2>
-        <div class="loop-grid">
-          <div><b>01</b><strong>Mission coordination</strong><p>If launched, the token may help coordinate optional campaigns, creator challenges, or district events.</p></div>
-          <div><b>02</b><strong>Creator access</strong><p>Approved contributors may use it for transparent collaboration budgets or campaign credits.</p></div>
-          <div><b>03</b><strong>Governance signal</strong><p>It may signal preferences over treasury proposals or future themes where the decision is genuinely binding.</p></div>
-          <div><b>04</b><strong>Holding incentives</strong><p>Any lock or reward mechanism must be funded by real product activity, not unsustainable inflation.</p></div>
-        </div>
-        <p>$CAPY is not designed as payment for goods unless expressly stated at checkout, and it does not create a claim against CapyCrew revenue.</p>
-      </section>
-
-      <section id="governance" class="paper-section">
-        <div class="paper-kicker">08 / Governance</div>
+  <!-- ===== 07 / GOVERNANCE ===== -->
+  <section class="band" id="governance" data-district="governance">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">07 &mdash; Governance</p>
         <h2>Slow decisions,<br>published reasons.</h2>
-        <p>Before decentralized tooling is ready, the team maintains contracts, treasury controls, and release schedules. As governance matures, proposals should move through public discussion, impact review, implementation specification, execution, and post-execution reporting.</p>
-        <div class="paper-facts">
-          <div><span>Initial control</span><strong>Core team</strong></div>
-          <div><span>Treasury target</span><strong>Multisig / timelock</strong></div>
-          <div><span>Upgrade policy</span><strong>Notice + changelog</strong></div>
-        </div>
-      </section>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">Who holds the controls today, and the route a proposal has to travel.</p>
+      </header>
 
-      <section id="roadmap" class="paper-section">
-        <div class="paper-kicker">09 / Roadmap</div><h2>Milestones, not<br>manufactured deadlines.</h2>
-        <div class="roadmap-list">
-          <div class="roadmap-item"><span>01</span><div><strong>Foundation / live</strong><p>Genesis collection, animated media, official channels, responsive site, mint portal, and public documentation.</p></div></div>
-          <div class="roadmap-item"><span>02</span><div><strong>Member loop / MVP</strong><p>Wallet connection, Capy profile, holder gallery, traits and animations, monthly missions, badges, polls, and a public activity feed.</p></div></div>
-          <div class="roadmap-item"><span>03</span><div><strong>CapyCity districts / next</strong><p>Launch themed areas such as Street, Studio, Arcade, and Harbor with their own characters, media, missions, and collaborations.</p></div></div>
-          <div class="roadmap-item"><span>04</span><div><strong>Wearables + creators / planned</strong><p>Introduce clothing, accessories, room items, animations, and an approved creator marketplace with transparent collaboration terms.</p></div></div>
-          <div class="roadmap-item"><span>05</span><div><strong>Events + browser world / exploratory</strong><p>Host showcases, listening sessions, contests, pop-ups, and a lightweight interactive CapyCity where members display their Capy and discover stories.</p></div></div>
-          <div class="roadmap-item"><span>06</span><div><strong>Treasury + token review / gated</strong><p>Consider grants, commerce, fashion, and eventually $CAPY only after real activity, clear rewards, transparent distribution, and legal review exist.</p></div></div>
+      <div class="notes-grid">
+        <div class="columns" data-reveal data-reveal-delay="1">
+          <p class="lead-para">Before decentralized tooling is ready, the team maintains contracts, treasury
+            controls, and release schedules. As governance matures, proposals should move through public
+            discussion, impact review, implementation specification, execution, and post-execution
+            reporting.</p>
         </div>
-      </section>
 
-      <section id="game" class="paper-section">
-        <div class="paper-kicker">10 / Game concept</div>
+        <aside class="margin-note" data-reveal data-reveal-delay="2">
+          <p class="note-head">Today</p>
+          <p>Control sits with the core team, and the strip below is the standing record of it.</p>
+        </aside>
+      </div>
+    </div>
+
+    {#- The old .paper-facts row: .figures-inner is a hard five-track grid, so a
+        three-value record is set as a filed strip instead. -#}
+    <div class="sheet-head shell" data-reveal><span>Initial control &mdash; Core team</span><span>Treasury target &mdash; Multisig / timelock</span><span>Upgrade policy &mdash; Notice + changelog</span></div>
+  </section>
+  <!-- ===== 08 / ROADMAP ===== -->
+  {#- The page's one and only .route-list: dispatch.js takes q('.route-list'),
+      the first match, so a second list on this page would never fill its rule. -#}
+  <section class="band" id="roadmap" data-district="roadmap">
+    <div class="shell route-grid">
+      <header class="route-intro" data-reveal>
+        <p class="kicker">08 &mdash; Roadmap</p>
+        <h2>Milestones, not<br>manufactured deadlines.</h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">Six chapters, published in order. Each one has to be real before the next one
+          starts.</p>
+      </header>
+      <ol class="route-list">
+        <li><span class="route-no">01</span>
+          <span class="route-body"><b>Foundation</b><em data-status="live">Live</em>
+          <span>Genesis collection, animated media, official channels, responsive site, mint portal, and
+            public documentation.</span></span></li>
+        <li><span class="route-no">02</span>
+          <span class="route-body"><b>Member loop</b><em data-status="next">MVP</em>
+          <span>Wallet connection, Capy profile, holder gallery, traits and animations, monthly missions,
+            badges, polls, and a public activity feed.</span></span></li>
+        <li><span class="route-no">03</span>
+          <span class="route-body"><b>CapyCity districts</b><em data-status="next">Next</em>
+          <span>Launch themed areas such as Street, Studio, Arcade, and Harbor with their own characters,
+            media, missions, and collaborations.</span></span></li>
+        <li><span class="route-no">04</span>
+          <span class="route-body"><b>Wearables + creators</b><em data-status="planned">Planned</em>
+          <span>Introduce clothing, accessories, room items, animations, and an approved creator marketplace
+            with transparent collaboration terms.</span></span></li>
+        <li><span class="route-no">05</span>
+          <span class="route-body"><b>Events + browser world</b><em data-status="exploring">Exploratory</em>
+          <span>Host showcases, listening sessions, contests, pop-ups, and a lightweight interactive CapyCity
+            where members display their Capy and discover stories.</span></span></li>
+        <li><span class="route-no">06</span>
+          <span class="route-body"><b>Treasury + token review</b><em data-status="exploring">Gated</em>
+          <span>Consider grants, commerce, fashion, and eventually $CAPY only after real activity, clear
+            rewards, transparent distribution, and legal review exist.</span></span></li>
+      </ol>
+    </div>
+  </section>
+  <!-- ===== 09 / GAME CONCEPT ===== -->
+  <section class="band" id="game" data-district="game">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">09 &mdash; Game concept</p>
         <h2>CapyCity:<br>After Hours.</h2>
-        <p>A lightweight browser world where members explore districts, display their Capy, discover stories, and turn monthly missions into visible city changes. The game is an extension of the membership experience—not a speculative promise or a requirement for the NFT to have value as a collectible.</p>
-        <div class="loop-grid">
-          <div><b>01</b><strong>Explore</strong><p>Move through Street, Studio, Arcade, and Harbor using a small, readable browser map.</p></div>
-          <div><b>02</b><strong>Make</strong><p>Submit outfits, music, district props, and story fragments through moderated creator prompts.</p></div>
-          <div><b>03</b><strong>Earn</strong><p>Complete challenges to receive non-transferable badges, art unlocks, early access, or event priority.</p></div>
-          <div><b>04</b><strong>Shape</strong><p>Community votes and treasury grants decide which district ideas become permanent content.</p></div>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">The interactive layer, filed as a concept and ranked behind the member
+          product.</p>
+      </header>
+
+      <div class="notes-grid">
+        <div class="columns" data-reveal data-reveal-delay="1">
+          <p class="lead-para">A lightweight browser world where members explore districts, display their
+            Capy, discover stories, and turn monthly missions into visible city changes. The game is an
+            extension of the membership experience&mdash;not a speculative promise or a requirement for the NFT
+            to have value as a collectible.</p>
+          <ol class="notes-list">
+            <li><b>Explore.</b> Move through Street, Studio, Arcade, and Harbor using a small, readable browser
+              map.</li>
+            <li><b>Make.</b> Submit outfits, music, district props, and story fragments through moderated
+              creator prompts.</li>
+            <li><b>Earn.</b> Complete challenges to receive non-transferable badges, art unlocks, early access,
+              or event priority.</li>
+            <li><b>Shape.</b> Community votes and treasury grants decide which district ideas become permanent
+              content.</li>
+          </ol>
         </div>
-        <div class="paper-callout"><span class="callout-mark">A</span><div><strong>Animation concept / “Signal Pulse”</strong><p>A 12-second loop for the game and social drops: Capy enters from frame left, the card emits a cyan-orange pulse, a district marker blooms underfoot, three trait callouts lock into place, and the camera cuts into the next route. Motion is restrained, readable, and reusable across profile headers, missions, and event screens.</p></div></div>
-      </section>
 
-      <section id="architecture" class="paper-section"><div class="paper-kicker">11 / Architecture</div><h2>Document what is live.</h2><p>Contracts, network details, metadata endpoints, claim mechanics, and audit status will be linked here as they are deployed. Until then, treat integrations as prototypes and use only links published on the official domain.</p><div class="paper-facts"><div><span>Contracts</span><strong>Published per deployment</strong></div><div><span>Audits</span><strong>Before material launch</strong></div><div><span>Canonical links</span><strong>capycrew.com only</strong></div></div></section>
+        <aside class="margin-note" data-reveal data-reveal-delay="2">
+          <p class="note-head">Animation concept &mdash; &ldquo;Signal Pulse&rdquo;</p>
+          <p>A 12-second loop for the game and social drops: Capy enters from frame left, the card emits a
+            cyan-orange pulse, a district marker blooms underfoot, three trait callouts lock into place, and
+            the camera cuts into the next route. Motion is restrained, readable, and reusable across profile
+            headers, missions, and event screens.</p>
+          <p class="note-meta">Concept study<a class="fn" href="#fn-5"><sup>5</sup></a></p>
+        </aside>
+      </div>
 
-      <section id="security" class="paper-section">
-        <div class="paper-kicker">12 / Security &amp; operations</div>
-        <h2>Verify first,<br>always.</h2>
-        <p>The project will publish canonical contract addresses, deployment transactions, metadata roots, and known-issue notices. Operational controls should include least-privilege access, timelocked upgrades where feasible, incident disclosure, and independent review before high-risk changes.</p>
-        <div class="paper-callout warning"><span class="callout-mark">!</span><div><strong>User protection</strong><p>CapyCrew will never ask for a seed phrase or private key. A wallet signature proves control; it never authorizes token movement unless you approve a separate transaction.</p></div></div>
-      </section>
+      <p class="figure-note" data-reveal>The animation studies this concept is drawn from run on the
+        <a href="/">front page</a> as the dispatch deck.</p>
+    </div>
+  </section>
+  <!-- ===== 10 / ARCHITECTURE + SECURITY ===== -->
+  <section class="band" id="architecture" data-district="architecture">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">10 &mdash; Architecture &amp; operations</p>
+        <h2>Document what<br>is live.</h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">What gets published as it deploys, and the controls around it.</p>
+      </header>
 
-      <section id="risks" class="paper-section">
-        <div class="paper-kicker">13 / Risks &amp; legal</div>
+      <div class="notes-grid">
+        <div class="columns" data-reveal data-reveal-delay="1">
+          <p class="lead-para">Contracts, network details, metadata endpoints, claim mechanics, and audit
+            status will be linked here as they are deployed. Until then, treat integrations as prototypes and
+            use only links published on the official domain.</p>
+
+          <h3 id="security">Verify first, always</h3>
+          <p>The project will publish canonical contract addresses, deployment transactions, metadata roots,
+            and known-issue notices. Operational controls should include least-privilege access, timelocked
+            upgrades where feasible, incident disclosure, and independent review before high-risk changes.</p>
+        </div>
+
+        <aside class="margin-note" data-reveal data-reveal-delay="2">
+          <p class="note-head">Canonical only</p>
+          <p>If a contract address did not come from the official domain or an official channel, it is not
+            ours.</p>
+          <p class="note-meta">Confirm before signing<a class="fn" href="#fn-2"><sup>2</sup></a></p>
+        </aside>
+      </div>
+    </div>
+
+    <div class="sheet-head shell" data-reveal><span>Contracts &mdash; Published per deployment</span><span>Audits &mdash; Before material launch</span><span>Canonical links &mdash; capycrew.com only</span></div>
+
+    <div class="shell">
+      <p class="notice" data-reveal><b>User protection.</b> CapyCrew will never ask for a seed phrase or
+        private key. A wallet signature proves control; it never authorizes token movement unless you approve a
+        separate transaction.</p>
+    </div>
+  </section>
+  <!-- ===== 11 / RISKS ===== -->
+  <section class="band" id="risks" data-district="risks">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">11 &mdash; Risks</p>
         <h2>Know the edges.</h2>
-        <p>Digital assets are volatile and experimental. Smart contracts, token launches, wallets, bridges, third-party services, phishing, market illiquidity, and changing regulations carry real risk. Tokens and NFTs may lose all value. Never share a seed phrase, verify the contract and URL, and only use funds you can afford to lose.</p>
-        <p>This whitepaper is informational, does not constitute financial, investment, legal, accounting, or tax advice, and is not an offer to sell or solicitation to buy any asset where such offer would be unlawful. Availability of features and token distributions may change or be withdrawn. Obtain independent professional advice for your circumstances.</p>
-      </section>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">The parts of this that can go wrong, stated plainly.</p>
+      </header>
 
-      <section id="legal" class="paper-section">
-        <div class="paper-kicker">14 / Legal &amp; contact</div>
+      <div class="notes-grid">
+        <div class="columns" data-reveal data-reveal-delay="1">
+          <p class="lead-para">Digital assets are volatile and experimental. Smart contracts, token launches,
+            wallets, bridges, third-party services, phishing, market illiquidity, and changing regulations
+            carry real risk. Tokens and NFTs may lose all value. Never share a seed phrase, verify the contract
+            and URL, and only use funds you can afford to lose.</p>
+        </div>
+
+        <aside class="margin-note" data-reveal data-reveal-delay="2">
+          <p class="note-head">Also published</p>
+          <p>The <a href="/privacy">privacy policy</a> sits beside this document, and mint terms are published
+            on the <a href="/mint">mint page</a>.</p>
+        </aside>
+      </div>
+
+      <p class="notice" data-reveal>This whitepaper is informational, does not constitute financial,
+        investment, legal, accounting, or tax advice, and is not an offer to sell or solicitation to buy any
+        asset where such offer would be unlawful. Availability of features and token distributions may change
+        or be withdrawn. Obtain independent professional advice for your
+        circumstances.<a class="fn" href="#fn-3"><sup>3</sup></a></p>
+    </div>
+  </section>
+  <!-- ===== 12 / LEGAL + CONTACT ===== -->
+  <section class="band" id="legal" data-district="legal">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">12 &mdash; Legal &amp; contact</p>
         <h2>Where to verify,<br>who to ask.</h2>
-        <p>Only pages and links published on the official CapyCrew domain are canonical. Treat any other address, contract, direct message, or claim portal as untrusted, even when it copies this document word for word.</p>
-        <div class="paper-legal-links">
-          <a href="/privacy"><span>Published</span><strong>Privacy policy</strong></a>
-          <a href="https://x.com/capycrew" target="_blank" rel="noreferrer"><span>Official channel</span><strong>X / @capycrew</strong></a>
-          <a href="https://t.me/capycrew" target="_blank" rel="noreferrer"><span>Official channel</span><strong>Telegram</strong></a>
-          <a href="https://discord.gg/capycrew" target="_blank" rel="noreferrer"><span>Official channel</span><strong>Discord</strong></a>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">The canonical addresses, and which document wins where two of them differ.</p>
+      </header>
+
+      <div class="notes-grid">
+        <div class="columns" data-reveal data-reveal-delay="1">
+          <p class="lead-para">Only pages and links published on the official CapyCrew domain are canonical.
+            Treat any other address, contract, direct message, or claim portal as untrusted, even when it
+            copies this document word for word.</p>
+          <ul class="notes-list">
+            <li><b>Privacy policy.</b> Published &mdash; <a href="/privacy">read it here</a>.</li>
+            <li><b>X / @capycrew.</b> Official channel &mdash;
+              <a href="https://x.com/capycrew" target="_blank" rel="noreferrer">x.com/capycrew</a>.</li>
+            <li><b>Telegram.</b> Official channel &mdash;
+              <a href="https://t.me/capycrew" target="_blank" rel="noreferrer">t.me/capycrew</a>.</li>
+            <li><b>Discord.</b> Official channel &mdash;
+              <a href="https://discord.gg/capycrew" target="_blank" rel="noreferrer">discord.gg/capycrew</a>.</li>
+          </ul>
+          <p>Full terms, eligibility rules, snapshot timing, and jurisdictional restrictions are published
+            alongside each sale or claim and take precedence over this document wherever the two differ.
+            CapyCrew does not offer the collection or any token where doing so would be unlawful or would
+            require a licence it does not hold.</p>
         </div>
-        <div class="paper-facts">
-          <div><span>Terms of use</span><strong>Published before any sale</strong></div>
-          <div><span>Jurisdictions</span><strong>Restricted where unlawful</strong></div>
-          <div><span>Contact route</span><strong>Official channels above</strong></div>
-        </div>
-        <p>Full terms, eligibility rules, snapshot timing, and jurisdictional restrictions are published alongside each sale or claim and take precedence over this document wherever the two differ. CapyCrew does not offer the collection or any token where doing so would be unlawful or would require a licence it does not hold.</p>
-        <p class="paper-updated">This whitepaper is a living draft. Material changes will be dated and announced through official channels.</p>
-        <a class="btn dark" href="/mint">{{ 'Visit mint portal' if mint_enabled else 'Mint / coming soon' }}</a>
-      </section>
-    </article>
-  </div>
+
+        <aside class="margin-note" data-reveal data-reveal-delay="2">
+          <p class="note-head">Living draft</p>
+          <p>This whitepaper is a living draft. Material changes will be dated and announced through official
+            channels.</p>
+          <p class="note-meta">Last reviewed 27 Aug 2026</p>
+        </aside>
+      </div>
+    </div>
+
+    <div class="sheet-head shell" data-reveal><span>Terms of use &mdash; Published before any sale</span><span>Jurisdictions &mdash; Restricted where unlawful</span><span>Contact route &mdash; Official channels above</span></div>
+
+    <div class="shell">
+      <div class="cta-row" data-reveal>
+        <a class="btn-ink" href="/mint">{{ 'Visit mint portal' if mint_enabled else 'Mint / coming soon' }}</a>
+        <a class="btn-line" href="/about">Read the notes</a>
+      </div>
+    </div>
+  </section>
+
 </main>
 {% endblock %}
-{% block scripts %}<script src="{{ url_for('static', path='js/tokenomics3d.js') }}?v=20260827-1" defer></script>
-<script src="{{ url_for('static', path='js/whitepaper.js') }}?v=20260827-1" defer></script>{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', path='js/tokenomics3d.js') }}?v=20260903-1" defer></script>{% endblock %}

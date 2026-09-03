@@ -1,37 +1,25 @@
-/* Whitepaper reading aids: scroll progress, active-section rail state, section
-   reveals, and the closing legal block. Reveals are opt-in through the
-   data-reveal attribute that whitepaper.js sets, so the document stays fully
-   readable when scripting is unavailable. */
-.paper-progress{position:fixed;left:0;top:0;width:100%;height:3px;z-index:30;pointer-events:none;background:rgba(16,16,16,.08)}
-.paper-progress span{display:block;height:100%;width:100%;background:var(--red);transform:scaleX(0);transform-origin:0 50%}
+/* Whitepaper reading aids. Two rules and two repairs, nothing else - the page
+   itself is set entirely in dispatch.css's editorial vocabulary now.
 
-.paper-rail a.is-active{position:relative;color:var(--ink);transform:translateX(4px)}
-.paper-rail a.is-active::before{content:"";position:absolute;left:-18px;top:50%;width:10px;height:2px;background:var(--red);transform:translateY(-50%)}
+   The reading bar is CSS-only: dispatch.js already writes --page-progress onto
+   <html> on every page (that is what fills the folio rail), so the bar reads the
+   same custom property instead of carrying a script. js/whitepaper.js is gone;
+   its three jobs - progress, active rail link, section reveals - all belong to
+   dispatch.js. */
+.paper-progress { position: fixed; left: 0; top: 0; z-index: 30; width: 100%; height: 3px;
+  pointer-events: none; background: var(--rule); }
+.paper-progress span { display: block; width: 100%; height: 100%; background: var(--ink);
+  transform: scaleX(var(--page-progress, 0)); transform-origin: 0 50%; }
 
-.paper[data-reveal] .paper-section{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
-.paper[data-reveal] .paper-section.is-revealed{opacity:1;transform:none}
+/* The interactive allocation chart keeps its site.css styling, which is scoped
+   under .paper - and .paper is a 820px measure with no auto margin, so inside
+   the 1300px shell it would sit hard left of every table beside it. */
+.ledger-band .paper { margin-inline: auto; }
 
-.paper-legal-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:26px 0}
-.paper-legal-links a{border:1px solid var(--line);padding:13px 14px;display:grid;gap:4px;align-content:start;transition:border-color .2s,transform .2s}
-.paper-legal-links a:hover,.paper-legal-links a:focus-visible{border-color:var(--red);transform:translateY(-2px);outline:none}
-.paper-legal-links span{font:10px/1.4 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.16em;color:var(--muted)}
-.paper-legal-links strong{font-size:15px;letter-spacing:-.01em}
+/* .ledger-table styles its last column as the faint "condition" column, which
+   is right for Status and Purpose but not for the tier table's Per NFT figure. */
+.ledger-table td:last-child.num { color: var(--ink); font-size: 13.5px; }
 
-@media(max-width:900px){
-  .paper-progress{height:2px}
-  .paper-rail a.is-active{background:var(--ink);border-color:var(--ink);color:#fff;transform:none}
-  .paper-rail a.is-active::before{display:none}
-}
+@media (max-width: 900px) { .paper-progress { height: 2px; } }
 
-@media print{
-  /* Readers print or PDF a whitepaper: never let an un-revealed section print blank. */
-  .paper[data-reveal] .paper-section{opacity:1;transform:none}
-  .paper-progress{display:none}
-}
-
-@media(prefers-reduced-motion:reduce){
-  .paper[data-reveal] .paper-section{opacity:1;transform:none;transition:none}
-  .paper-rail a.is-active{transform:none}
-  .paper-legal-links a{transition:none}
-  .paper-legal-links a:hover,.paper-legal-links a:focus-visible{transform:none}
-}
+@media print { .paper-progress { display: none; } }

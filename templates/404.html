@@ -1,9 +1,64 @@
 {% extends "base.html" %}
 {% block title %}Page not found - CAPYCREW{% endblock %}
+
+{#- One district, one front block. A 404 is a masthead, a short apology, a list
+    of real doors and one safety note, so the doors are set as the issue's
+    contents list and the scam warning as a stamped notice. No folio rail - that
+    wants four sections - and no per-page stylesheet or script. -#}
 {% block content %}
-<section class="page-hero"><div class="wrap"><div class="eyebrow">CapyCrew / 404</div><h1>WRONG BLOCK.<br><em>STILL MELLOW.</em></h1><p class="lede">There is no district at this address. Nothing is broken on your side - the page simply does not exist.</p><div class="cta-row"><a class="btn primary" href="/">Back to CapyCity</a><a class="btn" href="/hub">Open the Crew Hub</a></div></div></section>
-<main class="section"><div class="wrap paper">
-<section class="paper-section"><div class="paper-kicker">Where to go instead</div><h2>Every real door<br>on this site.</h2><ul><li><strong><a href="/">Home:</a></strong> the CapyCity introduction, broadcasts, and the crew.</li><li><strong><a href="/hub">Crew Hub:</a></strong> the member loop, collection display, and what ships next.</li><li><strong><a href="/mint">Mint:</a></strong> {{ 'the Genesis mint portal.' if mint_enabled else 'the Genesis mint portal, not open yet.' }}</li><li><strong><a href="/whitepaper">Whitepaper:</a></strong> collection details, the $CAPY model, roadmap, and risks.</li><li><strong><a href="/about">About:</a></strong> what CapyCrew is and who it is for.</li><li><strong><a href="/store">Store:</a></strong> merch studies and future drops.</li><li><strong><a href="/privacy">Privacy:</a></strong> what this site does and does not collect.</li></ul></section>
-<section class="paper-section"><div class="paper-kicker">One safety note</div><h2>Only links on this<br>domain are official.</h2><p>If you arrived here from a link promising a mint, an airdrop, or a claim, treat it as a scam. CapyCrew will never ask for a seed phrase, and official announcements come only from the accounts linked in the footer below.</p></section>
-</div></main>
+<main class="issue">
+  <section class="front" id="front" data-district="front">
+    <div class="shell front-grid">
+
+      <div class="front-lead">
+        <p class="kicker" data-reveal>&mdash; <i>/</i> Off the route</p>
+        <h1 data-reveal data-reveal-delay="1">Wrong block.<br><em>Still mellow.</em></h1>
+        <span class="rule" data-rule data-reveal-delay="2" aria-hidden="true"></span>
+        <p class="standfirst" data-reveal data-reveal-delay="2">There is no district at this address. Nothing is
+          broken on your side &mdash; the page simply does not exist.</p>
+        <p class="byline" data-reveal data-reveal-delay="3">CapyCrew <i>/</i> 404 <i>/</i> Filed from CapyCity</p>
+        {#- .btn-ink / .btn-line, never the bare "btn" the old hero used: that
+            token still belongs to site.css and drags a 4px offset drop shadow
+            through, which dispatch.css sets no box-shadow to beat. -#}
+        <div class="cta-row" data-reveal data-reveal-delay="3">
+          <a class="btn-ink" href="/">Back to CapyCity</a>
+          <a class="btn-line" href="/hub">Open the Crew Hub</a>
+        </div>
+      </div>
+
+      <figure class="plate front-plate" data-reveal data-reveal-delay="2">
+        <div class="plate-frame">
+          <img src="/media/assets/Capybara_wearing_captain_hat_202608191119.jpeg"
+               alt="CapyCrew Captain, number 027" loading="lazy">
+          <span class="reg reg-tl" aria-hidden="true"></span><span class="reg reg-tr" aria-hidden="true"></span>
+          <span class="reg reg-bl" aria-hidden="true"></span><span class="reg reg-br" aria-hidden="true"></span>
+        </div>
+        <figcaption><b>Fig. 1</b><span>Harbour watch, No. 027. No record of this address.</span></figcaption>
+      </figure>
+
+      {#- Written out rather than looped: every line carries its own copy, and
+          the mint entry changes with the switch. No footnote marker goes inside
+          these links - a .fn anchor nested in a contents anchor is invalid. -#}
+      <aside class="contents" data-reveal data-reveal-delay="4">
+        <p class="contents-head">Where to go instead &mdash; every real door on this site</p>
+        <ol>
+          <li><a href="/"><b>&mdash;</b><span>Home: the CapyCity introduction, broadcasts, and the crew</span></a></li>
+          <li><a href="/hub"><b>&mdash;</b><span>Crew Hub: the member loop, collection display, and what ships next</span></a></li>
+          <li><a href="/mint"><b>&mdash;</b><span>Mint: {{ 'the Genesis mint portal' if mint_enabled else 'the Genesis mint portal, not open yet' }}</span></a></li>
+          <li><a href="/whitepaper"><b>&mdash;</b><span>Whitepaper: collection details, the $CAPY model, roadmap, and risks</span></a></li>
+          <li><a href="/about"><b>&mdash;</b><span>About: what CapyCrew is and who it is for</span></a></li>
+          <li><a href="/store"><b>&mdash;</b><span>Store: merch studies and future drops</span></a></li>
+          <li><a href="/privacy"><b>&mdash;</b><span>Privacy: what this site does and does not collect</span></a></li>
+        </ol>
+      </aside>
+    </div>
+
+    <div class="shell">
+      <p class="notice" data-reveal><b>Only links on this domain are official.</b> If you arrived here from a
+        link promising a mint, an airdrop, or a claim, treat it as a scam. CapyCrew will never ask for a seed
+        phrase, and official announcements come only from the accounts linked in the footer
+        below.<a class="fn" href="#fn-2" id="fnref-2"><sup>2</sup></a></p>
+    </div>
+  </section>
+</main>
 {% endblock %}

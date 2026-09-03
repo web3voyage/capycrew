@@ -1,21 +1,191 @@
 {% extends "base.html" %}
 {% block title %}About - CAPYCREW{% endblock %}
-{% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/about.css') }}?v=20260823-1">{% endblock %}
-{% block content %}
-<div class="about-page">
-<section class="page-hero">
-  <section class="about-hero-video" aria-hidden="true">
-    <video class="about-hero-video__media" autoplay muted loop playsinline preload="metadata">
-      <source src="{{ url_for('videos', path='Zoom_into_futuristic_CapyCity_202608191211.mp4') }}" type="video/mp4">
-    </video>
-  </section>
-  <div class="wrap"><div class="eyebrow">CAPYCREW / THE PROJECT</div><h1>A creative<br><em>internet club.</em></h1><p class="lede">CapyCrew is a collectible character world where your Capy becomes your identity, your membership pass, and your way to help shape CapyCity.</p></div>
-</section>
-<main class="section"><div class="wrap paper">
-<section class="paper-section"><div class="paper-kicker">01 / What is CapyCrew?</div><h2>Characters with somewhere to go.</h2><p>CapyCrew is a 10,000-piece collectible character project built on the Robinhood Chain. Each Capy is a digital identity and membership pass into CapyCity, an evolving universe shaped by character art, fashion, animation, games, and community culture.</p><p>The product is the experience around the collectible: a profile, a holder gallery, monthly missions, community polls, a public activity feed, and a growing library of districts, drops, badges, and events.</p></section>
-<section class="paper-section"><div class="paper-kicker">02 / The MVP we are building</div><h2>Give holders a reason to return.</h2><p>This is the member product being built, not a list of features that are live today. The Crew Hub publishes each one as it ships, and the <a href="/hub#activity">build log</a> is dated.</p><ul><li><strong>Wallet + Capy profile:</strong> connect a wallet, verify a Capy, and manage traits, animations, badges, and participation history.</li><li><strong>Holder gallery:</strong> inspect characters in a collection-style display with trait metadata, animation previews, and archive navigation.</li><li><strong>Monthly CapyCity missions:</strong> design a district, submit an outfit or music idea, vote on a drop, complete a challenge, or attend an event.</li><li><strong>Rewards:</strong> digital badges, exclusive artwork, early access, merchandise discounts, and event access when each reward is live and documented.</li><li><strong>Community polls:</strong> help choose themes, collaborations, district directions, and future character drops.</li><li><strong>Public build log:</strong> follow new districts, drops, member contributions, mission completions, and community decisions.</li></ul></section>
-<section class="paper-section"><div class="paper-kicker">03 / The direction</div><h2>Build the city together.</h2><p>CapyCity grows in chapters: Street, Studio, Arcade, Harbor, and the places members invent next. Each district can carry its own characters, media, missions, collaborations, and event format.</p><p>CapyCrew NFTs are collectibles and access passes to the CapyCrew ecosystem. They do not represent equity, ownership in a company, or a guaranteed financial return. Features are staged, conditional, and subject to product, partnership, legal, and community review.</p><div class="cta-row"><a class="btn {{ 'primary' if mint_enabled else 'dark' }}" href="/mint">{{ 'Enter the mint' if mint_enabled else 'Mint / coming soon' }}</a><a class="btn" href="/whitepaper">Read the whitepaper</a></div></section>
-<section class="paper-section"><div class="paper-kicker">04 / Game concept</div><h2>CapyCity: After Hours.</h2><p>A lightweight browser adventure where your Capy walks through themed districts, takes on monthly missions, collects wearables, and leaves visible traces of community activity.</p><ul><li><strong>Core loop:</strong> explore a district → accept a mission → make or discover something → earn a badge or unlock → return for the next chapter.</li><li><strong>District design:</strong> Street is the social plaza, Studio is the creator lab, Arcade is the challenge floor, and Harbor is the listening/event space.</li><li><strong>Animation language:</strong> a 12-second “signal pulse” loop—Capy steps into frame, the card lights up, a district marker blooms, then the camera cuts to the next route.</li></ul></section>
-</div></main></div>
+
+{#- Notes on a creative internet club: the long read of the issue. No per-page
+    stylesheet - dispatch.css already carries .notes-grid, .columns, .lead-para
+    and .margin-note - and no per-page script, because dispatch.js reveals
+    [data-reveal] the way about.js used to reveal .paper-section. -#}
+{% block rail %}
+<nav class="folio" aria-label="Sections on this page">
+  <span class="folio-rule" aria-hidden="true"><i></i></span>
+  <a href="#front" data-rail="front"><b>01</b><span>Front</span></a>
+  <a href="#notes" data-rail="notes"><b>02</b><span>Notes</span></a>
+  <a href="#direction" data-rail="direction"><b>03</b><span>Direction</span></a>
+  <a href="#game" data-rail="game"><b>04</b><span>Game</span></a>
+</nav>
 {% endblock %}
-{% block scripts %}<script src="{{ url_for('static', path='js/about.js') }}?v=20260823-1" defer></script>{% endblock %}
+
+{% block content %}
+<main class="issue">
+
+  <!-- ===== 01 / FRONT ===== -->
+  <section class="front" id="front" data-district="front">
+    <div class="shell front-grid">
+
+      <div class="front-lead">
+        <p class="kicker" data-reveal>01 &mdash; About <i>/</i> The project</p>
+        <h1 data-reveal data-reveal-delay="1">A creative<br><em>internet club.</em></h1>
+        <span class="rule" data-rule data-reveal-delay="2" aria-hidden="true"></span>
+        <p class="standfirst" data-reveal data-reveal-delay="2">CapyCrew is a collectible character world where
+          your Capy becomes your identity, your membership pass, and your way to help shape CapyCity.</p>
+        <p class="byline" data-reveal data-reveal-delay="3">Filed from CapyCity <i>/</i> {{ mint_chain_name }}
+          <i>/</i> 10,000 characters</p>
+        {#- No bare "btn" token: site.css still owns .btn and would print its 4px
+            offset shadow through, which dispatch.css sets nothing to beat. -#}
+        <div class="cta-row" data-reveal data-reveal-delay="3">
+          <a class="btn-ink" href="/hub">Open the Crew Hub</a>
+          <a class="btn-line" href="/whitepaper">Read the whitepaper</a>
+        </div>
+      </div>
+
+      <figure class="plate front-plate" data-reveal data-reveal-delay="2">
+        <div class="plate-frame">
+          <video autoplay muted loop playsinline preload="metadata"
+                 src="/media/videos/Zoom_into_futuristic_CapyCity_202608191211.mp4"></video>
+          <span class="reg reg-tl" aria-hidden="true"></span><span class="reg reg-tr" aria-hidden="true"></span>
+          <span class="reg reg-bl" aria-hidden="true"></span><span class="reg reg-br" aria-hidden="true"></span>
+        </div>
+        <figcaption><b>Fig. 1</b><span>Approach vector &mdash; the CapyCity downtown grid.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===== 02 / NOTES (two-column read) ===== -->
+  <section class="band" id="notes" data-district="notes">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">02 &mdash; Notes</p>
+        <h2>Characters with<br>somewhere to go.</h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">What the project is, and what the member product has to carry before any of it
+          counts as shipped.</p>
+      </header>
+
+      {#- .columns is a real two-column measure with a column rule; .margin-note
+          sits beside it and goes sticky above 1100px. h3 inside .columns is
+          re-set as a mono forest subhead, so it does not need a class. -#}
+      <div class="notes-grid">
+        <div class="columns" data-reveal data-reveal-delay="1">
+          <p class="lead-para">CapyCrew is a 10,000-piece collectible character project built on
+            {{ mint_chain_name }}. Each Capy is a digital identity and a membership pass into CapyCity, an
+            evolving universe shaped by character art, fashion, animation, games, and community culture.</p>
+          <p>The product is the experience around the collectible: a profile, a holder gallery, monthly
+            missions, community polls, a public activity feed, and a growing library of districts, drops,
+            badges, and events.</p>
+
+          <h3>The MVP we are building</h3>
+          <p>This is the member product being built, not a list of features that are live today. The Crew Hub
+            publishes each one as it ships, and the <a href="/hub#activity">build log</a> is dated.</p>
+          <ul class="notes-list">
+            <li><b>Wallet and Capy profile.</b> Connect a wallet, verify a Capy, and manage traits,
+              animations, badges, and participation history.</li>
+            <li><b>Holder gallery.</b> Inspect characters in a collection-style display with trait metadata,
+              animation previews, and archive navigation.</li>
+            <li><b>Monthly CapyCity missions.</b> Design a district, submit an outfit or music idea, vote on a
+              drop, complete a challenge, or attend an event.</li>
+            <li><b>Rewards.</b> Digital badges, exclusive artwork, early access, merchandise discounts, and
+              event access &mdash; each one documented when it is live.</li>
+            <li><b>Community polls.</b> Help choose themes, collaborations, district directions, and future
+              character drops.</li>
+            <li><b>Public build log.</b> Follow new districts, drops, member contributions, mission
+              completions, and community decisions.</li>
+          </ul>
+        </div>
+
+        <aside class="margin-note" data-reveal data-reveal-delay="2">
+          <p class="note-head">Editor's note</p>
+          <p>Read the list on the left as scope, not as inventory. A line graduates from this page to the
+            build log on the day it ships, with a date against it.</p>
+          <p class="note-meta">Staged and conditional<a class="fn" href="#fn-5" id="fnref-5"><sup>5</sup></a></p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PULL QUOTE ===== -->
+  <aside class="pull" data-reveal>
+    <div class="shell">
+      <blockquote>Give holders a reason<br><em>to return.</em></blockquote>
+      <p class="pull-attr">On the one test every feature in the hub has to pass</p>
+    </div>
+  </aside>
+
+  <!-- ===== 03 / DIRECTION ===== -->
+  <section class="band" id="direction" data-district="direction">
+    <div class="shell route-grid">
+      <header class="route-intro" data-reveal>
+        <p class="kicker">03 &mdash; Direction</p>
+        <h2>Build the city<br>together.</h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">CapyCity grows in chapters, and each district carries its own characters, media,
+          missions, collaborations, and event format. The list below is the order they are being written in.</p>
+      </header>
+      {#- dispatch.js reveals .route-list li itself and fills --route-progress
+          down the spine, so the items carry no data-reveal of their own. -#}
+      <ol class="route-list">
+        <li><span class="route-no">01</span>
+          <span class="route-body"><b>Street</b><em data-status="next">Next</em>
+          <span>The social plaza: fit checks, block-level dispatches, and the front door to the city.</span></span></li>
+        <li><span class="route-no">02</span>
+          <span class="route-body"><b>Studio</b><em data-status="planned">Planned</em>
+          <span>The creator lab, where outfits, music ideas, and district proposals get made and submitted.</span></span></li>
+        <li><span class="route-no">03</span>
+          <span class="route-body"><b>Arcade</b><em data-status="planned">Planned</em>
+          <span>The challenge floor: monthly missions, community scoreboards, and badge unlocks.</span></span></li>
+        <li><span class="route-no">04</span>
+          <span class="route-body"><b>Harbor</b><em data-status="exploring">Exploring</em>
+          <span>The listening and event space, plus the places members invent after it.</span></span></li>
+      </ol>
+    </div>
+
+    <div class="shell">
+      <p class="notice" data-reveal><b>Collectibles and access passes.</b> CapyCrew NFTs do not represent
+        equity, ownership in a company, or a guaranteed financial return. Features are staged, conditional, and
+        subject to product, partnership, legal, and community
+        review.<a class="fn" href="#fn-3" id="fnref-3"><sup>3</sup></a></p>
+      <div class="cta-row" data-reveal>
+        <a class="btn-ink" href="/mint">{{ 'Enter the mint' if mint_enabled else 'Mint / coming soon' }}</a>
+        <a class="btn-line" href="/whitepaper">Read the whitepaper</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 04 / GAME CONCEPT ===== -->
+  <section class="band" id="game" data-district="game">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">04 &mdash; Game concept</p>
+        <h2>CapyCity:<br>After Hours.</h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">A concept study for the interactive layer, filed here so the shape of it is public
+          before any of it is built.</p>
+      </header>
+
+      <div class="notes-grid">
+        <div class="columns" data-reveal data-reveal-delay="1">
+          <p class="lead-para">A lightweight browser adventure where your Capy walks through themed districts,
+            takes on monthly missions, collects wearables, and leaves visible traces of community activity.</p>
+          <ul class="notes-list">
+            <li><b>Core loop.</b> Explore a district, accept a mission, make or discover something, earn a
+              badge or an unlock, then return for the next chapter.</li>
+            <li><b>District design.</b> Street is the social plaza, Studio is the creator lab, Arcade is the
+              challenge floor, and Harbor is the listening and event space.</li>
+            <li><b>Animation language.</b> A twelve-second signal pulse: the Capy steps into frame, the card
+              lights up, a district marker blooms, then the camera cuts to the next route.</li>
+          </ul>
+        </div>
+
+        <aside class="margin-note" data-reveal data-reveal-delay="2">
+          <p class="note-head">Filed as concept</p>
+          <p>Nothing on this page is dated, priced, or promised. The game layer sits behind the member product
+            in the running order, and the route on the front page is the one under construction.</p>
+          <p class="note-meta">Concept study<a class="fn" href="#fn-5"><sup>5</sup></a></p>
+        </aside>
+      </div>
+
+      <p class="figure-note" data-reveal>The animation studies that this concept is drawn from run on the
+        <a href="/">front page</a> as the dispatch deck.</p>
+    </div>
+  </section>
+</main>
+{% endblock %}

@@ -1,97 +1,346 @@
 {% extends "base.html" %}
 {% block title %}Crew Hub - CAPYCREW{% endblock %}
-{% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/hub.css') }}?v=20260825-1">{% endblock %}
+
+{#- The member home, re-set as the interior of the issue. Everything the old
+    hub.css printed as a stacked panel is dispatch.css furniture now - .figures
+    for the standing counts, .ledger-table for the missions, the build log and
+    the proofs, .route-list for the route ahead - so hub.css is down to the two
+    things dispatch.css cannot carry: the WebGL collection stage and the filter
+    chips hub.js drives.
+
+    base.html keeps the city plate and capycity.js off this page (page != 'hub'),
+    because the collection stage runs its own WebGL context. three.min.js still
+    loads from the shell, so hub.js has its renderer. -#}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/hub.css') }}?v=20260903-2">{% endblock %}
+{% block rail %}
+<nav class="folio" aria-label="Sections on this page">
+  <span class="folio-rule" aria-hidden="true"><i></i></span>
+  <a href="#front" data-rail="front"><b>01</b><span>Front</span></a>
+  <a href="#missions" data-rail="missions"><b>02</b><span>Missions</span></a>
+  <a href="#activity" data-rail="activity"><b>03</b><span>Build log</span></a>
+  <a href="#collection-studio" data-rail="collection"><b>04</b><span>Collection</span></a>
+  <a href="#rewards" data-rail="rewards"><b>05</b><span>Proofs</span></a>
+  <a href="#signal" data-rail="signal"><b>06</b><span>Signal</span></a>
+  <a href="#future" data-rail="future"><b>07</b><span>Route</span></a>
+</nav>
+{% endblock %}
+
 {% block content %}
-<main class="hub-page">
-  <section class="hub-hero">
-    <div class="wrap hub-hero-grid">
-      <div>
-        <div class="eyebrow">CAPYCREW / MEMBER HOME</div>
-        <h1>YOUR CAPY.<br><em>YOUR SIGNAL.</em></h1>
-        <p class="hub-lede">A practical home for the people shaping CapyCity. Track what is live, make your next move, and keep your place in the story.</p>
-        <div class="hub-actions"><a class="btn {{ 'primary' if mint_enabled else 'dark' }}" href="/mint">{{ 'Get a Genesis Capy' if mint_enabled else 'Mint / coming soon' }}</a><a class="btn dark" href="/whitepaper">Read the whitepaper</a></div>
+<main class="issue">
+
+  <!-- ===== 01 / FRONT ===== -->
+  <section class="front" id="front" data-district="front">
+    <div class="shell front-grid">
+
+      <div class="front-lead">
+        <p class="kicker" data-reveal>01 &mdash; Crew Hub <i>/</i> Member home</p>
+        <h1 data-reveal data-reveal-delay="1">Your Capy.<br><em>Your signal.</em></h1>
+        <span class="rule" data-rule data-reveal-delay="2" aria-hidden="true"></span>
+        <p class="standfirst" data-reveal data-reveal-delay="2">A practical home for the people shaping
+          CapyCity. Track what is live, make your next move, and keep your place in the story.</p>
+        <p class="byline" data-reveal data-reveal-delay="3">Filed from CapyCity <i>/</i> {{ mint_chain_name }}
+          <i>/</i> Member accounts in build</p>
+        {#- No bare "btn" token: site.css still owns .btn and would print its 4px
+            offset shadow through, which dispatch.css sets nothing to beat. -#}
+        <div class="cta-row" data-reveal data-reveal-delay="3">
+          <a class="btn-ink" href="/mint">{{ 'Get a Genesis Capy' if mint_enabled else 'Mint / coming soon' }}</a>
+          <a class="btn-line" href="/whitepaper">Read the whitepaper</a>
+        </div>
       </div>
-      <div class="member-pass" aria-label="CapyCrew member pass design">
-        <div class="member-pass-top"><span>MEMBER PASS</span><span>042 / 10K</span></div>
-        <div class="member-avatar"><img src="/media/assets/CapyCrew_042_cutout.png" alt="CapyCrew Genesis character 042"></div>
-        <div class="member-pass-bottom"><strong>CAPY #042</strong><span>SAMPLE PASS</span></div>
-      </div>
+      {#- The pass is a plate like any other figure, not a rotated card: the
+          cutout is 511x723, so the frame takes that ratio and nothing crops. -#}
+      <figure class="plate front-plate pass-plate" data-reveal data-reveal-delay="2">
+        <div class="plate-frame">
+          <img src="/media/assets/CapyCrew_042_cutout.png" alt="CapyCrew Genesis character 042">
+          <span class="stamp">Sample pass</span>
+          <span class="reg reg-tl" aria-hidden="true"></span><span class="reg reg-tr" aria-hidden="true"></span>
+          <span class="reg reg-bl" aria-hidden="true"></span><span class="reg reg-br" aria-hidden="true"></span>
+        </div>
+        <figcaption><b>Fig. 1</b><span>Member pass &mdash; Capy #042, one of 10,000.</span></figcaption>
+      </figure>
     </div>
   </section>
 
-  <section class="hub-section hub-overview">
-    <div class="wrap">
-      <div class="hub-section-head"><div><span class="kicker">01 / Your loop</span><h2>Collect.<br>Show up.</h2></div><p>Three small actions keep the club useful: complete a mission, claim a proof of participation, and help choose what ships next.</p></div>
-      <div class="hub-stats"><div><strong>10K</strong><span>genesis supply</span></div><div><strong>03</strong><span>missions designed</span></div><div><strong>03</strong><span>proofs mapped</span></div><div><strong>05</strong><span>in the archive</span></div></div>
+  {#- The standing counts. Five tracks, so the units ride in the dt: a dd wider
+      than a fifth of the shell spills over its neighbour's rule. -#}
+  <div class="figures" data-reveal>
+    <dl class="shell figures-inner">
+      <div><dt>Genesis supply</dt><dd data-count="10000">10,000</dd></div>
+      <div><dt>Missions <span>designed</span></dt><dd>03</dd></div>
+      <div><dt>Proofs <span>mapped</span></dt><dd>03</dd></div>
+      <div><dt>In the archive</dt><dd>05</dd></div>
+      <div><dt>Accounts</dt><dd class="is-soon">In build<a class="fn" href="#fn-5" id="fnref-5"><sup>5</sup></a></dd></div>
+    </dl>
+  </div>
+
+  <!-- ===== PULL QUOTE ===== -->
+  <aside class="pull" data-reveal>
+    <div class="shell">
+      <blockquote>Collect.<br><em>Show up.</em></blockquote>
+      <p class="pull-attr">The loop the whole hub is built around</p>
+    </div>
+  </aside>
+  <!-- ===== 02 / THE MEMBER LOOP ===== -->
+  <section class="band" id="missions" data-district="missions">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">02 &mdash; The member loop</p>
+        <h2>Make your<br><em>next move.</em></h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">Three small actions keep the club useful: complete a mission, claim a proof of
+          participation, and help choose what ships next.</p>
+      </header>
+
+      <div class="table-wrap" data-reveal data-reveal-delay="1">
+        <table class="ledger-table">
+          <caption>Table 2.1 &mdash; The first three missions, as designed</caption>
+          <thead>
+            <tr><th>Mission</th><th>What it asks</th><th>Proof</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">01 &mdash; Shape a district</th>
+              <td>Choose the mood for CapyCity's next block and leave one sentence for the builders.</td>
+              <td>+1 city proof</td>
+              <td>Opens with member accounts</td>
+            </tr>
+            <tr>
+              <th scope="row">02 &mdash; Pass the signal</th>
+              <td>Share the latest CapyCity broadcast with someone who would make the city better.</td>
+              <td>+1 signal proof</td>
+              <td>Opens with member accounts</td>
+            </tr>
+            <tr>
+              <th scope="row">03 &mdash; Bring a collaborator</th>
+              <td>Invite a creator to propose a drop, a sound, or a place in the next district.</td>
+              <td>Planned</td>
+              <td>Opens after launch</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="figure-note" data-reveal>These are the first repeatable rituals of CapyCrew. They are designed
+        to take minutes, not a full-time job. Missions open once member accounts ship; until then this is the
+        published design, not a live scoreboard.</p>
     </div>
   </section>
+  <!-- ===== 03 / BUILD LOG ===== -->
+  <section class="band ledger-band" id="activity" data-district="activity">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">03 &mdash; Build log</p>
+        <h2>What has shipped<br><em>so far.</em></h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">A public build log keeps the club legible. Every entry below is a change that is
+          live on this site right now, dated. Nothing is listed before it is real.</p>
+      </header>
 
-  <section class="hub-section" id="missions">
-    <div class="wrap">
-      <div class="hub-section-head"><div><span class="kicker">02 / The member loop</span><h2>Make your<br>next move.</h2></div><p>These are the first repeatable rituals of CapyCrew. They are designed to take minutes, not a full-time job. Missions open once member accounts ship; until then this is the published design, not a live scoreboard.</p></div>
-      <div class="mission-grid">
-        <article class="mission-card is-featured"><div class="mission-number">MISSION 01</div><div class="mission-icon">01</div><h3>Shape a district</h3><p>Choose the mood for CapyCity's next block and leave one sentence for the builders.</p><div class="mission-meta"><span>+1 city proof</span><span class="mission-lock">Opens with member accounts</span></div></article>
-        <article class="mission-card"><div class="mission-number">MISSION 02</div><div class="mission-icon">02</div><h3>Pass the signal</h3><p>Share the latest CapyCity broadcast with someone who would make the city better.</p><div class="mission-meta"><span>+1 signal proof</span><span class="mission-lock">Opens with member accounts</span></div></article>
-        <article class="mission-card mission-card-locked"><div class="mission-number">MISSION 03 / SOON</div><div class="mission-icon">03</div><h3>Bring a collaborator</h3><p>Invite a creator to propose a drop, a sound, or a place in the next district.</p><div class="mission-meta"><span>Planned</span><span class="mission-lock">Opens after launch</span></div></article>
+      <div class="table-wrap" data-reveal data-reveal-delay="1">
+        <table class="ledger-table">
+          <caption>Table 3.1 &mdash; Shipped changes, newest first</caption>
+          <thead>
+            <tr><th>Filed</th><th>Change</th><th>What went live</th><th>Area</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">31 Aug 2026</th>
+              <td>Mint portal switch</td>
+              <td>The mint page and its API now open and close from one setting, so a shared link never
+                reaches an unopened contract.</td>
+              <td>Mint</td>
+            </tr>
+            <tr>
+              <th scope="row">27 Aug 2026</th>
+              <td>Whitepaper published</td>
+              <td>Supply model, tier-weighted holder airdrop, roadmap, risks, and the legal section are all
+                readable in full.</td>
+              <td>Docs</td>
+            </tr>
+            <tr>
+              <th scope="row">25 Aug 2026</th>
+              <td>Collection display and blueprint</td>
+              <td>The collection view, five-character archive, and the Kentsugi construction layer went live
+                on this page.</td>
+              <td>Build</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
+  <!-- ===== 04 / COLLECTION DISPLAY ===== -->
+  {#- The one block that keeps its own stylesheet. hub.js mounts the wireframe
+      renderer into #collection-canvas, swaps the finished mockup from the rail,
+      and falls back to the cutout when WebGL is unavailable, so every hook below
+      is load-bearing: [data-collection-stage], #collection-canvas,
+      #collection-loading, #collection-angle, .character-fallback,
+      .collection-item[data-character][data-image], #collection-mockup-image,
+      #collection-mockup-name, #collection-mockup-trait. -#}
+  <section class="band" id="collection-studio" data-district="collection">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">04 &mdash; Collection display</p>
+        <h2>Meet the Capys.<br><em>Read the traits.</em></h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">A collection view for the actual product: inspect one character at a time,
+          compare the archive, and see the construction layer separately from the finished
+          artwork.<a class="fn" href="#fn-4" id="fnref-4"><sup>4</sup></a></p>
+      </header>
 
-  <section class="hub-section activity-section" id="activity">
-    <div class="wrap">
-      <div class="hub-section-head"><div><span class="kicker">03 / Build log</span><h2>What has shipped<br>so far.</h2></div><p>A public build log keeps the club legible. Every entry below is a change that is live on this site right now, dated. Nothing is listed before it is real.</p></div>
-      <div class="activity-feed" aria-label="CapyCrew build log">
-        <article class="activity-item"><span class="activity-time">31 AUG 2026</span><div><strong>Mint portal switch</strong><p>The mint page and its API now open and close from one setting, so a shared link never reaches an unopened contract.</p></div><b>MINT</b></article>
-        <article class="activity-item"><span class="activity-time">27 AUG 2026</span><div><strong>Whitepaper published</strong><p>Supply model, tier-weighted holder airdrop, roadmap, risks, and the legal section are all readable in full.</p></div><b>DOCS</b></article>
-        <article class="activity-item"><span class="activity-time">25 AUG 2026</span><div><strong>Collection display and blueprint</strong><p>The collection view, five-character archive, and the Kentsugi construction layer went live on this page.</p></div><b>BUILD</b></article>
-      </div>
-    </div>
-  </section>
-
-  <section class="hub-section collection-studio" id="collection-studio">
-    <div class="wrap">
-      <div class="hub-section-head collection-intro"><div><span class="kicker">04 / Collection display</span><h2>Meet the Capys.<br>Read the traits.</h2></div><p>A collection view for the actual product: inspect one character at a time, compare the archive, and see the construction layer separately from the finished artwork.</p></div>
-      <div class="collection-showcase">
+      <div class="collection-showcase" data-reveal data-reveal-delay="1">
         <div class="collection-stage" data-collection-stage>
-          <div class="stage-hud"><span>CAPYCREW / COLLECTION VIEW</span><strong id="collection-angle">ANGLE / 000°</strong></div>
+          <div class="stage-hud"><span>CapyCrew / collection view</span><strong id="collection-angle">Angle / 000&deg;</strong></div>
           <div class="stage-grid" aria-hidden="true"></div>
-          <div class="stage-loading" id="collection-loading">LOADING CHARACTER / 042</div>
+          <div class="stage-loading" id="collection-loading">Loading character / 042</div>
           <canvas class="character-canvas" id="collection-canvas" aria-label="Interactive 3D wireframe blueprint of CapyCrew character 042"></canvas>
           <img class="character-fallback" src="/media/assets/CapyCrew_042_cutout.png" alt="CapyCrew #042 finished character">
-          <div class="stage-caption"><strong>CAPY #042 / GENESIS</strong><span>Drag to inspect the approved silhouette</span></div>
+          <div class="stage-caption"><strong>Capy #042 / Genesis</strong><span>Drag to inspect the approved silhouette</span></div>
         </div>
         <aside class="collection-rail" aria-label="CapyCrew collection archive">
-          <div class="rail-head"><span>ARCHIVE / 05 SHOWN</span><span>01—05</span></div>
+          <div class="rail-head"><span>Archive / 05 shown</span><span>01&ndash;05</span></div>
           <button class="collection-item is-active" type="button" data-character="042" data-image="/media/assets/CapyCrew_042_cutout.png"><img src="/media/assets/CapyCrew_042_cutout.png" alt="Capy #042"><span><b>#042</b><small>Genesis / street signal</small></span></button>
           <button class="collection-item" type="button" data-character="118" data-image="/media/assets/Capybara_dressed_as_skater_202608190231.jpeg"><img src="/media/assets/Capybara_dressed_as_skater_202608190231.jpeg" alt="Skater Capy"><span><b>#118</b><small>Skate / city runner</small></span></button>
           <button class="collection-item" type="button" data-character="207" data-image="/media/assets/Capybara_wearing_puffer_jacket_202608190230.jpeg"><img src="/media/assets/Capybara_wearing_puffer_jacket_202608190230.jpeg" alt="Puffer Capy"><span><b>#207</b><small>Cold front / puffer</small></span></button>
           <button class="collection-item" type="button" data-character="314" data-image="/media/assets/Capybara_wearing_techwear_attire_202608190230.jpeg"><img src="/media/assets/Capybara_wearing_techwear_attire_202608190230.jpeg" alt="Techwear Capy"><span><b>#314</b><small>Night shift / techwear</small></span></button>
           <button class="collection-item" type="button" data-character="512" data-image="/media/assets/Capybara_wearing_varsity_jacket_202608190232.jpeg"><img src="/media/assets/Capybara_wearing_varsity_jacket_202608190232.jpeg" alt="Varsity Capy"><span><b>#512</b><small>Campus / varsity</small></span></button>
-          <div class="rail-note">The archive is a sample view. Trait metadata, animation URLs, and badges will attach to each holder profile as they become available.</div>
+          <div class="rail-note">The archive is a sample view. Trait metadata, animation URLs, and badges will
+            attach to each holder profile as they become available.</div>
         </aside>
       </div>
-      <div class="blueprint-mockup-grid">
-        <article class="blueprint-card"><div class="kicker">Blueprint / construction layer</div><h3>Mapped before it is styled.</h3><p>Kentsugi keeps the canonical identity stable through bounded volumes, attachment rails, and a repeatable render handoff. Face, muzzle, glasses, card hand, stance, and shoe scale are locked before trait variants are introduced.</p><div class="blueprint-lines"><span>HEAD / 03 VOLUMES</span><span>BODY / 04 VOLUMES</span><span>WARDROBE / 05 RAILS</span><span>HANDOFF / VALIDATED JSON → BLENDER</span></div></article>
-        <article class="finished-mockup"><div class="mockup-label">Finished art / field card</div><img id="collection-mockup-image" src="/media/assets/CapyCrew_042_cutout.png" alt="Finished CapyCrew #042 mockup"><div class="mockup-meta"><strong id="collection-mockup-name">CAPY #042</strong><span id="collection-mockup-trait">street edition · final presentation</span></div></article>
+      <div class="blueprint-mockup-grid" data-reveal data-reveal-delay="1">
+        <article class="blueprint-card">
+          <div class="kicker">Blueprint / construction layer</div>
+          <h3>Mapped before it is styled.</h3>
+          <p>Kentsugi keeps the canonical identity stable through bounded volumes, attachment rails, and a
+            repeatable render handoff. Face, muzzle, glasses, card hand, stance, and shoe scale are locked
+            before trait variants are introduced.</p>
+          <div class="blueprint-lines"><span>Head / 03 volumes</span><span>Body / 04 volumes</span><span>Wardrobe / 05 rails</span><span>Handoff / validated JSON &rarr; Blender</span></div>
+        </article>
+        <article class="finished-mockup">
+          <div class="mockup-label">Finished art / field card</div>
+          <img id="collection-mockup-image" src="/media/assets/CapyCrew_042_cutout.png" alt="Finished CapyCrew #042 mockup">
+          <div class="mockup-meta"><strong id="collection-mockup-name">Capy #042</strong><span id="collection-mockup-trait">street edition &middot; final presentation</span></div>
+        </article>
       </div>
     </div>
   </section>
 
-  <section class="hub-section hub-split" id="rewards">
-    <div class="wrap hub-split-grid">
-      <div class="reward-panel"><div class="kicker">05 / Your proofs</div><h2>Small acts.<br>Visible history.</h2><p>Participation should leave a trace you can keep. Proofs are designed as non-transferable badges for moments you helped make happen.</p><div class="proof-list"><div class="proof"><span>01</span><div><strong>Genesis arrival</strong><small>Issued when your Capy is minted</small></div><b>AT MINT</b></div><div class="proof"><span>02</span><div><strong>District voice</strong><small>Earned by completing Mission 01</small></div><b>PLANNED</b></div><div class="proof is-locked"><span>03</span><div><strong>First collaborator</strong><small>Planned for the next chapter</small></div><b>SOON</b></div></div></div>
-      <div class="vote-panel"><div class="kicker">06 / Community signal</div><h2>What should<br>CapyCity feel like?</h2><p>One proposal at a time, one clear choice. The result guides the next art direction conversation. Voting is not onchain and no ballot is open yet: until member accounts ship, direction is gathered in the community channels.</p><div class="vote-options" aria-label="CapyCity district directions under discussion"><div class="vote-option">Neon night market <span>PROPOSED</span></div><div class="vote-option">Quiet reading room <span>PROPOSED</span></div><div class="vote-option">Rooftop radio club <span>PROPOSED</span></div></div><div class="vote-footer"><span>Open discussion</span><a class="text-button" href="https://discord.gg/capycrew" target="_blank" rel="noreferrer">Join the conversation</a></div></div>
+  <!-- ===== 05 / YOUR PROOFS ===== -->
+  <section class="band ledger-band" id="rewards" data-district="rewards">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">05 &mdash; Your proofs</p>
+        <h2>Small acts.<br><em>Visible history.</em></h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">Participation should leave a trace you can keep. Proofs are designed as
+          non-transferable badges for moments you helped make happen.</p>
+      </header>
+
+      <div class="table-wrap" data-reveal data-reveal-delay="1">
+        <table class="ledger-table">
+          <caption>Table 5.1 &mdash; Proofs of participation, as designed</caption>
+          <thead>
+            <tr><th>Proof</th><th>How it is earned</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">01 &mdash; Genesis arrival</th><td>Issued when your Capy is minted.</td><td>At mint</td></tr>
+            <tr><th scope="row">02 &mdash; District voice</th><td>Earned by completing Mission 01.</td><td>Planned</td></tr>
+            <tr><th scope="row">03 &mdash; First collaborator</th><td>Planned for the next chapter.</td><td>Soon</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="figure-note" data-reveal>Nothing above is claimable yet. Each proof is published here as it is
+        designed, and dated in the build log on the day it ships.<a class="fn" href="#fn-5"><sup>5</sup></a></p>
     </div>
   </section>
+  <!-- ===== 06 / COMMUNITY SIGNAL ===== -->
+  <section class="band" id="signal" data-district="signal">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">06 &mdash; Community signal</p>
+        <h2>What should<br><em>CapyCity feel like?</em></h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">Voting is not onchain, and no ballot is open yet.</p>
+      </header>
 
-  <section class="hub-section future-section" id="future">
-    <div class="wrap">
-      <div class="hub-section-head"><div><span class="kicker">07 / The route ahead</span><h2>Useful things,<br>when ready.</h2></div><p>Future plans are deliberately staged. Each one ships only after the member loop above is working and documented.</p></div>
-      <div class="future-controls" role="group" aria-label="Filter future plans"><button class="future-filter is-active" data-filter="all" type="button" aria-pressed="true">All plans</button><button class="future-filter" data-filter="next" type="button" aria-pressed="false">Next chapter</button><button class="future-filter" data-filter="explore" type="button" aria-pressed="false">Exploring</button></div>
-      <div class="future-grid"><article class="future-card" data-stage="next"><span class="future-stage">NEXT CHAPTER</span><h3>CapyCity districts</h3><p>Explore themed blocks with stories, broadcasts, and member-led missions.</p><span class="future-quarter">Target: after Genesis launch</span></article><article class="future-card" data-stage="next"><span class="future-stage">NEXT CHAPTER</span><h3>Digital wearables</h3><p>Collect clothing and accessories that give your Capy a living media identity.</p><span class="future-quarter">Target: prototype</span></article><article class="future-card" data-stage="explore"><span class="future-stage">EXPLORING</span><h3>Creator collaborations</h3><p>Open a path for artists, musicians, and designers to build official CapyCrew drops.</p><span class="future-quarter">Needs: contributor model</span></article><article class="future-card" data-stage="explore"><span class="future-stage">EXPLORING</span><h3>CapyCity events</h3><p>Bring the club offline through showcases, pop-ups, and small creative gatherings.</p><span class="future-quarter">Needs: local partners</span></article><article class="future-card" data-stage="explore"><span class="future-stage">EXPLORING</span><h3>Interactive world</h3><p>A lightweight browser world where members can display their Capy and discover stories.</p><span class="future-quarter">Needs: technical brief</span></article><article class="future-card" data-stage="explore"><span class="future-stage">EXPLORING</span><h3>Community grants</h3><p>A transparent pool for member-led art, music, events, and city improvements.</p><span class="future-quarter">Needs: treasury policy</span></article></div>
-      <div class="hub-disclaimer"><span>STATUS NOTE</span><p>Planned features are directional, not promises. Eligibility, timing, and availability will be published before any claim, sale, or launch.</p></div>
+      <div class="notes-grid">
+        <div class="columns" data-reveal data-reveal-delay="1">
+          <p class="lead-para">One proposal at a time, one clear choice. The result guides the next art
+            direction conversation.</p>
+          <h3>Under discussion</h3>
+          <ul class="notes-list">
+            <li><b>Neon night market.</b> Proposed.</li>
+            <li><b>Quiet reading room.</b> Proposed.</li>
+            <li><b>Rooftop radio club.</b> Proposed.</li>
+          </ul>
+        </div>
+
+        <aside class="margin-note" data-reveal data-reveal-delay="2">
+          <p class="note-head">Open discussion</p>
+          <p>Until member accounts ship, direction is gathered in the community channels rather than counted
+            on this page.</p>
+          <p class="note-meta"><a href="https://discord.gg/capycrew" target="_blank" rel="noreferrer">Join the conversation</a></p>
+        </aside>
+      </div>
+    </div>
+  </section>
+  <!-- ===== 07 / THE ROUTE AHEAD ===== -->
+  {#- The plans are the page's only .route-list, so dispatch.js fills its rule on
+      scroll. Each li also carries .future-card[data-stage] because hub.js filters
+      by hiding those - a list item is exactly the right thing for it to hide. -#}
+  <section class="band" id="future" data-district="future">
+    <div class="shell route-grid">
+      <header class="route-intro" data-reveal>
+        <p class="kicker">07 &mdash; The route ahead</p>
+        <h2>Useful things,<br><em>when ready.</em></h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">Future plans are deliberately staged. Each one ships only after the member loop
+          above is working and documented.</p>
+        <div class="future-controls" role="group" aria-label="Filter future plans">
+          <button class="future-filter is-active" data-filter="all" type="button" aria-pressed="true">All plans</button>
+          <button class="future-filter" data-filter="next" type="button" aria-pressed="false">Next chapter</button>
+          <button class="future-filter" data-filter="explore" type="button" aria-pressed="false">Exploring</button>
+        </div>
+      </header>
+
+      <ol class="route-list">
+        <li class="future-card" data-stage="next"><span class="route-no">01</span>
+          <span class="route-body"><b>CapyCity districts</b><em data-status="next">Next chapter</em>
+          <span>Explore themed blocks with stories, broadcasts, and member-led missions. Target: after
+            Genesis launch.</span></span></li>
+        <li class="future-card" data-stage="next"><span class="route-no">02</span>
+          <span class="route-body"><b>Digital wearables</b><em data-status="next">Next chapter</em>
+          <span>Collect clothing and accessories that give your Capy a living media identity. Target:
+            prototype.</span></span></li>
+        <li class="future-card" data-stage="explore"><span class="route-no">03</span>
+          <span class="route-body"><b>Creator collaborations</b><em data-status="exploring">Exploring</em>
+          <span>Open a path for artists, musicians, and designers to build official CapyCrew drops. Needs: a
+            contributor model.</span></span></li>
+        <li class="future-card" data-stage="explore"><span class="route-no">04</span>
+          <span class="route-body"><b>CapyCity events</b><em data-status="exploring">Exploring</em>
+          <span>Bring the club offline through showcases, pop-ups, and small creative gatherings. Needs: local
+            partners.</span></span></li>
+        <li class="future-card" data-stage="explore"><span class="route-no">05</span>
+          <span class="route-body"><b>Interactive world</b><em data-status="exploring">Exploring</em>
+          <span>A lightweight browser world where members can display their Capy and discover stories. Needs:
+            a technical brief.</span></span></li>
+        <li class="future-card" data-stage="explore"><span class="route-no">06</span>
+          <span class="route-body"><b>Community grants</b><em data-status="exploring">Exploring</em>
+          <span>A transparent pool for member-led art, music, events, and city improvements. Needs: a treasury
+            policy.</span></span></li>
+      </ol>
+    </div>
+
+    <div class="shell">
+      <p class="notice" data-reveal><b>Status note.</b> Planned features are directional, not promises.
+        Eligibility, timing, and availability will be published before any claim, sale, or
+        launch.<a class="fn" href="#fn-5"><sup>5</sup></a></p>
+      <div class="cta-row" data-reveal>
+        <a class="btn-ink" href="/mint">{{ 'Enter the mint' if mint_enabled else 'Mint / coming soon' }}</a>
+        <a class="btn-line" href="/about">Read the about page</a>
+      </div>
     </div>
   </section>
 </main>
 {% endblock %}
-{% block scripts %}<script src="{{ url_for('static', path='js/hub.js') }}?v=20260825-1" defer></script>{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', path='js/hub.js') }}?v=20260903-2" defer></script>{% endblock %}

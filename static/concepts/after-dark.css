@@ -1,0 +1,626 @@
+/* ==========================================================================
+   CapyCrew redesign concept - "CapyCity After Dark"
+   One layout + motion system, three switchable visual directions.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  --display: "Archivo", "Space Grotesk", system-ui, sans-serif;
+  --body: "Space Grotesk", system-ui, sans-serif;
+  --mono: "DM Mono", ui-monospace, monospace;
+
+  --shell: 1320px;
+  --gutter: clamp(18px, 4vw, 40px);
+  --band-y: clamp(84px, 11vh, 148px);
+  --radius: 3px;
+  --ease: cubic-bezier(.2, .75, .25, 1);
+}
+
+/* ---------- 01 / AFTER DARK (recommended) ---------- */
+[data-theme="night"] {
+  --ground: #05100e;
+  --ground-2: #0a1a16;
+  --ink: #f2efe7;
+  --ink-2: rgba(242, 239, 231, .72);
+  --ink-3: rgba(242, 239, 231, .44);
+  --line: rgba(242, 239, 231, .13);
+  --line-2: rgba(108, 211, 178, .34);
+  --acid: #d6ff3f;
+  --mint: #6cd3b2;
+  --amber: #ff9e61;
+  --alert: #ff5a45;
+  --panel: rgba(6, 20, 17, .58);
+  --panel-solid: #071613;
+  --on-acid: #05100e;
+  --shadow: 0 26px 60px rgba(0, 0, 0, .55);
+  --city-sky: #05100e;  --city-road: #0c211b;   --city-bld: #1a473a;
+  --city-win: #d6ff3f;  --city-beacon: #d6ff3f; --city-star: #8de5c0;
+  --city-fog-a: 13;     --city-fog-b: 46;
+
+  /* ---- CapyCity, after dark -------------------------------------------
+     The 63 names capycity.js reads off the root once, at init. Written as a
+     night: the sky is nearly black and lifts a little at the horizon so towers
+     silhouette against it, the walls run 1.34:1 (the darkest, which dissolves)
+     to 2.62:1 (the lightest, which stands clear) over that horizon, and the
+     brand acid is spent only where a light is genuinely on - windows, signal
+     greens, awnings, a taxi. Those emitters are unlit MeshBasicMaterial, so
+     they hold full strength against the dim moon rig. */
+  --sky-top: #02080a;   --sky-mid: #061210;    --sky-low: #0a1c19;
+  --sun: #dff0e6;       --cloud: #10312a;
+  --road: #0a1a16;      --road-2: #0e211c;     --mark: #4e8f79;
+  --kerb: #123028;      --kerb-top: #1b4034;
+  --walk: #102a23;      --walk-2: #16342c;     --grate: #050e0c;
+  --bld-a: #14332a;     --bld-b: #1c4437;      --bld-c: #0f2620;
+  --bld-d: #245645;     --bld-e: #0c1f1a;      --bld-f: #2c6650;
+  --trim: #47876f;      --roof: #0a1a16;       --roof-2: #071411;
+  --glass: #0e2b2c;     --glass-lit: #d6ff3f;
+  --awning-a: #d6ff3f;  --awning-b: #6cd3b2;   --awning-c: #ff9e61;
+  --trunk: #123028;     --leaf-a: #1e5c46;     --leaf-b: #14493a;
+  --leaf-c: #2a7358;    --soil: #06120f;
+  --car-1: #6cd3b2;     --car-2: #1c4a3b;      --car-3: #d6ff3f;
+  --car-4: #cfe9dd;     --car-5: #0f2a24;      --car-6: #ff9e61;
+  --taxi: #d6ff3f;      --tyre: #05100e;       --rim: #8de5c0;
+  --chrome: #6f8f85;    --plate: #cfe9dd;
+  --head: #f6ffd9;      --tail: #ff5a45;
+  --post: #05100e;      --lamp-glow: #d6ff3f;
+  --sig-red: #ff5a45;   --sig-amber: #ff9e61;  --sig-green: #6cd3b2;
+  --sig-off: #0a1a16;
+  --capy: #8a6a4c;      --capy-2: #74573e;     --capy-dark: #5a4331;
+  --capy-nose: #2b2118;
+  --fit-1: #d6ff3f;     --fit-2: #6cd3b2;      --fit-3: #ff9e61;
+  --fit-4: #0f2a24;     --fit-5: #cfe9dd;      --fit-6: #ff5a45;
+  --fit-7: #1c4a3b;     --fit-8: #8de5c0;
+  --scrim: linear-gradient(180deg, rgba(5,16,14,.72) 0%, rgba(5,16,14,.34) 34%, rgba(5,16,14,.86) 100%);
+  color-scheme: dark;
+}
+/* ---------- 02 / EDITORIAL (evolution of the current cream site) ---------- */
+[data-theme="paper"] {
+  --ground: #f4f0e8;
+  --ground-2: #fffdf8;
+  --ink: #101010;
+  --ink-2: #4a473f;
+  --ink-3: #857f72;
+  --line: rgba(16, 16, 16, .14);
+  --line-2: rgba(28, 74, 59, .42);
+  --acid: #c2ee2c;
+  --mint: #1c4a3b;
+  --amber: #e4712f;
+  --alert: #e23a2c;
+  --panel: rgba(255, 253, 248, .78);
+  --panel-solid: #fffdf8;
+  --on-acid: #101010;
+  --shadow: 0 22px 44px rgba(16, 16, 16, .16);
+  --city-sky: #e5dfd1;  --city-road: #b6ae9d;   --city-bld: #2a6a54;
+  --city-win: #ffb061;  --city-beacon: #e4712f; --city-star: #8aa79a;
+  --city-fog-a: 16;     --city-fog-b: 52;
+
+  /* ---- CapyCity, daylight ---------------------------------------------
+     The paper direction runs the city as a printed plan in daylight, so this
+     is the palette concept 02 already ships, token for token. Holding the two
+     paper directions to one set of colours is the point: whichever of them is
+     picked, the city underneath is the same city. */
+  --sky-top: #d6e2d7;   --sky-mid: #e6e5da;    --sky-low: #f2ede1;
+  --sun: #fdf3d2;       --cloud: #fffdf8;
+  --road: #cdc7b6;      --road-2: #c4beac;     --mark: #fffdf8;
+  --kerb: #b9b3a2;      --kerb-top: #ded7c6;
+  --walk: #e8e2d4;      --walk-2: #ddd6c6;     --grate: #4a473f;
+  --bld-a: #2a6a54;     --bld-b: #a8836a;      --bld-c: #7d8f7a;
+  --bld-d: #e3dccc;     --bld-e: #1c4a3b;      --bld-f: #b8a98c;
+  --trim: #fffdf8;      --roof: #6f6a5e;       --roof-2: #4a473f;
+  --glass: #16362c;     --glass-lit: #d9e78c;
+  --awning-a: #e4712f;  --awning-b: #1c4a3b;   --awning-c: #c2ee2c;
+  --trunk: #6f6a5e;     --leaf-a: #3f7458;     --leaf-b: #2a6a54;
+  --leaf-c: #5c8f5f;    --soil: #4a473f;
+  --car-1: #101010;     --car-2: #1c4a3b;      --car-3: #e4712f;
+  --car-4: #fffdf8;     --car-5: #7d8f7a;      --car-6: #a8836a;
+  --taxi: #c2ee2c;      --tyre: #2a2823;       --rim: #ded7c6;
+  --chrome: #b9b3a2;    --plate: #fffdf8;
+  --head: #fdf3d2;      --tail: #e4712f;
+  --post: #101010;      --lamp-glow: #fdf3d2;
+  --sig-red: #cf4526;   --sig-amber: #e4a12f;  --sig-green: #4f9e64;
+  --sig-off: #3a3830;
+  --capy: #a8836a;      --capy-2: #8f6c55;     --capy-dark: #6f5342;
+  --capy-nose: #3a2e27;
+  --fit-1: #e4712f;     --fit-2: #1c4a3b;      --fit-3: #c2ee2c;
+  --fit-4: #101010;     --fit-5: #7d8f7a;      --fit-6: #fffdf8;
+  --fit-7: #d8cdb4;     --fit-8: #4a473f;
+  /* The wash has to hold at its thinnest point, not its average: the scrim is
+     fixed and the page scrolls through it, so every line of type eventually
+     passes the middle stop. At .28 the daylight city ate the 9.5px mono - acid
+     on cream over a lit street is nothing - so the floor comes up to .66, which
+     is close to the .78 the Dispatch plate settled on for the same reason. The
+     city is still plainly a city underneath; it is just printed, not lit. */
+  --scrim: linear-gradient(180deg, rgba(244,240,232,.8) 0%, rgba(244,240,232,.66) 38%, rgba(244,240,232,.93) 100%);
+  color-scheme: light;
+}
+
+/* ---------- 03 / CHROME (cool, product-led, metallic) ---------- */
+[data-theme="chrome"] {
+  --ground: #08090b;
+  --ground-2: #12141a;
+  --ink: #f5f6f8;
+  --ink-2: rgba(245, 246, 248, .66);
+  --ink-3: rgba(245, 246, 248, .38);
+  --line: rgba(245, 246, 248, .11);
+  --line-2: rgba(245, 246, 248, .26);
+  --acid: #d6ff3f;
+  --mint: #9bb0c4;
+  --amber: #cfd6de;
+  --alert: #ff5a45;
+  --panel: rgba(18, 20, 26, .6);
+  --panel-solid: #0d0f13;
+  --on-acid: #08090b;
+  --shadow: 0 26px 60px rgba(0, 0, 0, .6);
+  --city-sky: #08090b;  --city-road: #14171c;   --city-bld: #23272f;
+  --city-win: #d6ff3f;  --city-beacon: #d6ff3f; --city-star: #9bb0c4;
+  --city-fog-a: 12;     --city-fog-b: 44;
+
+  /* ---- CapyCity, graphite ---------------------------------------------
+     Same night rig as 01, no hue. The whole city is neutral and the only
+     saturated things in frame are the ones emitting - acid windows, signal
+     heads, brake lights - plus the crew, who stay brown because they are the
+     characters and desaturating them would cost the page its subject. Walls
+     spread 1.2:1 to 1.89:1 over the horizon; the flat 6-role fallback skyline
+     above is still the old 1.32:1 and wants raising separately. */
+  --sky-top: #030406;   --sky-mid: #070809;    --sky-low: #101319;
+  --sun: #dfe5ee;       --cloud: #191d24;
+  --road: #0f1115;      --road-2: #13161b;     --mark: #7f8b99;
+  --kerb: #171a20;      --kerb-top: #23272f;
+  --walk: #14171c;      --walk-2: #191d23;     --grate: #06070a;
+  --bld-a: #1b1e25;     --bld-b: #262a33;      --bld-c: #16181d;
+  --bld-d: #2f353f;     --bld-e: #101318;      --bld-f: #3d444f;
+  --trim: #5d6672;      --roof: #0c0e12;       --roof-2: #090a0e;
+  --glass: #1b2129;     --glass-lit: #d6ff3f;
+  --awning-a: #d6ff3f;  --awning-b: #9bb0c4;   --awning-c: #4a5260;
+  --trunk: #23272f;     --leaf-a: #2d3a3a;     --leaf-b: #26302f;
+  --leaf-c: #3a4747;    --soil: #0c0e12;
+  --car-1: #cfd6de;     --car-2: #3a4250;      --car-3: #d6ff3f;
+  --car-4: #9bb0c4;     --car-5: #12141a;      --car-6: #5c6675;
+  --taxi: #d6ff3f;      --tyre: #08090b;       --rim: #b6bfca;
+  --chrome: #cfd6de;    --plate: #eef1f5;
+  --head: #ffffff;      --tail: #ff5a45;
+  --post: #0c0e12;      --lamp-glow: #eef1f5;
+  --sig-red: #ff5a45;   --sig-amber: #ffb066;  --sig-green: #7ee0a5;
+  --sig-off: #14171c;
+  --capy: #8f7358;      --capy-2: #79604a;     --capy-dark: #5e4a39;
+  --capy-nose: #2a231c;
+  --fit-1: #d6ff3f;     --fit-2: #9bb0c4;      --fit-3: #eef1f5;
+  --fit-4: #1b1e25;     --fit-5: #ff5a45;      --fit-6: #5c6675;
+  --fit-7: #cfd6de;     --fit-8: #3a4250;
+  --scrim: linear-gradient(180deg, rgba(8,9,11,.74) 0%, rgba(8,9,11,.36) 34%, rgba(8,9,11,.88) 100%);
+  color-scheme: dark;
+}
+/* ==================== BASE ==================== */
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font: 400 16px/1.55 var(--body);
+  overflow-x: hidden;
+  transition: background .5s var(--ease), color .5s var(--ease);
+}
+
+a { color: inherit; text-decoration: none; }
+img, video { display: block; max-width: 100%; }
+
+:focus-visible { outline: 2px solid var(--acid); outline-offset: 3px; border-radius: 2px; }
+
+.shell { width: min(var(--shell), calc(100% - var(--gutter) * 2)); margin-inline: auto; }
+
+/* Display type: Archivo's width axis gives the wordmark real presence. */
+h1, h2, .wordmark, .foot-ghost {
+  font-family: var(--display);
+  font-variation-settings: "wdth" 112;
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: .88;
+  margin: 0;
+  text-wrap: balance;
+}
+
+h1 { font-size: clamp(52px, 7.4vw, 122px); letter-spacing: -.045em; }
+h1 em { font-style: normal; color: var(--acid); }
+h2 { font-size: clamp(36px, 4.6vw, 74px); }
+
+.eyebrow, .kicker, .dock-label, .foot-label, .chip, .hint {
+  font: 500 10.5px/1.4 var(--mono);
+  letter-spacing: .19em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.eyebrow { color: var(--mint); }
+.eyebrow i { color: var(--ink-3); font-style: normal; padding: 0 4px; }
+.kicker { color: var(--acid); }
+
+.lede { max-width: 46ch; margin: 22px 0 0; font-size: clamp(16px, 1.25vw, 19px); color: var(--ink-2); }
+.band-note { max-width: 44ch; margin: 20px 0 0; color: var(--ink-2); font-size: 15px; }
+/* ==================== ENVIRONMENT ====================
+   The city is the page background, not a boxed panel. Content sits above it
+   on its own layer, so nothing can ever collide with the headline. */
+/* The plate carries the sky itself, so the stage is the right colour from the
+   first paint - before three.js has compiled a shader, and behind the scene's
+   own exponential fog, which dissolves the far end of the avenue into exactly
+   these three stops. */
+#city-stage {
+  position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  background: linear-gradient(180deg,
+    var(--sky-top) 0%, var(--sky-mid) 44%, var(--sky-low) 100%);
+}
+#city-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.city-scrim { position: absolute; inset: 0; z-index: 2; background: var(--scrim); }
+
+.city-grain {
+  position: absolute; inset: 0; z-index: 3; opacity: .5; mix-blend-mode: overlay;
+  background-image: repeating-linear-gradient(0deg, transparent 0 2px, rgba(255,255,255,.028) 2px 3px);
+}
+
+/* CSS-only skyline: shown when WebGL is unavailable or motion is reduced. */
+.city-fallback {
+  position: absolute; inset: auto 0 0; z-index: 1; height: 62%; opacity: .5;
+  background:
+    linear-gradient(90deg,
+      var(--city-bld) 0 7%, transparent 7% 10%, var(--city-bld) 10% 19%, transparent 19% 23%,
+      var(--city-bld) 23% 33%, transparent 33% 37%, var(--city-bld) 37% 48%, transparent 48% 52%,
+      var(--city-bld) 52% 63%, transparent 63% 67%, var(--city-bld) 67% 79%, transparent 79% 83%,
+      var(--city-bld) 83% 100%);
+  clip-path: polygon(0 100%, 0 54%, 7% 54%, 7% 30%, 19% 30%, 19% 66%, 33% 66%, 33% 17%,
+    48% 17%, 48% 60%, 63% 60%, 63% 34%, 79% 34%, 79% 8%, 90% 8%, 90% 44%, 100% 44%, 100% 100%);
+}
+#city-stage[data-renderer="webgl"] .city-fallback { display: none; }
+/* capycity.js claims the plate early, before the context is confirmed, so a
+   failure after that point has to bring the skyline back rather than leave an
+   empty gradient. Same specificity as the rule above, so it has to sit after it. */
+#city-stage.is-dead .city-fallback { display: block; opacity: .62; }
+
+.flow, .nav, .foot { position: relative; z-index: 1; }
+
+/* ==================== NAV ==================== */
+.nav { position: sticky; top: 0; z-index: 30; backdrop-filter: blur(14px); background: var(--panel);
+  border-bottom: 1px solid var(--line); }
+.nav-inner { width: min(var(--shell), calc(100% - var(--gutter) * 2)); margin-inline: auto;
+  display: flex; align-items: center; gap: 32px; height: 62px; }
+
+.wordmark { position: relative; font-size: 18px; letter-spacing: .1em; font-variation-settings: "wdth" 96; }
+.wordmark i { position: absolute; right: -9px; top: 4px; width: 5px; height: 5px; background: var(--acid);
+  border-radius: 50%; animation: pulse 2.6s var(--ease) infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.7); } }
+
+.nav-links { display: flex; gap: 26px; margin-left: auto;
+  font: 500 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); }
+.nav-links a { position: relative; padding: 4px 0; transition: color .25s; }
+.nav-links a::after { content: ""; position: absolute; left: 0; bottom: 0; width: 0; height: 1px;
+  background: var(--acid); transition: width .3s var(--ease); }
+.nav-links a:hover { color: var(--ink); } .nav-links a:hover::after { width: 100%; }
+.nav-cta { border: 1px solid var(--line-2); padding: 9px 14px; color: var(--ink);
+  font: 500 10.5px var(--mono); letter-spacing: .15em; text-transform: uppercase;
+  transition: background .25s, border-color .25s, color .25s; }
+.nav-cta em { font-style: normal; color: var(--ink-3); }
+.nav-cta:hover { background: var(--acid); border-color: var(--acid); color: var(--on-acid); }
+.nav-cta:hover em { color: var(--on-acid); opacity: .7; }
+
+/* ==================== BUTTONS ==================== */
+.btn { display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 22px;
+  border: 1px solid transparent; font: 500 11.5px var(--mono); letter-spacing: .14em;
+  text-transform: uppercase; transition: transform .28s var(--ease), background .28s, color .28s,
+  border-color .28s, box-shadow .28s; }
+.btn-primary { background: var(--acid); color: var(--on-acid); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(214, 255, 63, .3); }
+.btn-ghost { border-color: var(--line-2); color: var(--ink); }
+.btn-ghost em { font-style: normal; color: var(--ink-3); }
+.btn-ghost:hover { transform: translateY(-2px); border-color: var(--acid); background: color-mix(in srgb, var(--acid) 12%, transparent); }
+
+/* ==================== 01 / HERO ==================== */
+.hero { position: relative; display: flex; align-items: center; min-height: min(92svh, 900px);
+  padding: clamp(48px, 8vh, 96px) 0 clamp(64px, 9vh, 110px); }
+
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 400px);
+  align-items: center; gap: clamp(32px, 5vw, 76px); }
+
+.hero-copy h1 { margin: 18px 0 0; }
+
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+
+.spec-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 44px 0 0; border-top: 1px solid var(--line); max-width: 560px; }
+.spec-strip > div { padding: 16px 18px 0 0; border-right: 1px solid var(--line); }
+.spec-strip > div:last-child { border-right: 0; }
+.spec-strip dt { font: 500 10px var(--mono); letter-spacing: .17em; text-transform: uppercase; color: var(--ink-3); }
+.spec-strip dd { margin: 8px 0 0; font-family: var(--display); font-variation-settings: "wdth" 100;
+  font-weight: 700; font-size: clamp(20px, 2vw, 27px); letter-spacing: -.03em; }
+.spec-strip dd span { color: var(--mint); font-size: .62em; letter-spacing: 0; }
+
+/* The character sits in its own grid column - it can never overlap the type. */
+.hero-portal { justify-self: end; width: 100%; }
+.portal { position: relative; aspect-ratio: 3 / 4; overflow: hidden;
+  border: 1px solid var(--line-2); border-radius: 210px 210px var(--radius) var(--radius);
+  background: var(--ground-2); box-shadow: var(--shadow); }
+.portal video { width: 100%; height: 100%; object-fit: cover; }
+.portal-scan { position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,.045) 3px 4px),
+  radial-gradient(ellipse at 50% 108%, color-mix(in srgb, var(--acid) 26%, transparent), transparent 58%); }
+.portal-ring { position: absolute; inset: -1px; border-radius: inherit; pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--acid) 34%, transparent); }
+
+.portal-tag { display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--line);
+  font: 500 10.5px var(--mono); letter-spacing: .15em; text-transform: uppercase; }
+.portal-tag b { color: var(--acid); } .portal-tag span { color: var(--ink-3); }
+
+.scroll-hint { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 10px; color: var(--ink-3);
+  font: 500 10px var(--mono); letter-spacing: .22em; text-transform: uppercase; }
+.scroll-hint span { display: block; width: 1px; height: 34px; background: linear-gradient(var(--acid), transparent);
+  animation: drop 2.2s var(--ease) infinite; transform-origin: top; }
+@keyframes drop { 0% { transform: scaleY(0); opacity: 0; } 40% { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(1) translateY(34px); opacity: 0; } }
+
+/* ==================== DATA STRIP (replaces the red marquee) ==================== */
+.datastrip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  background: var(--panel); backdrop-filter: blur(12px); }
+.datastrip-inner { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.datastrip-inner > div { padding: 18px 20px 18px 0; border-right: 1px solid var(--line); }
+.datastrip-inner > div + div { padding-left: 20px; }
+.datastrip-inner > div:last-child { border-right: 0; }
+.datastrip span { display: block; font: 500 9.5px var(--mono); letter-spacing: .2em;
+  text-transform: uppercase; color: var(--ink-3); }
+.datastrip strong { display: flex; align-items: center; gap: 8px; margin-top: 7px;
+  font: 500 14px var(--mono); letter-spacing: .02em; }
+.datastrip .live strong { color: var(--acid); }
+.datastrip .live i { width: 6px; height: 6px; border-radius: 50%; background: var(--acid);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--acid) 22%, transparent);
+  animation: pulse 2.4s var(--ease) infinite; }
+
+/* ==================== BANDS ==================== */
+.band { position: relative; padding: var(--band-y) 0; }
+.band + .band { border-top: 1px solid var(--line); }
+.band-head { max-width: 760px; }
+.band-head .kicker { margin-bottom: 16px; }
+.band-head-row { display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 40px; max-width: none; }
+.band-head-row .band-note { margin: 0 0 6px; }
+/* ==================== 02 / TRANSMISSION DECK ==================== */
+.deck { display: grid; grid-template-columns: minmax(0, 1fr) 276px; gap: 18px; margin-top: 48px; }
+
+.deck-stage { position: relative; margin: 0; aspect-ratio: 16 / 9; overflow: hidden;
+  border: 1px solid var(--line-2); background: var(--ground-2); box-shadow: var(--shadow); }
+.deck-stage video { width: 100%; height: 100%; object-fit: cover; transition: opacity .32s var(--ease); }
+.deck-stage.is-swapping video { opacity: 0; }
+.deck-frame { position: absolute; inset: 10px; pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--acid) 20%, transparent); }
+.deck-frame::before, .deck-frame::after { content: ""; position: absolute; width: 16px; height: 16px;
+  border: 1px solid var(--acid); }
+.deck-frame::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.deck-frame::after { right: -1px; bottom: -1px; border-left: 0; border-top: 0; }
+
+.deck-stage figcaption { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; padding: 26px 22px 18px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, .82)); color: #f2efe7; }
+.deck-stage figcaption b { font: 500 12px var(--mono); letter-spacing: .16em; text-transform: uppercase;
+  color: var(--acid); }
+.deck-stage figcaption span { font: 500 11px var(--mono); letter-spacing: .1em; color: rgba(242, 239, 231, .66); }
+
+.deck-list { display: grid; grid-auto-rows: 1fr; gap: 10px; }
+.deck-list button { position: relative; display: block; padding: 0; overflow: hidden; cursor: pointer;
+  border: 1px solid var(--line); background: var(--ground-2); text-align: left;
+  transition: border-color .28s, transform .28s var(--ease); }
+.deck-list video { width: 100%; height: 100%; object-fit: cover; opacity: .42;
+  transition: opacity .3s, transform .5s var(--ease); }
+.deck-list b { position: absolute; left: 12px; bottom: 10px; font: 500 10px var(--mono);
+  letter-spacing: .16em; text-transform: uppercase; color: #f2efe7;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, .9); }
+.deck-list button:hover { border-color: var(--line-2); transform: translateX(-3px); }
+.deck-list button:hover video { opacity: .72; transform: scale(1.04); }
+.deck-list button.is-active { border-color: var(--acid); }
+.deck-list button.is-active video { opacity: .9; }
+.deck-list button.is-active::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--acid); }
+
+/* ==================== 03 / CASTING REEL ==================== */
+.reel { margin-top: 52px; padding: 8px 0 26px; overflow-x: auto; overscroll-behavior-inline: contain;
+  scroll-snap-type: x proximity; scrollbar-width: none; cursor: grab; }
+.reel::-webkit-scrollbar { display: none; }
+.reel.is-dragging { cursor: grabbing; scroll-snap-type: none; }
+.reel-track { display: flex; gap: 18px; width: max-content; padding-inline: max(var(--gutter), calc((100vw - var(--shell)) / 2)); }
+.cast { position: relative; flex: none; width: min(324px, 74vw); margin: 0; overflow: hidden;
+  scroll-snap-align: center; border: 1px solid var(--line); background: var(--ground-2);
+  transform: scale(.955); filter: saturate(.7) brightness(.74);
+  transition: transform .55s var(--ease), filter .55s var(--ease), border-color .55s, box-shadow .55s; }
+.cast img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.cast figcaption { display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  padding: 15px 16px; border-top: 1px solid var(--line); }
+.cast figcaption b { font-family: var(--display); font-variation-settings: "wdth" 100; font-weight: 700;
+  font-size: 19px; letter-spacing: -.02em; }
+.cast figcaption span { font: 500 10px var(--mono); letter-spacing: .13em; text-transform: uppercase;
+  color: var(--ink-3); }
+
+/* The card nearest the centre of the viewport is the one in focus. */
+.cast.is-focus { transform: scale(1); filter: none; border-color: var(--line-2); box-shadow: var(--shadow); }
+.cast.is-focus::after { content: ""; position: absolute; left: 12px; top: 12px; width: 22px; height: 22px;
+  border-left: 1px solid var(--acid); border-top: 1px solid var(--acid); }
+
+.reel-foot { display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  flex-wrap: wrap; margin-top: 14px; }
+.hint { color: var(--ink-3); }
+
+/* ==================== 04 / PRODUCT BOARD ==================== */
+.board { position: relative; margin-top: 52px; min-height: clamp(430px, 52vw, 660px);
+  overflow: hidden; border: 1px solid var(--line); background:
+    radial-gradient(ellipse at 50% 10%, color-mix(in srgb, var(--mint) 12%, transparent), transparent 58%),
+    var(--ground-2);
+  perspective: 1500px; }
+
+.board-meta { position: absolute; z-index: 5; inset: 18px 20px auto; display: flex;
+  justify-content: space-between; color: var(--mint); font: 500 9.5px var(--mono); letter-spacing: .18em;
+  text-transform: uppercase; }
+
+.board-floor { position: absolute; inset: 38% 0 0; opacity: .3;
+  background-image: linear-gradient(color-mix(in srgb, var(--mint) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--mint) 55%, transparent) 1px, transparent 1px);
+  background-size: 46px 46px;
+  transform: perspective(560px) rotateX(64deg); transform-origin: center top;
+  mask-image: linear-gradient(rgba(0,0,0,.9), transparent 78%); }
+.board-glow { position: absolute; left: 50%; top: 52%; width: 62%; aspect-ratio: 2 / 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--acid) 20%, transparent), transparent 66%); }
+
+.board figure { position: absolute; margin: 0; transform-style: preserve-3d; }
+.board figure img { border: 1px solid var(--line-2); background: var(--ground);
+  box-shadow: 22px 30px 60px rgba(0, 0, 0, .48); }
+/* Pointer tilt is driven by --tx / --ty, set in JS. Falls back to a static angle. */
+.board-desktop { left: 7%; top: 15%; width: 66%;
+  transform: rotateY(calc(-11deg + var(--tx, 0deg))) rotateX(calc(5deg + var(--ty, 0deg))) rotateZ(-1.6deg); }
+.board-mobile { right: 8%; bottom: 8%; width: 17.5%;
+  transform: rotateY(calc(-17deg + var(--tx, 0deg))) rotateX(calc(5deg + var(--ty, 0deg))) rotateZ(3.4deg); }
+.board figure { transition: transform .5s var(--ease); }
+
+.chip { display: block; margin-bottom: 9px; color: var(--acid); }
+
+.board-pin { position: absolute; z-index: 4; padding: 8px 11px; border: 1px solid var(--line-2);
+  background: var(--panel); backdrop-filter: blur(6px); color: var(--mint);
+  font: 500 9.5px var(--mono); letter-spacing: .16em; text-transform: uppercase; }
+.pin-a { top: 27%; right: 6%; transform: rotate(7deg); }
+.pin-b { left: 6%; bottom: 12%; transform: rotate(-4deg); }
+
+/* ==================== 05 / ROUTE ==================== */
+.route-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1fr);
+  gap: clamp(36px, 6vw, 88px); align-items: start; }
+.route-intro .kicker { margin-bottom: 16px; }
+
+.route-list { position: relative; list-style: none; margin: 0; padding: 0; }
+.route-list::before { content: ""; position: absolute; left: 43px; top: 12px; bottom: 12px; width: 1px;
+  background: var(--line); }
+/* Scroll-driven progress line: --route-progress is set in JS (0 -> 1). */
+.route-list::after { content: ""; position: absolute; left: 43px; top: 12px; width: 1px;
+  height: calc((100% - 24px) * var(--route-progress, 0)); background: var(--acid);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--acid) 60%, transparent); transition: height .2s linear; }
+
+.route-list li { position: relative; display: grid; grid-template-columns: 30px 26px minmax(0, 1fr);
+  align-items: start; gap: 0; padding: 24px 0; border-bottom: 1px solid var(--line); }
+.route-list li:first-child { border-top: 1px solid var(--line); }
+
+.route-index { font: 500 11px var(--mono); letter-spacing: .1em; color: var(--ink-3); padding-top: 6px; }
+.route-dot { position: relative; z-index: 1; width: 9px; height: 9px; margin: 9px 0 0 -4px;
+  border-radius: 50%; background: var(--ground); border: 1px solid var(--line-2); justify-self: center; }
+.route-list li.is-in .route-dot { background: var(--acid); border-color: var(--acid); }
+
+.route-body { display: grid; gap: 6px; padding-left: 18px; }
+.route-body b { font-family: var(--display); font-variation-settings: "wdth" 104; font-weight: 700;
+  font-size: clamp(21px, 2.1vw, 29px); letter-spacing: -.03em; }
+.route-body > span { color: var(--ink-2); font-size: 14.5px; }
+.route-body em { justify-self: start; order: -1; padding: 4px 9px; border: 1px solid currentColor;
+  font: 500 9.5px var(--mono); letter-spacing: .18em; text-transform: uppercase; font-style: normal; }
+[data-status="live"] { color: var(--acid); }
+[data-status="next"] { color: var(--mint); }
+[data-status="planned"] { color: var(--ink-2); }
+[data-status="exploring"] { color: var(--ink-3); }
+/* ==================== FOOTER ==================== */
+.foot { position: relative; overflow: hidden; padding: clamp(64px, 8vw, 104px) 0 34px;
+  border-top: 1px solid var(--line); background: var(--panel-solid); }
+.foot-ghost { position: absolute; left: 50%; bottom: -4%; transform: translateX(-50%);
+  font-size: clamp(90px, 18vw, 260px); font-variation-settings: "wdth" 118; letter-spacing: -.06em;
+  color: var(--ink); opacity: .045; pointer-events: none; white-space: nowrap; }
+.foot-grid { position: relative; display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 44px; }
+.foot p { margin: 14px 0 0; color: var(--ink-2); font-size: 14.5px; }
+.foot small { display: block; margin-top: 18px; color: var(--ink-3); font: 500 10.5px var(--mono);
+  letter-spacing: .1em; }
+.foot-label { color: var(--acid); margin: 0 0 16px; }
+.foot-grid > div:not(:first-child) a { display: block; padding: 6px 0; color: var(--ink-2);
+  font-size: 14px; transition: color .22s, transform .22s var(--ease); }
+.foot-grid > div:not(:first-child) a:hover { color: var(--ink); transform: translateX(4px); }
+.socials { display: flex; gap: 8px; flex-wrap: wrap; }
+.socials a { border: 1px solid var(--line); padding: 9px 13px !important; transform: none !important;
+  font: 500 10px var(--mono); letter-spacing: .14em; text-transform: uppercase;
+  transition: border-color .25s, color .25s; }
+.socials a:hover { border-color: var(--acid); color: var(--acid); }
+
+/* ==================== DISTRICT RAIL ==================== */
+.district-rail { position: fixed; z-index: 25; left: 22px; top: 50%; transform: translateY(-50%);
+  display: grid; gap: 2px; padding-left: 14px; }
+.rail-progress { position: absolute; left: 0; top: 4px; bottom: 4px; width: 1px; background: var(--line); }
+.rail-progress i { position: absolute; left: -1px; top: 0; width: 3px; background: var(--acid);
+  height: calc(100% * var(--page-progress, 0)); transition: height .18s linear; }
+.district-rail a { display: flex; align-items: baseline; gap: 8px; padding: 6px 0;
+  font: 500 9.5px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3);
+  transition: color .25s, transform .25s var(--ease); }
+.district-rail a b { font-weight: 500; }
+/* The district name unfolds only where there is margin to unfold into. The rail
+   puts a name at x=57 and the longest of them runs to about 107px, while the
+   1320px shell leaves just 60px at 1440px - so the name landed on top of the
+   lede. It needs a 1540px viewport ((1540 - 1320) / 2 = 110) before it can open.
+   Below that the name is kept for screen readers but pulled out of layout: left
+   in place at opacity 0 it still carried its box, which put five invisible nav
+   links over the first 47px of the paragraph. */
+.district-rail a span { position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (min-width: 1540px) {
+  .district-rail a span { position: static; width: auto; height: auto;
+    overflow: visible; clip-path: none; opacity: 0; transform: translateX(-6px);
+    transition: opacity .3s var(--ease), transform .3s var(--ease); }
+  .district-rail:hover a span, .district-rail a.is-here span { opacity: 1; transform: none; }
+}
+.district-rail a:hover, .district-rail a.is-here { color: var(--acid); transform: translateX(3px); }
+
+/* ==================== CONCEPT DOCK ==================== */
+.theme-dock { position: fixed; z-index: 40; right: 20px; bottom: 20px; display: grid; gap: 6px;
+  padding: 14px; border: 1px solid var(--line-2); background: var(--panel);
+  backdrop-filter: blur(16px); box-shadow: var(--shadow); }
+.dock-label { color: var(--ink-3); margin-bottom: 2px; }
+.theme-dock button { cursor: pointer; border: 1px solid var(--line); background: transparent;
+  color: var(--ink-2); padding: 9px 14px; text-align: left; font: 500 10.5px var(--mono);
+  letter-spacing: .13em; text-transform: uppercase; transition: all .25s var(--ease); }
+.theme-dock button:hover { border-color: var(--line-2); color: var(--ink); }
+.theme-dock button.is-active { background: var(--acid); border-color: var(--acid); color: var(--on-acid); }
+/* ==================== REVEAL: clip wipe + rise, staggered ==================== */
+[data-reveal] { opacity: 0; transform: translateY(16px); clip-path: inset(0 0 100% 0);
+  transition: opacity .62s var(--ease), transform .62s var(--ease), clip-path .72s var(--ease); }
+[data-reveal].is-in { opacity: 1; transform: none; clip-path: inset(0 0 -12% 0); }
+[data-reveal-delay="1"] { transition-delay: .07s; }
+[data-reveal-delay="2"] { transition-delay: .14s; }
+[data-reveal-delay="3"] { transition-delay: .21s; }
+[data-reveal-delay="4"] { transition-delay: .28s; }
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 1180px) {
+  .district-rail { display: none; }
+  .deck { grid-template-columns: minmax(0, 1fr); }
+  .deck-list { grid-auto-flow: column; grid-auto-columns: minmax(140px, 1fr); grid-auto-rows: 84px; }
+}
+
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .hero-portal { justify-self: stretch; max-width: 420px; }
+  .portal { aspect-ratio: 4 / 3; border-radius: var(--radius); }
+  .route-grid, .foot-grid { grid-template-columns: minmax(0, 1fr); }
+  .board-desktop { left: 5%; top: 17%; width: 84%; }
+  .board-mobile { right: 6%; bottom: 6%; width: 26%; }
+}
+
+@media (max-width: 760px) {
+  .nav-links { display: none; }
+  .nav-cta { margin-left: auto; }
+  .datastrip-inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .datastrip-inner > div { border-bottom: 1px solid var(--line); }
+  .datastrip-inner > div:nth-child(2n) { border-right: 0; }
+  .datastrip-inner > div:nth-last-child(-n+2) { border-bottom: 0; }
+  .spec-strip { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .spec-strip > div:last-child { grid-column: span 2; border-top: 1px solid var(--line); }
+  .band-head-row { display: block; }
+  .band-head-row .band-note { margin-top: 20px; }
+  .deck-list { grid-auto-columns: minmax(116px, 1fr); grid-auto-rows: 70px; overflow-x: auto; }
+  .scroll-hint { display: none; }
+  .theme-dock { right: 12px; bottom: 12px; padding: 10px; }
+  .theme-dock button { padding: 8px 10px; font-size: 9.5px; }
+}
+
+/* ==================== REDUCED MOTION ==================== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important; }
+  [data-reveal] { opacity: 1; transform: none; clip-path: none; }
+  .cast { transform: none; filter: none; }
+}

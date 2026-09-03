@@ -1,10 +1,119 @@
 {% extends "base.html" %}
 {% block title %}Mint - Coming soon - CAPYCREW{% endblock %}
+
+{#- The holding page for the mint: the same shell and the same print apparatus as
+    the rest of the issue, with no widget in it. No per-page stylesheet and no
+    per-page script - dispatch.css carries .front, .figures, .notes-grid and
+    .notice, and dispatch.js reveals [data-reveal] / [data-rule] on sight.
+
+    Three districts, so this page prints no folio rail: the rail earns its margin
+    at four entries and above, and dispatch.css hides it under 1410px anyway. -#}
 {% block content %}
-<section class="page-hero"><div class="wrap"><div class="eyebrow">CapyCrew / Mint portal</div><h1>THE MINT<br><em>IS NOT OPEN.</em></h1><p class="lede">The Genesis mint has not started yet. When it does, this is where you will claim your Capy.</p></div></section>
-<main class="section"><div class="wrap paper">
-<section class="paper-section"><div class="paper-kicker">01 / What is coming</div><h2>10,000 characters,<br>one door.</h2><p>CapyCrew Genesis is a 10,000-piece collectible character collection on {{ mint_chain_name }}. Each Capy is a digital identity and a membership pass into CapyCity.</p><p>The mint portal opens here on this same address. Nothing is claimable before then, and no other contract, form, or wallet request is official.</p></section>
-<section class="paper-section"><div class="paper-kicker">02 / While you wait</div><h2>Get to know<br>the crew.</h2><ul><li><strong>Read the whitepaper:</strong> collection details, the CapyCity direction, and the roadmap.</li><li><strong>Open the Crew Hub:</strong> preview the member experience, missions, and rewards.</li><li><strong>Follow the official channels:</strong> the launch signal goes out on X, Telegram, and Discord first.</li></ul><div class="cta-row"><a class="btn primary" href="/hub">Open the Crew Hub</a><a class="btn" href="/whitepaper">Read the whitepaper</a></div></section>
-<section class="paper-section"><div class="paper-kicker">03 / Stay safe</div><h2>Verify before<br>you connect.</h2><p>CapyCrew will never ask for a seed phrase, and there is no presale, allowlist payment, or private mint link. Until the portal is live, treat any wallet request claiming to be a CapyCrew mint as a scam.</p><p>Announcements only come from the accounts linked in the footer of this site.</p></section>
-</div></main>
+<main class="issue">
+
+  <!-- ===== 01 / FRONT ===== -->
+  <section class="front" id="front" data-district="front">
+    <div class="shell front-grid">
+
+      <div class="front-lead">
+        <p class="kicker" data-reveal>01 &mdash; CapyCrew <i>/</i> Mint portal</p>
+        <h1 data-reveal data-reveal-delay="1">The mint<br><em>is not open.</em></h1>
+        <span class="rule" data-rule data-reveal-delay="2" aria-hidden="true"></span>
+        <p class="standfirst" data-reveal data-reveal-delay="2">The Genesis mint has not started yet. When it
+          does, this is where you will claim your Capy.</p>
+        <p class="byline" data-reveal data-reveal-delay="3">Filed from CapyCity <i>/</i> {{ mint_chain_name }}
+          <i>/</i> 10,000 characters</p>
+        {#- No bare "btn" token: site.css still owns .btn and would print its 4px
+            offset shadow through, which dispatch.css sets nothing to beat. -#}
+        <div class="cta-row" data-reveal data-reveal-delay="3">
+          <a class="btn-ink" href="/hub">Open the Crew Hub</a>
+          <a class="btn-line" href="/whitepaper">Read the whitepaper</a>
+        </div>
+      </div>
+
+      <figure class="plate front-plate" data-reveal data-reveal-delay="2">
+        <div class="plate-frame">
+          <video autoplay muted loop playsinline preload="metadata"
+                 src="/media/videos/CapyCrew_logo_forms_on_screen_202608191209.mp4"></video>
+          <span class="reg reg-tl" aria-hidden="true"></span><span class="reg reg-tr" aria-hidden="true"></span>
+          <span class="reg reg-bl" aria-hidden="true"></span><span class="reg reg-br" aria-hidden="true"></span>
+        </div>
+        <figcaption><b>Fig. 1</b><span>Holding card &mdash; the identity system forms.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===== STANDING FIGURES: what is settled while the mint waits ===== -->
+  {#- The unit lives in the dt, never appended to the dd: .figures-inner tracks
+      are minmax(0, 1fr), so a dd wider than a fifth of the shell spills over its
+      neighbour's rule instead of the grid growing. -#}
+  <div class="figures" data-reveal>
+    <dl class="shell figures-inner">
+      <div><dt>Collection</dt><dd data-count="10000">10,000</dd></div>
+      <div><dt>Network</dt><dd>{{ mint_chain_name }}</dd></div>
+      <div><dt>Presale</dt><dd>None</dd></div>
+      <div><dt>Allowlist <span>payment</span></dt><dd>None</dd></div>
+      <div><dt>Mint</dt><dd class="is-soon">Not open<a class="fn" href="#fn-2" id="fnref-2"><sup>2</sup></a></dd></div>
+    </dl>
+  </div>
+
+  <!-- ===== 02 / WHAT IS COMING ===== -->
+  <section class="band" id="coming" data-district="coming">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">02 &mdash; What is coming</p>
+        <h2>10,000 characters,<br><em>one door.</em></h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">The mint portal opens here on this same address.</p>
+      </header>
+
+      {#- .columns is a real two-column measure with a column rule; .margin-note
+          sits beside it and goes sticky above 1100px. h3 inside .columns is
+          re-set as a mono forest subhead, so it does not need a class. -#}
+      <div class="notes-grid">
+        <div class="columns" data-reveal data-reveal-delay="1">
+          <p class="lead-para">CapyCrew Genesis is a 10,000-piece collectible character collection on
+            {{ mint_chain_name }}. Each Capy is a digital identity and a membership pass into
+            CapyCity.<a class="fn" href="#fn-3" id="fnref-3"><sup>3</sup></a></p>
+
+          <h3>While you wait</h3>
+          <p>Get to know the crew.</p>
+          <ul class="notes-list">
+            <li><b>Read the whitepaper:</b> collection details, the CapyCity direction, and the roadmap.</li>
+            <li><b>Open the Crew Hub:</b> preview the member experience, missions, and rewards.</li>
+            <li><b>Follow the official channels:</b> the launch signal goes out on X, Telegram, and Discord
+              first.</li>
+          </ul>
+        </div>
+
+        <aside class="margin-note" data-reveal data-reveal-delay="2">
+          <p class="note-head">Mint status</p>
+          <p>Contracts are under review and the mint switch stays off until launch is announced through
+            official channels.</p>
+          <p class="note-meta">Not open<a class="fn" href="#fn-2"><sup>2</sup></a></p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 03 / STAY SAFE ===== -->
+  <section class="band" id="safe" data-district="safe">
+    <div class="shell band-head band-head-row" data-reveal>
+      <div>
+        <p class="kicker">03 &mdash; Stay safe</p>
+        <h2>Verify before<br><em>you connect.</em></h2>
+      </div>
+      <p class="band-note">CapyCrew will never ask for a seed phrase, and there is no presale, allowlist
+        payment, or private mint link.</p>
+    </div>
+
+    <div class="shell">
+      <p class="notice" data-reveal><b>Nothing is claimable yet.</b> Until the portal is live, treat any wallet
+        request claiming to be a CapyCrew mint as a scam. Nothing is claimable before then, and no other
+        contract, form, or wallet request is official.</p>
+      <p class="figure-note" data-reveal>Announcements only come from the accounts linked in the footer of this
+        site.</p>
+    </div>
+  </section>
+</main>
 {% endblock %}

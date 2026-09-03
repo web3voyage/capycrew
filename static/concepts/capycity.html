@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en" data-quality="high" data-cam="drive" data-hour="day">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>CapyCrew concept 03 - CapyCity (animated city)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="capycity.css">
+</head>
+<body>
+
+<!-- ===== THE CITY ===== -->
+<div id="city" aria-hidden="true">
+  <div class="city-noweb">
+    <p><b>CapyCity needs WebGL.</b></p>
+    <p>The city is a real-time scene, so there is no still to fall back to here.</p>
+  </div>
+</div>
+
+<!-- ===== TITLE CARD ===== -->
+<div class="card">
+  <span class="card-kicker">CapyCrew &middot; concept 03</span>
+  <h1>CapyCity</h1>
+  <p class="card-sub">A toon-shaded city on a real street grid &mdash; and the crew
+  walking it. Buildings, roads, signals, lamps, trees and traffic all redrawn;
+  capybaras in streetwear on every sidewalk.</p>
+  <dl class="card-stats">
+    <div><dt>Scale</dt><dd>1 unit = 1 metre</dd></div>
+    <div><dt>Crew</dt><dd id="stat-capy">&mdash;</dd></div>
+    <div><dt>Traffic</dt><dd id="stat-cars">&mdash;</dd></div>
+    <div><dt>Draw calls</dt><dd id="stat-draw">&mdash;</dd></div>
+  </dl>
+</div>
+
+<!-- ===== HUD ===== -->
+<div class="hud"><span id="hud-fps">&mdash;</span> <i>fps</i></div>
+
+<!-- ===== CONCEPT-ONLY CONTROLS (would not ship) ===== -->
+<div class="dock" role="group" aria-label="Concept preview controls">
+  <div class="dock-row">
+    <span class="dock-label">Camera</span>
+    <button type="button" data-cam="drive" class="is-active">Drive</button>
+    <button type="button" data-cam="fly">Fly</button>
+    <button type="button" data-cam="orbit">Orbit</button>
+  </div>
+  <div class="dock-row">
+    <span class="dock-label">Light</span>
+    <button type="button" data-hour="day" class="is-active">Midday</button>
+    <button type="button" data-hour="golden">Golden</button>
+    <button type="button" data-hour="night">Night</button>
+  </div>
+  <div class="dock-row">
+    <span class="dock-label">Quality</span>
+    <button type="button" data-quality="high" class="is-active">High</button>
+    <button type="button" data-quality="balanced">Balanced</button>
+    <button type="button" data-quality="lite">Lite</button>
+  </div>
+  <p class="dock-hint">Drag to look &middot; scroll to move down the avenue</p>
+  <a class="dock-link" href="editorial.html">Compare 02 / Editorial &rarr;</a>
+</div>
+
+<script src="../three.min.js"></script>
+<script src="capycity.js" defer></script>
+</body>
+</html>

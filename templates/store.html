@@ -1,28 +1,129 @@
 {% extends "base.html" %}
 {% block title %}Store - CAPYCREW{% endblock %}
-{% block content %}
-<section class="page-hero"><div class="wrap"><div class="eyebrow">CapyCrew / Physical district</div><h1>THE STORE<br>IS COMING.</h1><p class="lede">Objects from CapyCity are in development. Browse the Initial Scene films and the first product studies below.</p></div></section>
-<main class="section store-page"><div class="wrap">
-  <div class="section-head store-section-head"><span class="kicker">01 / Initial Scene</span><h2>Motion studies<br>from the district.</h2></div>
-  <div class="store-video-grid">
-    <article class="store-card store-video-card"><video autoplay muted loop playsinline preload="metadata" src="/media/store/Initial_Scene_-_2026-08-20_202608201252.mp4"></video><div class="overlay"><span>Initial scene / 01</span><span class="badge">Soon</span></div></article>
-    <article class="store-card store-video-card"><video autoplay muted loop playsinline preload="metadata" src="/media/store/Initial_Scene_-_2026-08-20_202608201252_2.mp4"></video><div class="overlay"><span>Initial scene / 02</span><span class="badge">Soon</span></div></article>
-    <article class="store-card store-video-card"><video autoplay muted loop playsinline preload="metadata" src="/media/store/Initial_Scene_-_2026-08-20_202608201252_3.mp4"></video><div class="overlay"><span>Initial scene / 03</span><span class="badge">Soon</span></div></article>
-    <article class="store-card store-video-card"><video autoplay muted loop playsinline preload="metadata" src="/media/store/Initial_Scene_-_2026-08-20_202608201252_4.mp4"></video><div class="overlay"><span>Initial scene / 04</span><span class="badge">Soon</span></div></article>
-  </div>
 
-  <div class="section-head store-section-head product-head"><span class="kicker">02 / Product studies</span><h2>Wear the<br>signal.</h2></div>
-  <div class="store-product-grid">
-    <article class="store-card product-card product-card-large"><img src="/media/store/Capy-Tech_high-top_sneakers_202608201212.jpeg" alt="Capy-Tech high-top sneakers" loading="lazy"><div class="overlay"><span>Capy-Tech high-tops</span><span class="badge">Soon</span></div></article>
-    <article class="store-card product-card"><img src="/media/store/Graffiti_denim_jacket_displayed_202608201212.jpeg" alt="Graffiti denim jacket" loading="lazy"><div class="overlay"><span>Graffiti denim jacket</span><span class="badge">Soon</span></div></article>
-    <article class="store-card product-card"><img src="/media/store/CapyCrew_product_study_001.png" alt="CapyCrew product study" loading="lazy"><div class="overlay"><span>Product study 001</span><span class="badge">Soon</span></div></article>
-    <article class="store-card product-card"><img src="/media/store/Urban_Mesh_utility_cargo_shorts_202608201212.jpeg" alt="Urban Mesh utility cargo shorts" loading="lazy"><div class="overlay"><span>Urban Mesh cargos</span><span class="badge">Soon</span></div></article>
-    <article class="store-card product-card"><img src="/media/store/Urban_mesh_utility_cargo_shorts_202608201213.jpeg" alt="Urban mesh utility cargo shorts study" loading="lazy"><div class="overlay"><span>Urban Mesh study</span><span class="badge">Soon</span></div></article>
-    <article class="store-card product-card"><img src="/media/store/White_high-top_sneakers_side_view_202608190500.jpeg" alt="White high-top sneakers" loading="lazy"><div class="overlay"><span>Signal high-tops</span><span class="badge">Soon</span></div></article>
-    <article class="store-card product-card"><img src="/media/store/Neon_Ghost_jersey_202608201213.jpeg" alt="Neon Ghost jersey" loading="lazy"><div class="overlay"><span>Neon Ghost jersey</span><span class="badge">Soon</span></div></article>
-    <article class="store-card product-card"><img src="/media/store/Orange_embroidered_beanie_202608201213.jpeg" alt="Orange embroidered beanie" loading="lazy"><div class="overlay"><span>Embroidered beanie</span><span class="badge">Soon</span></div></article>
-    <article class="store-card product-card"><img src="/media/store/White_mesh_jersey_202608201213.jpeg" alt="White mesh jersey" loading="lazy"><div class="overlay"><span>White mesh jersey</span><span class="badge">Soon</span></div></article>
-  </div>
-  <p class="store-note"><span>Preview media only. Product releases will be announced through official CapyCrew channels.</span></p>
-</div></main>
+{#- Three districts - front, films, goods - so there is no folio rail: the rail
+    only earns the margin from four sections up. No per-page stylesheet and no
+    per-page script either; the running order, the goods grid, the stamps and
+    the reveals all come from dispatch.css and dispatch.js. -#}
+{% block content %}
+<main class="issue">
+
+  <!-- ===== 01 / FRONT ===== -->
+  <section class="front" id="front" data-district="front">
+    <div class="shell front-grid">
+
+      <div class="front-lead">
+        <p class="kicker" data-reveal>01 &mdash; Store <i>/</i> Goods in development</p>
+        <h1 data-reveal data-reveal-delay="1">The store<br><em>is coming.</em></h1>
+        <span class="rule" data-rule data-reveal-delay="2" aria-hidden="true"></span>
+        <p class="standfirst" data-reveal data-reveal-delay="2">Objects from CapyCity are in development.
+          Browse the Initial Scene films and the first product studies below.</p>
+        <p class="byline" data-reveal data-reveal-delay="3">Filed from CapyCity <i>/</i> Physical district
+          <i>/</i> Preview media only</p>
+        {#- .btn-ink / .btn-line only. The bare "btn" token is not used here: it
+            is still owned by site.css, which prints a 4px offset drop shadow
+            that dispatch.css sets no box-shadow to beat. -#}
+        <div class="cta-row" data-reveal data-reveal-delay="3">
+          <a class="btn-ink" href="/hub">Open the Crew Hub</a>
+          <a class="btn-line" href="/mint">{{ 'Get a Genesis Capy' if mint_enabled else 'Mint / soon' }}</a>
+        </div>
+      </div>
+
+      {#- The lead study is promoted out of the grid and onto the front plate,
+          which is where the old layout's double-height card was pointing. -#}
+      <figure class="plate front-plate" data-reveal data-reveal-delay="2">
+        <div class="plate-frame">
+          <img src="/media/store/Capy-Tech_high-top_sneakers_202608201212.jpeg"
+               alt="Capy-Tech high-top sneakers" loading="lazy">
+          <span class="reg reg-tl" aria-hidden="true"></span><span class="reg reg-tr" aria-hidden="true"></span>
+          <span class="reg reg-bl" aria-hidden="true"></span><span class="reg reg-br" aria-hidden="true"></span>
+        </div>
+        <figcaption><b>Fig. 1</b><span>Capy-Tech high-tops &mdash; product study, not yet on sale.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===== 02 / INITIAL SCENE ===== -->
+  <section class="band" id="films" data-district="films">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">02 &mdash; Initial Scene</p>
+        <h2>Motion studies<br>from the district.</h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">Four takes of the Initial Scene, one on the plate at a time. The running order
+          sits beside it; pick any entry.</p>
+      </header>
+
+      {#- The old page autoplayed all four films at once. As a running order only
+          the selected take streams, and each one finally has a label. The first
+          button's data-src / data-fig / data-sub must match what the stage
+          prints below, or the page contradicts itself before dispatch.js runs.
+          Captions below carry a literal em dash rather than an entity, because
+          autoescape prints an entity written in a set tuple as visible text. -#}
+      <div class="deck" data-reveal data-reveal-delay="1">
+        <figure class="plate deck-stage" id="deck-panel" role="tabpanel" tabindex="0"
+                aria-label="Selected Initial Scene film" aria-live="polite">
+          <div class="plate-frame">
+            <video id="deck-player" autoplay muted loop playsinline preload="auto"
+                   src="/media/store/Initial_Scene_-_2026-08-20_202608201252.mp4"></video>
+            <span class="reg reg-tl" aria-hidden="true"></span><span class="reg reg-tr" aria-hidden="true"></span>
+            <span class="reg reg-bl" aria-hidden="true"></span><span class="reg reg-br" aria-hidden="true"></span>
+          </div>
+          <figcaption><b id="deck-fig">Fig. 2.1</b><span id="deck-sub">Initial scene &mdash; take one</span></figcaption>
+        </figure>
+
+        {% set films = [
+             ('Initial_Scene_-_2026-08-20_202608201252.mp4', 'Take one', 'Initial scene — take one'),
+             ('Initial_Scene_-_2026-08-20_202608201252_2.mp4', 'Take two', 'Initial scene — take two'),
+             ('Initial_Scene_-_2026-08-20_202608201252_3.mp4', 'Take three', 'Initial scene — take three'),
+             ('Initial_Scene_-_2026-08-20_202608201252_4.mp4', 'Take four', 'Initial scene — take four')
+           ] %}
+        <ol class="running-order" role="tablist" aria-label="Initial Scene running order">
+          {%- for file, name, caption in films %}
+          <li role="presentation"><button type="button" role="tab"
+              aria-selected="{{ 'true' if loop.first else 'false' }}" aria-controls="deck-panel"
+              {% if loop.first %}class="is-active" {% endif %}data-src="/media/store/{{ file }}"
+              data-fig="Fig. 2.{{ loop.index }}" data-sub="{{ caption }}">
+            <b>{{ '%02d'|format(loop.index) }}</b><span>{{ name }}</span><em>Soon</em></button></li>
+          {%- endfor %}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 03 / PRODUCT STUDIES ===== -->
+  <section class="band goods-band" id="goods" data-district="goods">
+    <div class="shell">
+      <div class="band-head band-head-row" data-reveal>
+        <div>
+          <p class="kicker">03 &mdash; Product studies</p>
+          <h2>Wear the<br>signal.</h2>
+        </div>
+        <p class="band-note">Studies, not stock. Every piece stays stamped until there is a release to
+          announce.</p>
+      </div>
+
+      <div class="goods-grid" data-reveal data-reveal-delay="1">
+        {%- for image, name, alt, study in [
+              ('Graffiti_denim_jacket_displayed_202608201212.jpeg', 'Graffiti denim jacket', 'Graffiti denim jacket', '3.1'),
+              ('CapyCrew_product_study_001.png', 'Product study 001', 'CapyCrew product study', '3.2'),
+              ('Urban_Mesh_utility_cargo_shorts_202608201212.jpeg', 'Urban Mesh cargos', 'Urban Mesh utility cargo shorts', '3.3'),
+              ('Urban_mesh_utility_cargo_shorts_202608201213.jpeg', 'Urban Mesh study', 'Urban mesh utility cargo shorts study', '3.4'),
+              ('White_high-top_sneakers_side_view_202608190500.jpeg', 'Signal high-tops', 'White high-top sneakers', '3.5'),
+              ('Neon_Ghost_jersey_202608201213.jpeg', 'Neon Ghost jersey', 'Neon Ghost jersey', '3.6'),
+              ('Orange_embroidered_beanie_202608201213.jpeg', 'Embroidered beanie', 'Orange embroidered beanie', '3.7'),
+              ('White_mesh_jersey_202608201213.jpeg', 'White mesh jersey', 'White mesh jersey', '3.8')
+            ] %}
+        <figure class="good">
+          <div class="plate-frame"><img src="/media/store/{{ image }}" alt="{{ alt }}" loading="lazy"><span class="stamp">Soon</span></div>
+          <figcaption><b>{{ name }}</b><span>Study {{ study }}</span></figcaption>
+        </figure>
+        {%- endfor %}
+      </div>
+
+      <p class="notice" data-reveal><b>Preview media only.</b> Product releases will be announced through
+        official CapyCrew channels.<a class="fn" href="#fn-4" id="fnref-4"><sup>4</sup></a></p>
+    </div>
+  </section>
+</main>
 {% endblock %}

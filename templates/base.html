@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="{{ og_description|default('CapyCrew - a mellow onchain universe.') }}">
-  <meta name="theme-color" content="#101010">
+  <!-- Paper, not ink: the masthead is now the top of the page on mobile. -->
+  <meta name="theme-color" content="#f4f0e8">
   <link rel="canonical" href="{{ canonical_url|default(request.url) }}">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="CAPYCREW">
@@ -22,47 +23,115 @@
   <meta name="twitter:description" content="{{ og_description|default('CapyCrew - a mellow onchain universe.') }}">
   <meta name="twitter:image" content="{{ og_image_url|default('/static/og-image.png') }}">
   <title>{% block title %}{{ site_name }}{% endblock %}</title>
-  <link rel="stylesheet" href="{{ url_for('static', path='site.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', path='css/capycity.css') }}?v=20260820-11">
+  <!-- The three faces of the Dispatch. This used to arrive as an @import at the
+       top of site.css, which the browser could not see until site.css had come
+       back; as a link it is discovered with the document. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  <!-- dispatch.css comes after site.css on purpose: the shell it defines wins on
+       source order, while site.css keeps styling the interior page bodies. -->
+  <link rel="stylesheet" href="{{ url_for('static', path='site.css') }}?v=20260903-1">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/dispatch.css') }}?v=20260903-1">
   {% block styles %}{% endblock %}
 </head>
 <body data-page="{{ page|default('home') }}">
-  <nav class="site-nav">
-    <a class="brand" href="/">CAPYCREW</a>
-    <div class="nav-links">
-      <a class="{{ 'active' if page=='hub' else '' }}" href="/hub">Crew Hub</a>
-      <a class="{{ 'active' if page=='mint' else '' }}" href="/mint">{{ 'Mint' if mint_enabled else 'Mint / soon' }}</a>
-      <a class="{{ 'active' if page=='about' else '' }}" href="/about">About</a>
-      <a class="{{ 'active' if page=='whitepaper' else '' }}" href="/whitepaper">Whitepaper</a>
-      <a class="{{ 'active' if page=='store' else '' }}" href="/store">Store</a>
+  {# The city is the plate the type is printed over. The hub runs its own WebGL
+     studio, so it keeps the stage - and capycity.js - off the page. #}
+  {% if page != 'hub' %}
+  <div id="scene-stage" aria-hidden="true">
+    <div class="city-fallback"></div>
+    <div class="city-haze"></div>
+    <div class="city-grain"></div>
+  </div>
+  {% endif %}
+  {% block rail %}{% endblock %}
+  <header class="masthead" id="masthead">
+    <div class="mast-strip">
+      <div class="shell strip-inner">
+        <span>CapyCrew Dispatch</span>
+        <span>Vol. 042</span>
+        <span>September 2026</span>
+        <span class="strip-end">Stay mellow. Build onchain.</span>
+      </div>
     </div>
-  </nav>
-  {% if page != 'hub' %}<div id="scene-stage" aria-hidden="true"><div class="scene-horizon"></div>{% if page == 'home' %}<video class="world-video" autoplay muted loop playsinline preload="auto" src="/media/videos/Capy_%23042_rises_with_NFT_202608191210.mp4"></video>{% endif %}</div>{% endif %}
+    <div class="mast-main">
+      <div class="shell mast-inner">
+        <a class="wordmark" href="/">CapyCrew</a>
+        {#- Every destination is a real route: no in-page anchors live in the
+            shared shell, so an interior page never inherits a link to an id it
+            does not have. The mint label stays one flat string. -#}
+        {% set nav_items = [
+             ('/hub', 'Crew Hub', 'hub'),
+             ('/mint', 'Mint' if mint_enabled else 'Mint / soon', 'mint'),
+             ('/about', 'About', 'about'),
+             ('/whitepaper', 'Whitepaper', 'whitepaper'),
+             ('/store', 'Store', 'store')
+           ] %}
+        <nav class="mast-nav" aria-label="Primary">
+          {%- for href, label, key in nav_items %}
+          <a href="{{ href }}"{% if page == key %} class="is-here" aria-current="page"{% endif %}>{{ label }}</a>
+          {%- endfor %}
+        </nav>
+        <a class="mast-cta" href="/mint">{{ 'Mint the crew' if mint_enabled else 'Mint / soon' }}</a>
+      </div>
+    </div>
+  </header>
   <div class="site-content">
     {% block content %}{% endblock %}
-    <footer class="footer">
-      <div class="wrap footer-grid">
-        <div>
-          <div class="brand">CAPYCREW</div>
-          <p>Stay mellow. Build onchain.<br><small>Copyright 2026 CapyCrew. All rights reserved.</small></p>
+  </div>
+  <footer class="colophon">
+    <span class="ghost" aria-hidden="true">CapyCrew</span>
+    <div class="shell">
+      {#- Standing notes: they carry the gating language, so they print on every
+          page. The return arrow only appears where the markers do. -#}
+      {% set footnotes = [
+           ('1', '$CAPY is gated and has not launched. The 1,000,000,000 figure is an illustrative planning envelope for review, not a commitment, and no launch date is promised.'),
+           ('2', 'Mint terms, price, and supply are published on the mint page. Always confirm the contract address through official CapyCrew channels before signing anything.' if mint_enabled else 'The mint is not open. Contracts are under review and the mint switch stays off until launch is announced through official channels.'),
+           ('3', 'CapyCrew NFTs are collectibles and access passes to the CapyCrew ecosystem. They do not represent equity, ownership in a company, or a guaranteed financial return.'),
+           ('4', 'Preview media only. Product releases will be announced through official CapyCrew channels.'),
+           ('5', 'Features are staged, conditional, and subject to product, partnership, legal, and community review.')
+         ] %}
+      <section class="notes-apparatus" aria-label="Footnotes">
+        <p class="notes-head">Notes</p>
+        <ol class="fn-list">
+          {%- for n, note in footnotes %}
+          <li id="fn-{{ n }}"><b>{{ n }}.</b> {{ note }}{% if page == 'home' %} <a href="#fnref-{{ n }}" aria-label="Back to reference {{ n }}">&#8617;</a>{% endif %}</li>
+          {%- endfor %}
+        </ol>
+      </section>
+      <div class="colophon-grid">
+        <div class="colophon-brand">
+          <div class="wordmark">CapyCrew</div>
+          <p>Stay mellow. Build onchain.</p>
+          <p class="imprint">The CapyCity Dispatch <i>/</i> Vol. 042 <i>/</i> September 2026<br>
+            Set in Fraunces, Space Grotesk, and DM Mono.</p>
         </div>
         <div>
-          <div class="eyebrow" style="color:var(--acid)">Explore</div>
-          <p><a href="/about">About CapyCrew</a><br><a href="/mint">{{ 'Mint the crew' if mint_enabled else 'Mint / coming soon' }}</a><br><a href="/whitepaper">Read the whitepaper</a><br><a href="/store">Store / coming soon</a><br><a href="/privacy">Privacy policy</a></p>
+          <p class="colophon-label">Explore</p>
+          <a href="/about">About CapyCrew</a>
+          <a href="/mint">{{ 'Mint the crew' if mint_enabled else 'Mint / coming soon' }}</a>
+          <a href="/whitepaper">Whitepaper</a>
+          <a href="/store">Store / soon</a>
+          <a href="/privacy">Privacy policy</a>
         </div>
         <div>
-          <div class="eyebrow" style="color:var(--acid)">Community</div>
+          <p class="colophon-label">Community</p>
           <div class="socials">
-            <a class="social-icon" href="https://x.com/capycrew" target="_blank" rel="noreferrer" aria-label="CapyCrew on X" title="X">X</a>
-            <a class="social-icon" href="https://t.me/capycrew" target="_blank" rel="noreferrer" aria-label="CapyCrew on Telegram" title="Telegram">TG</a>
-            <a class="social-icon" href="https://discord.gg/capycrew" target="_blank" rel="noreferrer" aria-label="CapyCrew on Discord" title="Discord">DC</a>
+            <a href="https://x.com/capycrew" target="_blank" rel="noreferrer" aria-label="CapyCrew on X">X</a>
+            <a href="https://t.me/capycrew" target="_blank" rel="noreferrer" aria-label="CapyCrew on Telegram">Telegram</a>
+            <a href="https://discord.gg/capycrew" target="_blank" rel="noreferrer" aria-label="CapyCrew on Discord">Discord</a>
           </div>
+          <p class="colophon-label colophon-label-2">Issue</p>
+          <p class="imprint">Filed from CapyCity. Printed on demand.</p>
         </div>
       </div>
-    </footer>
-  </div>
-  <script src="{{ url_for('static', path='three.min.js') }}?v=20260820-11"></script>
-  {% if page != 'hub' %}<script src="{{ url_for('static', path='js/capycity.js') }}?v=20260820-11" defer></script>{% endif %}
+      <p class="copyright"><span>Copyright 2026 CapyCrew. All rights reserved.</span><span>End of issue &mdash; No. 042</span></p>
+    </div>
+  </footer>
+  <script src="{{ url_for('static', path='three.min.js') }}?v=20260903-1"></script>
+  {% if page != 'hub' %}<script src="{{ url_for('static', path='js/capycity.js') }}?v=20260903-1" defer></script>{% endif %}
+  <script src="{{ url_for('static', path='js/dispatch.js') }}?v=20260903-1" defer></script>
   {% block scripts %}{% endblock %}
 </body>
 </html>

@@ -1,75 +1,266 @@
 {% extends "base.html" %}
 {% block title %}CAPYCREW - Stay mellow{% endblock %}
-{% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/home.css') }}">{% endblock %}
+
+{#- The folio rail is the running section marker. dispatch.js maps each
+    data-rail value onto the [data-district] section of the same name and marks
+    the one that has passed the reading line, so the two lists below must stay
+    in step. Only the long reads carry one, and it hides itself below 1410px. -#}
+{% block rail %}
+<nav class="folio" aria-label="Sections on this page">
+  <span class="folio-rule" aria-hidden="true"><i></i></span>
+  <a href="#front" data-rail="front"><b>01</b><span>Front</span></a>
+  <a href="#dispatch" data-rail="dispatch"><b>02</b><span>Dispatch</span></a>
+  <a href="#cast" data-rail="cast"><b>03</b><span>Cast</span></a>
+  <a href="#study" data-rail="study"><b>04</b><span>Study</span></a>
+  <a href="#route" data-rail="route"><b>05</b><span>Route</span></a>
+  <a href="#goods" data-rail="goods"><b>06</b><span>Goods</span></a>
+</nav>
+{% endblock %}
+
 {% block content %}
-<main class="home-flow">
-  <section class="hero" data-scene="world">
-    <div class="wrap hero-grid">
-      <div>
-        <div class="eyebrow">01 / The world - CAPYCITY</div>
-        <h1>STAY <em>MELLOW.</em><br>GO ONCHAIN.</h1>
-        <p class="lede">CapyCrew is an animation-first character universe, a shared city, and a community that makes room for better internet rituals.</p>
-        <div class="cta-row"><a class="btn primary" href="/hub">Open the Crew Hub</a><a class="btn" href="/mint">{{ 'Get a Genesis Capy' if mint_enabled else 'Mint / coming soon' }}</a></div>
-      </div>
-      <div class="hero-note"><span class="eyebrow">CapyCity / 2026</span><strong>Soft power<br>for the timeline.</strong><span>Genesis 042<br>10,000 animated characters</span></div>
-    </div>
-  </section>
+<main class="issue">
 
-  <div class="ticker" aria-label="CapyCrew updates"><span>CAPYCITY IS CALLING - 1,000,000,000 $CAPY - CAPYCREW FOREVER - </span><span>CAPYCITY IS CALLING - 1,000,000,000 $CAPY - CAPYCREW FOREVER - </span></div>
+  <!-- ===== 01 / FRONT PAGE ===== -->
+  <section class="front" id="front" data-district="front">
+    <div class="shell front-grid">
 
-  <section class="section signal-section" data-scene="signal">
-    <div class="wrap">
-      <div class="section-head"><span class="kicker">02 / The signal</span><h2>Broadcasts<br>from the district.</h2></div>
-      <p class="lede">Animated clips, city transmissions, and collectible moments move through CapyCity all day.</p>
-      <div class="signal-rail" tabindex="0" aria-label="Scrollable CapyCity video transmissions">
-        <article class="signal-card"><video autoplay muted loop playsinline preload="metadata" src="/media/videos/Capybara_counting_project_perks_202608191148.mp4"></video><span>Perks / 001</span></article>
-        <article class="signal-card"><video autoplay muted loop playsinline preload="metadata" src="/media/videos/Capybara_giving_thumbs_up_202608191148.mp4"></video><span>Signal / 002</span></article>
-        <article class="signal-card"><video autoplay muted loop playsinline preload="metadata" src="/media/videos/Capybara_wearing_streetwear_202608191149.mp4"></video><span>Street / 003</span></article>
-        <article class="signal-card"><video autoplay muted loop playsinline preload="metadata" src="/media/videos/CapyCrew_logo_forms_on_screen_202608191209.mp4"></video><span>Logo / 004</span></article>
-        <article class="signal-card"><video autoplay muted loop playsinline preload="metadata" src="/media/videos/Capy_%23042_rises_with_NFT_202608191210.mp4"></video><span>Rise / 005</span></article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section crew-section" data-scene="crew">
-    <div class="wrap">
-      <div class="section-head"><span class="kicker">03 / Meet the crew</span><h2>Different fits.<br>Same frequency.</h2></div>
-      <div class="crew-window" aria-label="CapyCrew character gallery">
-        <div class="crew-track">
-          {% for image, label in [
-            ('Capybara_dressed_as_skater_202608190231.jpeg','Skater / 014'),
-            ('Capybara_wearing_captain_hat_202608191119.jpeg','Captain / 027'),
-            ('Capybara_wearing_gorpcore_fashion_202608190231.jpeg','Gorpcore / 031'),
-            ('Capybara_wearing_maritime_uniform_202608190423.jpeg','Maritime / 042'),
-            ('Capybara_wearing_puffer_jacket_202608190230.jpeg','Puffer / 056'),
-            ('Capybara_wearing_techwear_attire_202608190230.jpeg','Techwear / 073'),
-            ('Capybara_wearing_varsity_jacket_202608190232.jpeg','Varsity / 088')
-          ] %}
-          <figure class="crew-card"><img src="/media/assets/{{ image }}" alt="CapyCrew {{ label }}" loading="lazy"><figcaption>{{ label }}</figcaption></figure>
-          {% endfor %}
+      <div class="front-lead">
+        <p class="kicker" data-reveal>01 &mdash; Front page <i>/</i> CapyCity edition</p>
+        <h1 data-reveal data-reveal-delay="1">Stay <em>mellow.</em><br>Go onchain.</h1>
+        <span class="rule" data-rule data-reveal-delay="2" aria-hidden="true"></span>
+        <p class="standfirst" data-reveal data-reveal-delay="2">An animation-first character universe, a shared
+          city, and a community that makes room for better internet rituals &mdash; ten thousand capybaras deep.</p>
+        <p class="byline" data-reveal data-reveal-delay="3">Filed from CapyCity <i>/</i> Genesis 042
+          <i>/</i> {{ mint_chain_name }} <i>/</i> 10,000 characters</p>
+        {#- .btn-ink / .btn-line carry their own geometry. The bare "btn" token is
+            NOT added: site.css still owns .btn and would print its 4px offset
+            drop shadow through, since dispatch.css sets no box-shadow to beat
+            it. Interior pages that still run site.css keep using .btn. -#}
+        <div class="cta-row" data-reveal data-reveal-delay="3">
+          <a class="btn-ink" href="/hub">Open the Crew Hub</a>
+          <a class="btn-line" href="/mint">{{ 'Get a Genesis Capy' if mint_enabled else 'Mint / soon' }}</a>
         </div>
       </div>
+
+      <figure class="plate front-plate" data-reveal data-reveal-delay="2">
+        <div class="plate-frame">
+          <video autoplay muted loop playsinline preload="auto"
+                 src="/media/videos/Capy_%23042_rises_with_NFT_202608191210.mp4"></video>
+          <span class="reg reg-tl" aria-hidden="true"></span><span class="reg reg-tr" aria-hidden="true"></span>
+          <span class="reg reg-bl" aria-hidden="true"></span><span class="reg reg-br" aria-hidden="true"></span>
+        </div>
+        <figcaption><b>Fig. 1</b><span>Genesis 042 rises. Motion study, CapyCity core.</span></figcaption>
+      </figure>
+
+      <aside class="contents" data-reveal data-reveal-delay="4">
+        <p class="contents-head">Inside this issue</p>
+        <ol>
+          <li><a href="#dispatch"><b>02</b><span>Dispatches from the district</span></a></li>
+          <li><a href="#cast"><b>03</b><span>The cast: one wardrobe system</span></a></li>
+          <li><a href="#study"><b>04</b><span>Product study: the Crew Hub</span></a></li>
+          <li><a href="#route"><b>05</b><span>Route: what gets built next</span></a></li>
+          <li><a href="#goods"><b>06</b><span>Goods in development</span></a></li>
+          <li><a href="/about"><b>&mdash;</b><span>Notes on a creative internet club</span></a></li>
+          <li><a href="/whitepaper"><b>&mdash;</b><span>Ledger: the $CAPY envelope</span></a></li>
+        </ol>
+      </aside>
     </div>
   </section>
+  <!-- ===== STANDING FIGURES: the old red marquee, set as a table of record ===== -->
+  <div class="figures" data-reveal>
+    <dl class="shell figures-inner">
+      <div><dt>Collection</dt><dd data-count="10000">10,000</dd></div>
+      <div><dt>Genesis</dt><dd>No. 042</dd></div>
+      <div><dt>Network</dt><dd>{{ mint_chain_name }}</dd></div>
+      {#- The unit lives in the dt, not the dd: .figures-inner tracks are
+          minmax(0, 1fr), so a dd wider than a fifth of the shell spills over its
+          neighbour's rule instead of the grid growing. "1,000,000,000 $CAPY" is
+          exactly that case at 1500px. -#}
+      <div><dt>Envelope <span>$CAPY</span></dt><dd>1,000,000,000<a class="fn" href="#fn-1" id="fnref-1"><sup>1</sup></a></dd></div>
+      <div><dt>Mint</dt><dd{% if not mint_enabled %} class="is-soon"{% endif %}>{{ 'Open' if mint_enabled else 'Not open' }}<a class="fn" href="#fn-2" id="fnref-2"><sup>2</sup></a></dd></div>
+    </dl>
+  </div>
 
-  <section class="section hub-preview-section">
-    <div class="wrap">
-      <div class="section-head"><span class="kicker">04 / Product preview</span><h2>The crew has<br>a home now.</h2></div>
-      <p class="lede">The Crew Hub connects identity, missions, community signals, and the Kentsugi character pipeline in one member experience.</p>
-      <div class="product-board" aria-label="Dimensional Crew Hub product concepts">
-        <div class="product-board-meta"><span>CREW HUB / PRODUCT STUDY</span><span>01 — 04</span></div>
-        <figure class="product-board-desktop"><span class="board-label">DESKTOP / MEMBER HOME</span><img src="/static/crew-hub-desktop.png" alt="Desktop preview of the CapyCrew member hub" loading="lazy" width="1440" height="1100"><figcaption>Identity, missions, proofs, and community signal in one operating surface.</figcaption></figure>
-        <figure class="product-board-mobile"><span class="board-label">MOBILE / SIGNAL PASS</span><img src="/static/crew-hub-mobile.png" alt="Mobile preview of the CapyCrew member hub" loading="lazy" width="390" height="844"><figcaption>Carry the member loop into the pocket.</figcaption></figure>
-        <div class="product-board-orbit orbit-one" aria-hidden="true">KENT / 042</div><div class="product-board-orbit orbit-two" aria-hidden="true">LIVE / CREW HUB</div>
+  <!-- ===== 02 / DISPATCHES ===== -->
+  <section class="band" id="dispatch" data-district="dispatch">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">02 &mdash; Dispatches</p>
+        <h2>Broadcasts from<br>the district.</h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">Animated clips, city transmissions, and collectible moments move through CapyCity
+          all day. The running order is below; pick any entry.</p>
+      </header>
+
+      <div class="deck" data-reveal data-reveal-delay="1">
+        <figure class="plate deck-stage" id="deck-panel" role="tabpanel" tabindex="0"
+                aria-label="Selected dispatch" aria-live="polite">
+          <div class="plate-frame">
+            <video id="deck-player" autoplay muted loop playsinline preload="auto"
+                   src="/media/videos/Capy_%23042_rises_with_NFT_202608191210.mp4"></video>
+            <span class="reg reg-tl" aria-hidden="true"></span><span class="reg reg-tr" aria-hidden="true"></span>
+            <span class="reg reg-bl" aria-hidden="true"></span><span class="reg reg-br" aria-hidden="true"></span>
+          </div>
+          <figcaption><b id="deck-fig">Fig. 2.1</b><span id="deck-sub">Genesis reveal &mdash; CapyCity core</span></figcaption>
+        </figure>
+
+        {#- Every entry is one clip. data-src/data-fig/data-sub are read by
+            dispatch.js when the tab is chosen; the first one also has to be the
+            src and caption printed above, or the page contradicts itself before
+            any script runs. Captions carry a literal em dash, not &mdash;:
+            autoescape would turn the entity into visible text. -#}
+        {% set dispatches = [
+             ('Capy_%23042_rises_with_NFT_202608191210.mp4', 'Rise', 'Genesis reveal', 'Genesis reveal — CapyCity core'),
+             ('Zoom_into_futuristic_CapyCity_202608191211.mp4', 'City', 'Approach vector', 'Approach vector — downtown grid'),
+             ('Capybara_wearing_streetwear_202608191149.mp4', 'Street', 'Fit check', 'Fit check — block level'),
+             ('Capybara_counting_project_perks_202608191148.mp4', 'Perks', 'Holder utility', 'Holder utility — ledger read'),
+             ('Capybara_giving_thumbs_up_202608191148.mp4', 'Signal', 'All clear', 'All clear — community desk'),
+             ('CapyCrew_logo_forms_on_screen_202608191209.mp4', 'Mark', 'Identity system', 'Identity system — broadcast bumper')
+           ] %}
+        <ol class="running-order" role="tablist" aria-label="Dispatch running order">
+          {%- for file, name, note, caption in dispatches %}
+          <li role="presentation"><button type="button" role="tab"
+              aria-selected="{{ 'true' if loop.first else 'false' }}" aria-controls="deck-panel"
+              {% if loop.first %}class="is-active" {% endif %}data-src="/media/videos/{{ file }}"
+              data-fig="Fig. 2.{{ loop.index }}" data-sub="{{ caption }}">
+            <b>{{ '%02d'|format(loop.index) }}</b><span>{{ name }}</span><em>{{ note }}</em></button></li>
+          {%- endfor %}
+        </ol>
       </div>
-      <div class="cta-row"><a class="btn primary" href="/hub#collection-studio">Open the collection display</a></div>
+    </div>
+  </section>
+  <!-- ===== 03 / THE CAST (contact sheet) ===== -->
+  <section class="band" id="cast" data-district="cast">
+    <div class="shell band-head band-head-row" data-reveal>
+      <div>
+        <p class="kicker">03 &mdash; The cast</p>
+        <h2>Different fits.<br>Same frequency.</h2>
+      </div>
+      <p class="band-note">Every capybara is one character actor in one wardrobe system: garments, headwear,
+        accessories, and palette change &mdash; the face never does.<a class="fn" href="#fn-3" id="fnref-3"><sup>3</sup></a></p>
+    </div>
+
+    <div class="sheet-head shell" data-reveal><span>Contact sheet</span><span>Roll 03 &mdash; 7 of 10,000</span></div>
+
+    {#- The sheet scrolls on its own axis, so it sits outside .shell and runs the
+        full frame. dispatch.js adds drag and arrow keys on top of native
+        overflow scrolling; tabindex keeps it reachable without them. -#}
+    <div class="sheet" tabindex="0" role="region" aria-label="CapyCrew character contact sheet">
+      <div class="sheet-track">
+        {%- for image, name, no, note in [
+              ('Capybara_dressed_as_skater_202608190231.jpeg', 'Skater', '014', 'deck rat'),
+              ('Capybara_wearing_captain_hat_202608191119.jpeg', 'Captain', '027', 'harbour watch'),
+              ('Capybara_wearing_gorpcore_fashion_202608190231.jpeg', 'Gorpcore', '031', 'trail unit'),
+              ('Capybara_wearing_maritime_uniform_202608190423.jpeg', 'Maritime', '042', 'genesis'),
+              ('Capybara_wearing_puffer_jacket_202608190230.jpeg', 'Puffer', '056', 'cold front'),
+              ('Capybara_wearing_techwear_attire_202608190230.jpeg', 'Techwear', '073', 'night shift'),
+              ('Capybara_wearing_varsity_jacket_202608190232.jpeg', 'Varsity', '088', 'home game')
+            ] %}
+        <figure class="frame">
+          <div class="plate-frame"><img src="/media/assets/{{ image }}" alt="CapyCrew {{ name }}, number {{ no }}" loading="lazy"></div>
+          <figcaption><b>{{ name }}</b><span>Fig. 3.{{ loop.index }} <i>/</i> No. {{ no }} <i>/</i> {{ note }}</span></figcaption>
+        </figure>
+        {%- endfor %}
+      </div>
+    </div>
+
+    <div class="shell sheet-foot" data-reveal>
+      <span class="hint">Drag the sheet, scroll it, or use the arrow keys</span>
+      <a class="btn-line" href="/about">Read the wardrobe notes</a>
     </div>
   </section>
 
-  <section class="section roadmap-section" data-scene="roadmap">
-    <div class="wrap roadmap-layout">
-      <div><div class="section-head"><span class="kicker">05 / Roadmap</span><h2>Keep moving<br>with intention.</h2></div><p class="lede">The route is lit by deliverables, not hype. Start with the Crew Hub, then earn the right to build bigger layers of CapyCity.</p></div>
-      <ol class="roadmap-list"><li><b>01</b><span><strong>Live / Crew Hub</strong> Missions, proofs, one community signal, and a clear member loop.</span></li><li><b>02</b><span><strong>Next / Districts</strong> CapyCity scenes, holder tools, and community-led drops.</span></li><li><b>03</b><span><strong>Planned / Wearables</strong> Digital clothing, accessories, and media identity layers.</span></li><li><b>04</b><span><strong>Exploring / Expansion</strong> Physical goods, collaborations, events, and interactive world modules.</span></li></ol>
+  <!-- ===== 04 / PRODUCT STUDY (two-page spread) ===== -->
+  <section class="band" id="study" data-district="study">
+    <div class="shell">
+      <header class="band-head" data-reveal>
+        <p class="kicker">04 &mdash; Product study</p>
+        <h2>The crew has<br>a home now.</h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">Identity, missions, proofs, and community signal on one operating surface.</p>
+      </header>
+
+      <div class="spread" data-tilt data-reveal data-reveal-delay="1">
+        <div class="spread-meta"><span>Crew Hub / product study</span><span>Plates 4.1 &mdash; 4.2</span></div>
+        <span class="spread-gutter" aria-hidden="true"></span>
+        <figure class="spread-recto">
+          <div class="plate-frame"><img src="/static/crew-hub-desktop.png" alt="Desktop preview of the CapyCrew member hub" loading="lazy" width="1440" height="1100"></div>
+          <figcaption><b>Plate 4.1</b><span>Desktop &mdash; member home</span></figcaption>
+        </figure>
+        <figure class="spread-verso">
+          <div class="plate-frame"><img src="/static/crew-hub-mobile.png" alt="Mobile preview of the CapyCrew member hub" loading="lazy" width="390" height="844"></div>
+          <figcaption><b>Plate 4.2</b><span>Mobile &mdash; signal pass</span></figcaption>
+        </figure>
+        <span class="mark mark-a" aria-hidden="true"><i>A</i>Verified Capy sets the profile</span>
+        <span class="mark mark-b" aria-hidden="true"><i>B</i>Missions and proofs, dated</span>
+      </div>
+      <p class="figure-note" data-reveal>Annotations mark the two loops the hub has to carry: identity in,
+        contribution out. <a href="/hub#collection-studio">Open the collection display</a>.</p>
+    </div>
+  </section>
+  <!-- ===== PULL QUOTE ===== -->
+  <aside class="pull" data-reveal>
+    <div class="shell">
+      <blockquote>Characters with<br><em>somewhere to go.</em></blockquote>
+      <p class="pull-attr">On why the product is the experience around the collectible</p>
+    </div>
+  </aside>
+
+  <!-- ===== 05 / ROUTE ===== -->
+  <section class="band" id="route" data-district="route">
+    <div class="shell route-grid">
+      <header class="route-intro" data-reveal>
+        <p class="kicker">05 &mdash; Route</p>
+        <h2>Keep moving<br>with intention.</h2>
+        <span class="rule" data-rule aria-hidden="true"></span>
+        <p class="band-note">The route is lit by deliverables, not hype. Four chapters, published in order
+          &mdash; each one has to earn the next.<a class="fn" href="#fn-5" id="fnref-5"><sup>5</sup></a></p>
+      </header>
+      {#- dispatch.js reveals .route-list li itself and fills --route-progress
+          down the rule as the list passes the reading line, so the items need no
+          data-reveal of their own. -#}
+      <ol class="route-list">
+        <li><span class="route-no">01</span>
+          <span class="route-body"><b>Crew Hub</b><em data-status="live">Live</em>
+          <span>Missions, proofs, one community signal, and a clear member loop.</span></span></li>
+        <li><span class="route-no">02</span>
+          <span class="route-body"><b>Districts</b><em data-status="next">Next</em>
+          <span>CapyCity scenes, holder tools, and community-led drops.</span></span></li>
+        <li><span class="route-no">03</span>
+          <span class="route-body"><b>Wearables</b><em data-status="planned">Planned</em>
+          <span>Digital clothing, accessories, and media identity layers.</span></span></li>
+        <li><span class="route-no">04</span>
+          <span class="route-body"><b>Expansion</b><em data-status="exploring">Exploring</em>
+          <span>Physical goods, collaborations, events, interactive world modules.</span></span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== 06 / GOODS ===== -->
+  <section class="band goods-band" id="goods" data-district="goods">
+    <div class="shell">
+      <div class="band-head band-head-row" data-reveal>
+        <div>
+          <p class="kicker">06 &mdash; Goods</p>
+          <h2>Wear the<br>signal.</h2>
+        </div>
+        <p class="band-note">Objects from CapyCity are in development. First product studies below, and the
+          rest are <a href="/store">in the store</a>.<a class="fn" href="#fn-4" id="fnref-4"><sup>4</sup></a></p>
+      </div>
+
+      <div class="goods-grid" data-reveal data-reveal-delay="1">
+        {%- for image, name, study in [
+              ('Capy-Tech_high-top_sneakers_202608201212.jpeg', 'Capy-Tech high-tops', '6.1'),
+              ('Graffiti_denim_jacket_displayed_202608201212.jpeg', 'Graffiti denim jacket', '6.2'),
+              ('Orange_embroidered_beanie_202608201213.jpeg', 'Embroidered beanie', '6.3'),
+              ('Neon_Ghost_jersey_202608201213.jpeg', 'Neon Ghost jersey', '6.4')
+            ] %}
+        <figure class="good">
+          <div class="plate-frame"><img src="/media/store/{{ image }}" alt="{{ name }} product study" loading="lazy"><span class="stamp">Soon</span></div>
+          <figcaption><b>{{ name }}</b><span>Study {{ study }}</span></figcaption>
+        </figure>
+        {%- endfor %}
+      </div>
     </div>
   </section>
 </main>
